@@ -9,7 +9,7 @@
 
 ## 1. What — 한 문장 정의
 
-2026년 1월 1일부터 5월 14일까지(134일) **Anthropic 관련 공식 업데이트 214건**을 8개 카테고리 lane으로 묶어 가로 시간축에 시각화하는 단일 페이지.
+2026년 1월 1일부터 5월 14일까지(134일) **Anthropic 관련 공식 업데이트 224건**을 8개 카테고리 lane으로 묶어 가로 시간축에 시각화하는 단일 페이지.
 
 ## 2. Why — 문제 정의
 
@@ -90,7 +90,7 @@ Anthropic의 업데이트가 **8개 서로 다른 출처**에 흩어져 있다:
 
 | 카테고리 | 건수 | 출처 | URL 정확도 |
 |---|---|---|---|
-| Claude Code | 96 | GitHub CHANGELOG | 100% (버전 anchor) |
+| Claude Code | 106 | GitHub CHANGELOG + code.claude.com whats-new (Week 18~19) | 100% (버전 anchor 또는 Week 다이제스트 URL) |
 | Claude Apps | 24 | support.claude.com | 100% |
 | API Platform | 28 | platform.claude.com | 100% (`#month-day-2026` anchor) |
 | Engineering | 9 | anthropic.com/engineering | 100% (slug) |
@@ -98,7 +98,7 @@ Anthropic의 업데이트가 **8개 서로 다른 출처**에 흩어져 있다:
 | Research | 27 | anthropic.com/research + alignment.anthropic.com | 100% (slug) |
 | Corporate | 15 | anthropic.com/news | 100% (slug) |
 | Stealth | 9 | venturebeat / alex000kim / wavespeed | 100% (외부 글 URL) |
-| **합계** | **214** | | **100%** |
+| **합계** | **224** | | **100%** |
 
 ## 7. Non-functional
 

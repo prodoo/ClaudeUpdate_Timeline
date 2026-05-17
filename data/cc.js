@@ -1,6 +1,11 @@
-/* Claude Code — 96 events
- * Source: https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md
- * Verified: 2026-05-14
+/* Claude Code — 106 events
+ * Sources:
+ *   - https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md (v2.1.0~v2.1.120)
+ *   - https://code.claude.com/docs/ko/whats-new (Week 18~19 digests for v2.1.121~v2.1.136)
+ * Verified: 2026-05-17
+ * Note: v2.1.121+ items have dates distributed within their published Week range
+ *       (Week 18 = 2026-04-27~05-01, Week 19 = 2026-05-04~05-08).
+ *       v2.1.124/125/134/135 omitted — no notable entries in CHANGELOG or whats-new.
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["Claude Code"] = [
 {date:"2026-01-07",title:"v2.1.0: Skill hot-reload, /plan shortcut, agent hooks",version:"v2.1.0",importance:5,stage:"GA",summary:"Major release: automatic skill hot-reload, /plan shortcut, agent hooks, vim motions, language setting, /teleport & /remote-env, --tools flag.",url:"https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md#210"},
@@ -98,5 +103,19 @@
 {date:"2026-04-21",title:"v2.1.117: Forked subagents external",version:"v2.1.117",importance:3,stage:"GA",summary:"CLAUDE_CODE_FORK_SUBAGENT=1 enables forked subagents; native macOS/Linux replace Glob/Grep with bfs+ugrep.",url:"https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md#21117"},
 {date:"2026-04-22",title:"v2.1.118: Vim visual mode, named themes",version:"v2.1.118",importance:4,stage:"GA",summary:"Vim visual (v) and visual-line (V) modes; named custom themes; mcp_tool hook type; DISABLE_UPDATES env.",url:"https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md#21118"},
 {date:"2026-04-23",title:"v2.1.119: PowerShell auto-approve, /config persists",version:"v2.1.119",importance:4,stage:"GA",summary:"PowerShell tool auto-approval; /config settings persist to settings.json; CLAUDE_CODE_HIDE_CWD; --from-pr accepts GitLab/Bitbucket.",url:"https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md#21119"},
-{date:"2026-04-24",title:"v2.1.120: Latest stable",version:"v2.1.120",importance:2,stage:"GA",summary:"Most recent published release in window — incremental fixes following 2.1.119 feature wave.",url:"https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.120"}
+{date:"2026-04-24",title:"v2.1.120: Latest stable",version:"v2.1.120",importance:2,stage:"GA",summary:"Most recent published release in window — incremental fixes following 2.1.119 feature wave.",url:"https://www.npmjs.com/package/@anthropic-ai/claude-code/v/2.1.120"},
+
+/* ===== Week 18 (2026-04-27 ~ 05-01): v2.1.121~v2.1.126 — from code.claude.com/docs/ko/whats-new/2026-w18 ===== */
+{date:"2026-04-27",title:"v2.1.121: Persistent /config + plugin auto-retry",version:"v2.1.121",importance:3,stage:"GA",summary:"/config 설정이 settings.json에 영속화. prUrlTemplate 커스터마이징 옵션, 플러그인 의존성 설치 실패 시 자동 재시도.",url:"https://code.claude.com/docs/ko/whats-new/2026-w18"},
+{date:"2026-04-28",title:"v2.1.122: PR URL → /resume",version:"v2.1.122",importance:3,stage:"GA",summary:"PR URL을 /resume에 붙여넣어 해당 PR을 생성한 세션 복원. Bedrock 서비스 계층 선택 지원.",url:"https://code.claude.com/docs/ko/whats-new/2026-w18"},
+{date:"2026-04-29",title:"v2.1.123: OAuth config fix",version:"v2.1.123",importance:2,stage:"GA",summary:"CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS 설정 시 OAuth 인증 실패 수정.",url:"https://code.claude.com/docs/ko/whats-new/2026-w18"},
+{date:"2026-05-01",title:"v2.1.126: Browser-free login + project purge",version:"v2.1.126",importance:3,stage:"GA",summary:"OAuth 코드를 터미널에 직접 붙여넣기 지원(브라우저 콜백 없이). claude project purge 명령으로 로컬 상태 정리. 느린 IPv6 환경 타임아웃 수정.",url:"https://code.claude.com/docs/ko/whats-new/2026-w18"},
+
+/* ===== Week 19 (2026-05-04 ~ 05-08): v2.1.128~v2.1.136 — from code.claude.com/docs/ko/whats-new/2026-w19 ===== */
+{date:"2026-05-04",title:"v2.1.128: Gateway models in /model picker",version:"v2.1.128",importance:3,stage:"GA",summary:"/model picker에 게이트웨이 모델 통합. EnterWorktree에 path 파라미터 추가. MCP 재연결·이미지 크기 수정.",url:"https://code.claude.com/docs/ko/whats-new/2026-w19"},
+{date:"2026-05-05",title:"v2.1.129: --plugin-url + package manager auto-update",version:"v2.1.129",importance:3,stage:"GA",summary:"--plugin-url 플래그로 URL에서 플러그인 아카이브 로드. CLAUDE_CODE_PACKAGE_MANAGER_AUTO_UPDATE 지원. 게이트웨이 모델 검색 opt-in.",url:"https://code.claude.com/docs/ko/whats-new/2026-w19"},
+{date:"2026-05-06",title:"v2.1.131: VSCode Windows ext + Mantle auth fix",version:"v2.1.131",importance:2,stage:"GA",summary:"Windows에서 VSCode 확장 활성화 오류 수정. Mantle 인증 오류 처리 개선.",url:"https://code.claude.com/docs/ko/whats-new/2026-w19"},
+{date:"2026-05-06",title:"v2.1.132: CLAUDE_CODE_SESSION_ID env + alt-screen opt-out",version:"v2.1.132",importance:2,stage:"GA",summary:"세션 ID를 환경변수로 노출(CLAUDE_CODE_SESSION_ID). 전체화면 alt-screen 렌더러 거부 옵션 추가.",url:"https://code.claude.com/docs/ko/whats-new/2026-w19"},
+{date:"2026-05-07",title:"v2.1.133: worktree.baseRef + parallel session race fix",version:"v2.1.133",importance:3,stage:"GA",summary:"worktree.baseRef 설정으로 새 worktree가 원격 기본 또는 로컬 HEAD에서 분기. 포커스 모드 개선. 병렬 세션 자격증명 경쟁 조건 수정.",url:"https://code.claude.com/docs/ko/whats-new/2026-w19"},
+{date:"2026-05-08",title:"v2.1.136: Auto-mode hard_deny + effort-aware hooks",version:"v2.1.136",importance:4,stage:"GA",summary:"auto mode에 hard_deny 규칙 추가(allow 예외 무시하고 무조건 차단). hooks에서 effort.level + $CLAUDE_EFFORT로 활성 노력 수준 확인 가능. 피드백 설문 텔레메트리, MCP OAuth 동시성 수정.",url:"https://code.claude.com/docs/ko/whats-new/2026-w19"}
 ];

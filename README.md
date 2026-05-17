@@ -1,6 +1,6 @@
 # Claude 2026 · a timeline
 
-2026년 1월 1일 ~ 5월 14일 기간의 **Anthropic 관련 공식 업데이트 214건**을 8개 카테고리로 묶어 가로 시간축에 시각화하는 단일 페이지.
+2026년 1월 1일 ~ 5월 14일 기간의 **Anthropic 관련 공식 업데이트 224건**을 8개 카테고리로 묶어 가로 시간축에 시각화하는 단일 페이지.
 
 배포: https://prodoo.github.io/ClaudeUpdate_Timeline/
 
@@ -12,7 +12,7 @@
 .
 ├── index.html                ← 시각화 페이지 (CSS·JS 인라인)
 ├── data/
-│   ├── cc.js                 ← Claude Code 96건 (GitHub CHANGELOG)
+│   ├── cc.js                 ← Claude Code 106건 (GitHub CHANGELOG + code.claude.com whats-new)
 │   ├── apps.js               ← Claude Apps 24건 (support.claude.com)
 │   ├── api.js                ← API Platform 28건 (platform.claude.com)
 │   ├── eng.js                ← Engineering 9건 (anthropic.com/engineering)
@@ -47,7 +47,7 @@
 
 | 카테고리 (key)         | 컬러     | 건수 | 1차 출처 |
 |---|---|---|---|
-| Claude Code            | `#C6604E` | 96 | https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md |
+| Claude Code            | `#C6604E` | 106 | https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md + https://code.claude.com/docs/ko/whats-new |
 | Claude Apps            | `#6B95B8` | 24 | https://support.claude.com/en/articles/12138966-release-notes |
 | API Platform           | `#B89968` | 28 | https://platform.claude.com/docs/en/release-notes/api |
 | Engineering            | `#A8A06D` |  9 | https://www.anthropic.com/engineering |
@@ -55,7 +55,7 @@
 | Research               | `#7DA67E` | 27 | https://www.anthropic.com/research + https://alignment.anthropic.com |
 | Corporate              | `#7A6B5D` | 15 | https://www.anthropic.com/news |
 | Stealth (code)         | `#6B5C8A` |  9 | alex000kim.com · wavespeed.ai/blog · venturebeat.com (2026-03-31 leak 분석) |
-| **합계**               |         | **214** | |
+| **합계**               |         | **224** | |
 
 ## 검증 정책
 
