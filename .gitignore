@@ -1,6 +1,9 @@
 # Local dev / Claude Code settings
 .claude/
 
+# Internal planning/design docs (PRD, ADR, sources) — kept local, not in git
+docs/
+
 # OS metadata
 .DS_Store
 Thumbs.db

@@ -37,12 +37,8 @@
 │       ├── blog.js           ← Dev Blog 7건 (developers.openai.com/blog Codex 토픽)
 │       ├── corp.js           ← Corporate 9건 (GA · pricing · DevDay · SDK · Slack · Enterprise · Cerebras)
 │       └── community.js      ← Community 10건 (외부 보도 · HN 토론 · 독립 분석)
-├── docs/
-│   ├── prd.md                ← PRD (양 페이지 모두 다룸)
-│   ├── decisions.md          ← ADR-001~008 (multi-page는 ADR-007, ChatGPT 리브랜드는 ADR-008)
-│   └── chatgpt-sources.md    ← ChatGPT 검증 출처 표 (9 카테고리)
 ├── README.md                 ← 이 파일
-├── .gitignore                ← .claude/ 등 로컬 설정 제외
+├── .gitignore                ← .claude/, docs/ 등 제외
 └── .nojekyll                 ← GitHub Pages가 underscore 폴더 무시 안 하게
 ```
 
@@ -93,7 +89,7 @@
 | Community       | `#9CA3AF` | 10 | techcrunch.com, cerebras.ai/blog, tomshardware.com, 9to5mac, news.ycombinator.com |
 | **합계**        |          | **131** | |
 
-세부 출처 표·정밀도 정책은 [docs/chatgpt-sources.md](./docs/chatgpt-sources.md) 참조.
+내부 검증 출처표·ADR·PRD는 저장소 외부에 별도 관리 (`.gitignore`로 제외).
 
 ## 검증 정책
 
