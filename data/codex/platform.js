@@ -1,10 +1,17 @@
-/* Platform — developers.openai.com/codex/changelog entries
- * Source: https://developers.openai.com/codex/changelog (#month-YYYY-MM anchor only)
+/* Platform — developers.openai.com/codex/changelog + developers.openai.com/api/docs/changelog
+ * Sources:
+ *   - https://developers.openai.com/codex/changelog (#month-YYYY-MM anchor — 2026-04~ 만 가시)
+ *   - https://developers.openai.com/api/docs/changelog (Codex 관련 API release notes, 2025-04~)
  * Verified: 2026-05-17
- * Note: changelog는 month-level anchor만 제공 — ADR-007 참조
- *       각 항목은 changelog 페이지에서 직접 확인된 entry. URL은 month anchor.
+ * Note: codex/changelog는 month-level anchor만 — ADR-007 예외.
+ *       api/docs/changelog 의 Codex 관련 entry는 별도 게시일 보유 (더 정밀).
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["Platform"] = [
+{date:"2025-05-15",title:"API: codex-mini-latest 출시",version:"codex-mini-latest",importance:4,stage:"GA",summary:"Codex CLI와 함께 사용하도록 최적화된 codex-mini-latest 모델이 OpenAI API에 출시.",url:"https://developers.openai.com/api/docs/changelog"},
+{date:"2025-09-23",title:"API: gpt-5-codex 출시",version:"gpt-5-codex",importance:4,stage:"GA",summary:"Codex CLI 용으로 빌드·최적화된 gpt-5-codex 특수 목적 모델이 API에 정식 공개.",url:"https://developers.openai.com/api/docs/changelog"},
+{date:"2025-11-13",title:"API: gpt-5.1-codex + gpt-5.1-codex-mini",version:"gpt-5.1-codex",importance:4,stage:"GA",summary:"Responses API에 gpt-5.1-codex와 gpt-5.1-codex-mini 출시 — 에이전틱 코딩 작업 최적화.",url:"https://developers.openai.com/api/docs/changelog"},
+{date:"2026-01-14",title:"API: gpt-5.2-codex (Responses API)",version:"gpt-5.2-codex",importance:4,stage:"GA",summary:"GPT-5.2 기반 에이전틱 코딩 최적화 모델이 Responses API에 정식 출시.",url:"https://developers.openai.com/api/docs/changelog"},
+{date:"2026-02-24",title:"API: gpt-5.3-codex (Responses API)",version:"gpt-5.3-codex",importance:4,stage:"GA",summary:"GPT-5.3-Codex가 Responses API에 정식 출시.",url:"https://developers.openai.com/api/docs/changelog"},
 {date:"2026-04-30",title:"CLI 0.128.0 — persisted goal workflows",version:"v0.128.0",importance:3,stage:"GA",summary:"persisted goal workflows, permission profiles, plugin marketplace 설치, 세션 import.",url:"https://developers.openai.com/codex/changelog#month-2026-04"},
 {date:"2026-05-05",title:"Enterprise: Codex access tokens",version:"",importance:3,stage:"GA",summary:"ChatGPT Enterprise 워크스페이스 멤버가 비대화형·trusted 자동화 워크플로용 Codex access token을 생성 가능.",url:"https://developers.openai.com/codex/changelog#month-2026-05"},
 {date:"2026-05-06",title:"Enterprise governance guide updated",version:"",importance:2,stage:"GA",summary:"Analytics 대시보드 차트 + 데이터 export 옵션 상세 가이드 추가.",url:"https://developers.openai.com/codex/changelog#month-2026-05"},
