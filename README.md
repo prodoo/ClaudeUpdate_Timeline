@@ -1,14 +1,14 @@
-# 두 개의 타임라인 — Claude 2026 + Codex 2025–26
+# 두 개의 타임라인 — Claude 2026 + ChatGPT 2025–26
 
 같은 저장소 안에 **두 개의 평행 시각화**:
 - **`index.html`** — Claude 2026 (2026-01-01 ~ 2026-05-14, Anthropic 공식 업데이트 **224건** × 8 lane)
-- **`codex.html`** — Codex 2025–26 (2025-04-16 ~ 2026-05-17, OpenAI Codex 공식 업데이트 **59건** × 6 lane)
+- **`codex.html`** — ChatGPT 2025–26 (2025-04-16 ~ 2026-05-17, OpenAI 코딩 생태계 공식 업데이트 **131건** × 9 lane)
 
 헤더 토글로 한 클릭 전환. 디자인·인터랙션 공유, 데이터·컬러·범위는 독립.
 
 배포:
 - Claude — https://prodoo.github.io/ClaudeUpdate_Timeline/
-- Codex — https://prodoo.github.io/ClaudeUpdate_Timeline/codex.html
+- ChatGPT — https://prodoo.github.io/ClaudeUpdate_Timeline/codex.html
 
 로컬 실행: `index.html` 또는 `codex.html` 더블클릭 → 의존성·빌드 없음.
 
@@ -27,17 +27,20 @@
 │   ├── res.js                ← Research 27건 (anthropic.com/research + alignment.anthropic.com)
 │   ├── corp.js               ← Corporate 15건 (anthropic.com/news)
 │   ├── stl.js                ← Stealth 9건 (2026-03-31 source map leak 분석 글)
-│   └── codex/                ← Codex 6개 데이터 파일
-│       ├── cli.js            ← Codex CLI 22건 (github.com/openai/codex releases)
-│       ├── app.js            ← Codex App 6건 (openai.com/index/codex-*)
-│       ├── models.js         ← Models 10건 (GPT-5-Codex / 5.1 / 5.2 / 5.3 / Spark + system cards)
+│   └── codex/                ← ChatGPT 9개 데이터 파일 (ADR-008)
+│       ├── cli.js            ← Codex CLI 58건 (github.com/openai/codex releases)
+│       ├── app.js            ← Codex App 7건 (openai.com/index/codex-*, IDE ext, Chrome ext)
+│       ├── models.js         ← Codex Models 9건 (GPT-X-Codex 변종 + codex-mini + Max + Spark)
+│       ├── gpt-models.js     ← GPT Models 15건 (GPT-5/5.1/5.2/5.5 본체 + o-series + Realtime 2/Translate)
 │       ├── platform.js       ← Platform 8건 (developers.openai.com/codex/changelog)
+│       ├── research.js       ← Research 8건 (시스템 카드 + SWE-Bench / Terminal-Bench paper)
 │       ├── blog.js           ← Dev Blog 7건 (developers.openai.com/blog Codex 토픽)
-│       └── corp.js           ← Corporate 6건 (GA · pricing · DevDay · Cerebras)
+│       ├── corp.js           ← Corporate 9건 (GA · pricing · DevDay · SDK · Slack · Enterprise · Cerebras)
+│       └── community.js      ← Community 10건 (외부 보도 · HN 토론 · 독립 분석)
 ├── docs/
 │   ├── prd.md                ← PRD (양 페이지 모두 다룸)
-│   ├── decisions.md          ← ADR-001~007 (multi-page는 ADR-007)
-│   └── codex-sources.md      ← Codex 검증 출처 표
+│   ├── decisions.md          ← ADR-001~008 (multi-page는 ADR-007, ChatGPT 리브랜드는 ADR-008)
+│   └── chatgpt-sources.md    ← ChatGPT 검증 출처 표 (9 카테고리)
 ├── README.md                 ← 이 파일
 ├── .gitignore                ← .claude/ 등 로컬 설정 제외
 └── .nojekyll                 ← GitHub Pages가 underscore 폴더 무시 안 하게
@@ -75,19 +78,22 @@
 | Stealth (code)         | `#6B5C8A` |  9 | alex000kim.com · wavespeed.ai/blog · venturebeat.com (2026-03-31 leak 분석) |
 | **합계**               |         | **224** | |
 
-## Codex 2025–26 — 6 카테고리·출처 (codex.html)
+## ChatGPT 2025–26 — 9 카테고리·출처 (codex.html, ADR-008)
 
 | 카테고리 (key)  | 컬러     | 건수 | 1차 출처 |
 |---|---|---|---|
-| Codex CLI       | `#10A37F` | 22 | https://github.com/openai/codex/releases (tag anchor) |
-| Codex App       | `#7C5BC8` |  6 | https://openai.com/index/ (introducing-codex, codex-app, codex-for-almost-everything 등) |
-| Models          | `#3A86FF` | 10 | https://openai.com/index/introducing-gpt-5-X-codex/ + system card PDF |
+| Codex CLI       | `#10A37F` | 58 | https://github.com/openai/codex/releases (tag anchor) |
+| Codex App       | `#7C5BC8` |  7 | https://openai.com/index/ (introducing-codex, codex-app, codex-for-almost-everything, IDE ext, Chrome ext) |
+| Codex Models    | `#6366F1` |  9 | https://openai.com/index/ (introducing-gpt-X-codex, codex-mini, Codex Max, Spark) |
+| GPT Models      | `#06B6D4` | 15 | https://openai.com/index/ (gpt-5, gpt-5-1, gpt-realtime, gpt-realtime-2 등) + o-series |
 | Platform        | `#6B7280` |  8 | https://developers.openai.com/codex/changelog (⚠️ month anchor only) |
+| Research        | `#14B8A6` |  8 | cdn.openai.com/pdf (system cards), openai.com/index (system card pages), SWE-Bench, Terminal-Bench |
 | Dev Blog        | `#F39C12` |  7 | https://developers.openai.com/blog/topic/codex |
-| Corporate       | `#E26D5C` |  6 | openai.com/index, developers.openai.com/codex/pricing, github.blog 등 |
-| **합계**        |          | **59** | |
+| Corporate       | `#E26D5C` |  9 | openai.com/index, developers.openai.com/codex/{pricing,integrations}, github.blog, openai.com/devday |
+| Community       | `#9CA3AF` | 10 | techcrunch.com, cerebras.ai/blog, tomshardware.com, 9to5mac, news.ycombinator.com |
+| **합계**        |          | **131** | |
 
-세부 출처 표·정밀도 정책은 [docs/codex-sources.md](./docs/codex-sources.md) 참조.
+세부 출처 표·정밀도 정책은 [docs/chatgpt-sources.md](./docs/chatgpt-sources.md) 참조.
 
 ## 검증 정책
 
@@ -119,4 +125,4 @@
 
 ## 마지막 갱신
 
-2026-05-17 · Claude 224건 + Codex 59건 = **총 283건** 검증 완료 · multi-page 분리
+2026-05-17 · Claude 224건 + ChatGPT 131건 = **총 355건** 검증 완료 · ADR-008 ChatGPT 리브랜드 + 9 lane

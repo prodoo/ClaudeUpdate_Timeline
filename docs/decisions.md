@@ -202,6 +202,54 @@ GitHub Public 저장소 (`prodoo/ClaudeUpdate_Timeline`) + GitHub Pages 호스�
 
 ---
 
+## ADR-008 · Codex → ChatGPT 페이지 리브랜드 + 9 lane + 밀도 보강
+
+| 항목 | 값 |
+|---|---|
+| 날짜 | 2026-05-17 |
+| 상태 | Accepted |
+
+**Context**
+v1(`Codex 2025-26` / 6 lane / 59건) 출시 후 사용자 피드백:
+- Claude 페이지(Anthropic 전체 8 lane / 224건) 대비 비대칭 — Claude는 Anthropic 우산, Codex는 Codex 제품만
+- GPT-Realtime 2 / GPT-Realtime-Translate 등 OpenAI 광역 발표가 누락됨
+- 데이터 밀도가 1/4 수준 (59 vs 224)
+
+**Decision**
+- 페이지명 `Codex 2025-26` → **`ChatGPT 2025-26`** (OpenAI 브랜드 우산 중 가장 인지도 높은 단일 이름)
+- lane 6 → **9** (`GPT Models` + `Research` + `Community` 신설, `Models` → `Codex Models`로 명칭화)
+- 데이터 보강 패키지 A+C+D 적용:
+  - **A**: CLI에 모든 검증 가능한 stable rust-vX.Y.Z 추가 (22 → 58)
+  - **C**: openai.com/index 추가 발표 (App·Corp 보강)
+  - **D**: `Community` lane 신설 (외부 보도·커뮤니티 분석)
+- 데이터 폴더 `data/codex/` 그대로 유지 (rename은 git 노이즈만 만들고 가치 0)
+- 다크모드 localStorage 키 `codex2026-dark` 유지 (페이지 식별자 손상 방지)
+- 결과: **131건** (59 → 131, +122%). Claude 224에 더 근접하는 밀도.
+
+**대안**
+- A. Models lane 확장만 → lane 의미 흐려짐, 기각
+- B. GPT lane만 신설, 페이지명 유지 → 브랜드 우산 비대칭 잔존, 기각
+- 페이지명 `OpenAI 2025-26` → 회사명이라 무미, `ChatGPT`가 사용자에게 더 친숙, 기각
+- B' 패키지(changelog 월별 확장) → month anchor 정밀도 한계로 가치 대비 비용 낮음, 미선택
+
+**Consequences**
+- ✅ Claude ↔ ChatGPT 브랜드 우산 진짜 대칭
+- ✅ 131건으로 Claude 224건에 더 근접하는 밀도
+- ✅ GPT-Realtime/o-series/Community 분석 등 코딩 인접 OpenAI 활동 흡수
+- ✅ Codex 메인 thread 비중 유지 (CLI 58 + App 7 + Codex Models 9 = 74건, 56%)
+- ⚠️ 파일 경로 (`data/codex/`, `codex.html`)는 그대로 — 사용자 가치 없는 rename 회피
+- ⚠️ ChatGPT consumer 앱 기능(메모리/custom GPTs) / Sora·DALL-E 멀티모달은 의도적 제외 (사용자 명시 — 코딩 thread 유지)
+- ⚠️ lane 9개로 SVG 세로 +190px, monthly view 14개월 그대로
+- ⚠️ Platform lane만 `developers.openai.com/codex/changelog` month anchor 정밀도 예외 (ADR-007 그대로 적용)
+
+**Community lane 검증 정책**
+ADR-004(추정 거부) + ADR-005(URL 정확도)는 그대로 적용. 추가로:
+- `(커뮤니티 분석)` 라벨 허용 (Claude의 Stealth lane과 동일)
+- `(추정)`/`(추측)` 라벨 금지
+- 출처 URL은 외부 보도(techcrunch, cerebras.ai, github.blog 등) 또는 HackerNews item id까지 명시
+
+---
+
 ## 결정 영향 매트릭스
 
 | ADR | Pages 호환 | 더블클릭 호환 | git 이력 명료 | 데이터 신뢰 |
@@ -213,5 +261,6 @@ GitHub Public 저장소 (`prodoo/ClaudeUpdate_Timeline`) + GitHub Pages 호스�
 | 005 URL 정확도 | – | – | – | ✅✅ |
 | 006 라벨 전략 | ✅ | ✅ | – | – |
 | 007 multi-page | ✅ | ✅ | ✅ | – |
+| 008 ChatGPT 리브랜드 + 9 lane | ✅ | ✅ | ✅ | ✅ |
 
 모든 ADR이 핵심 가치(zero-build · git · 신뢰)와 정합.

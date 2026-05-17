@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Codex 2025–2026 · a timeline</title>
+<title>ChatGPT 2025–2026 · a timeline</title>
 <style>
 :root {
   --bg: #F4F4EE;
@@ -17,12 +17,15 @@
   --accent: #10A37F;
   --accent-soft: #14B894;
   --hover: #ECECE0;
-  --c-cli:      #10A37F;
-  --c-app:      #7C5BC8;
-  --c-models:   #3A86FF;
-  --c-platform: #6B7280;
-  --c-blog:     #F39C12;
-  --c-corp:     #E26D5C;
+  --c-cli:         #10A37F;
+  --c-app:         #7C5BC8;
+  --c-codexmodels: #6366F1;
+  --c-gptmodels:   #06B6D4;
+  --c-platform:    #6B7280;
+  --c-research:    #14B8A6;
+  --c-blog:        #F39C12;
+  --c-corp:        #E26D5C;
+  --c-community:   #9CA3AF;
   --shadow: 0 6px 18px rgba(20,30,40,.10), 0 1px 2px rgba(20,30,40,.08);
 }
 [data-theme="dark"] {
@@ -228,10 +231,10 @@ svg.timeline { display: block; user-select: none; }
     <div>
       <nav class="page-toggle">
         <a href="index.html" class="pg-tab">Claude 2026</a>
-        <a href="codex.html" class="pg-tab active">Codex 2025–26</a>
+        <a href="codex.html" class="pg-tab active">ChatGPT 2025–26</a>
       </nav>
-      <h1 class="serif">Codex <em>2025–26</em><span class="tl">· a timeline</span></h1>
-      <p class="lede">OpenAI Codex CLI, ChatGPT Codex 앱(web · macOS · Windows), GPT-5-Codex 계열 모델, Codex API/Platform, Developer Blog, GA·Pricing·DevDay·파트너십까지 — 2025년 4월 16일(출시) 부터 2026년 5월 17일까지의 연대기. 모든 항목은 공식 페이지(github.com/openai/codex · openai.com/index · developers.openai.com)에서 검증. 가로축은 시간, 세로축은 카테고리 lane.</p>
+      <h1 class="serif">ChatGPT <em>2025–26</em><span class="tl">· a timeline</span></h1>
+      <p class="lede">ChatGPT 우산 아래 OpenAI 코딩 생태계 전체 — Codex(CLI·App·Models), GPT 본체(5.x·Realtime·o-series), Platform·Research·Dev Blog·Community 분석까지. 2025년 4월 Codex 출시부터 2026년 5월 17일까지의 OpenAI 연대기. 모든 항목은 공식 페이지(github.com/openai/codex · openai.com/index · openai.com/research · developers.openai.com)에서 검증. 가로축은 시간, 세로축은 9개 lane.</p>
     </div>
     <div class="hdr-stats">
       <div class="stat alt"><div class="label">전체</div><div class="num" id="stat-total">59</div></div>
@@ -302,18 +305,24 @@ svg.timeline { display: block; user-select: none; }
 <script src="data/codex/cli.js"></script>
 <script src="data/codex/app.js"></script>
 <script src="data/codex/models.js"></script>
+<script src="data/codex/gpt-models.js"></script>
 <script src="data/codex/platform.js"></script>
+<script src="data/codex/research.js"></script>
 <script src="data/codex/blog.js"></script>
 <script src="data/codex/corp.js"></script>
+<script src="data/codex/community.js"></script>
 
 <script>
 const SOURCES = [
-  { key: "Codex CLI",  color: "#10A37F", letter: "Codex CLI" },
-  { key: "Codex App",  color: "#7C5BC8", letter: "Codex App" },
-  { key: "Models",     color: "#3A86FF", letter: "Models" },
-  { key: "Platform",   color: "#6B7280", letter: "Platform" },
-  { key: "Dev Blog",   color: "#F39C12", letter: "Dev Blog" },
-  { key: "Corporate",  color: "#E26D5C", letter: "Corporate" }
+  { key: "Codex CLI",    color: "#10A37F", letter: "Codex CLI" },
+  { key: "Codex App",    color: "#7C5BC8", letter: "Codex App" },
+  { key: "Codex Models", color: "#6366F1", letter: "Codex Models" },
+  { key: "GPT Models",   color: "#06B6D4", letter: "GPT Models" },
+  { key: "Platform",     color: "#6B7280", letter: "Platform" },
+  { key: "Research",     color: "#14B8A6", letter: "Research" },
+  { key: "Dev Blog",     color: "#F39C12", letter: "Dev Blog" },
+  { key: "Corporate",    color: "#E26D5C", letter: "Corporate" },
+  { key: "Community",    color: "#9CA3AF", letter: "Community" }
 ];
 
 /* ===== EVENTS: source-split files merged at runtime from data/codex/*.js ===== */
@@ -590,20 +599,20 @@ function escapeHtml(s) {
 function renderMonthly() {
   const filtered = getFiltered();
   const months = [
-    { key: "2025-04", label: "Apr 2025", sub: "Codex CLI · codex-mini-latest 출시" },
-    { key: "2025-05", label: "May 2025", sub: "Cloud agent 리서치 프리뷰" },
-    { key: "2025-06", label: "Jun 2025", sub: "초기 마이너 릴리스" },
-    { key: "2025-07", label: "Jul 2025", sub: "reasoning summaries · trusted commands" },
-    { key: "2025-08", label: "Aug 2025", sub: "Rust CLI npm 기본화" },
+    { key: "2025-04", label: "Apr 2025", sub: "Codex CLI 출시 · o3·o4-mini" },
+    { key: "2025-05", label: "May 2025", sub: "Codex Cloud preview" },
+    { key: "2025-06", label: "Jun 2025", sub: "o3-pro 출시" },
+    { key: "2025-07", label: "Jul 2025", sub: "TUI streaming · --oss flag" },
+    { key: "2025-08", label: "Aug 2025", sub: "GPT-5 · gpt-realtime GA" },
     { key: "2025-09", label: "Sep 2025", sub: "GPT-5-Codex 출시" },
-    { key: "2025-10", label: "Oct 2025", sub: "Codex GA · DevDay 2025" },
-    { key: "2025-11", label: "Nov 2025", sub: "GPT-5.1-Codex 출시" },
-    { key: "2025-12", label: "Dec 2025", sub: "Codex Max · GPT-5.2-Codex" },
+    { key: "2025-10", label: "Oct 2025", sub: "Codex GA · DevDay 2025 · SDK" },
+    { key: "2025-11", label: "Nov 2025", sub: "GPT-5.1 · 5.1-Codex-Max" },
+    { key: "2025-12", label: "Dec 2025", sub: "GPT-5.2 · 5.2-Codex · Skills" },
     { key: "2026-01", label: "Jan 2026", sub: "Cerebras 파트너십" },
-    { key: "2026-02", label: "Feb 2026", sub: "macOS 앱, GPT-5.3-Codex, Spark" },
+    { key: "2026-02", label: "Feb 2026", sub: "macOS 앱 · 5.3-Codex · Spark" },
     { key: "2026-03", label: "Mar 2026", sub: "Windows 앱 출시" },
-    { key: "2026-04", label: "Apr 2026", sub: "Codex for (almost) everything" },
-    { key: "2026-05", label: "May 2026", sub: "Chrome ext, Vim mode, remote work" },
+    { key: "2026-04", label: "Apr 2026", sub: "FAE · Enterprise scaling · GPT-5.5" },
+    { key: "2026-05", label: "May 2026", sub: "Chrome · Vim · Realtime 2/Translate" },
   ];
   let html = `<div class="monthly-grid">`;
   months.forEach(m => {
@@ -670,24 +679,24 @@ function renderTop() {
   });
 }
 
-/* ===== THEME (cluster) — Codex topic-specific ===== */
+/* ===== THEME (cluster) — ChatGPT topic-specific ===== */
 const THEME_DEFS = [
-  { key: "models",     label: "Codex Models",            match: /gpt-5|codex-mini|codex-max|spark|model/i,
-    desc: "GPT-5-Codex / 5.1 / 5.2 / 5.3 / Spark / codex-mini" },
-  { key: "agentic",    label: "Agentic & Long-horizon",  match: /agent|computer use|long.?horizon|wake|background|persisted|review|orchestr/i,
+  { key: "codex-models",  label: "Codex 변종 모델",       match: /codex-mini|codex-max|gpt-5.*codex|spark/i,
+    desc: "GPT-X-Codex 계열 · codex-mini · Codex Max · Spark" },
+  { key: "gpt-models",    label: "GPT 본체 모델",          match: /^gpt-5(?!.*codex)|gpt-realtime|o3-?pro|o4-mini|o3 |o4 |voice|translate|whisper/i,
+    desc: "GPT-5/5.1/5.2/5.3/5.5 · o3·o4-mini · Realtime/Voice" },
+  { key: "agentic",       label: "Agentic & Long-horizon",  match: /agentic|computer use|long.?horizon|wake|background|persisted|review|orchestr/i,
     desc: "computer use · 장시간 작업 · PR 리뷰 · wake-up" },
-  { key: "ide",        label: "IDE / Editor Integrations", match: /mcp|figma|jetbrains|vscode|chrome|browser|vim|extension/i,
-    desc: "MCP · Figma · JetBrains · Chrome extension · Vim mode" },
-  { key: "platform",   label: "Platform & Sandbox",      match: /windows|macos|linux|sandbox|powershell|sso|enterprise|access token|governance/i,
-    desc: "Windows / macOS / 샌드박스 / 거버넌스 / 액세스 토큰" },
-  { key: "workflows",  label: "Workflows & UX",          match: /\/[a-z]+|tui|resume|plan|task|workflow|tooltip|hook|sharing/i,
-    desc: "/resume · /review · TUI · hooks · 플러그인 공유" },
-  { key: "pricing",    label: "Pricing & Plans",         match: /pricing|token|rate|plan|plus|pro|business|enterprise|tier/i,
-    desc: "Plus/Pro/Business/Enterprise · token-based pricing" },
-  { key: "blog",       label: "Engineering Blog",        match: /^/i,
-    desc: "developers.openai.com/blog 케이스 스터디·튜토리얼" },
-  { key: "research",   label: "Research & System Cards", match: /system card|research|paper|spark/i,
-    desc: "GPT-5.x-Codex 시스템 카드 · Cerebras 파트너십" },
+  { key: "ide",           label: "IDE / Editor 통합",       match: /mcp|figma|jetbrains|vscode|vs code|chrome|browser|vim|extension|skill/i,
+    desc: "MCP · VS Code · JetBrains · Chrome · Vim mode · Skills" },
+  { key: "platform",      label: "Platform & Sandbox",      match: /windows|macos|linux|sandbox|powershell|sso|enterprise|access token|governance|execpolicy/i,
+    desc: "Windows / macOS / 샌드박스 / 거버넌스 / ExecPolicy" },
+  { key: "workflows",     label: "Workflows & TUI",         match: /\/[a-z]+|tui|resume|plan|task|workflow|tooltip|hook|sharing|streaming|paste/i,
+    desc: "/resume · /review · TUI · hooks · streaming" },
+  { key: "pricing",       label: "Pricing & Enterprise",    match: /pricing|token|rate|plan |plus|pro |business|enterprise|tier|scaling|sdk/i,
+    desc: "Plus/Pro/Business/Enterprise · token-based pricing · SDK" },
+  { key: "research-papers", label: "Research & System Cards", match: /system card|research|paper|swe.?bench|terminal.?bench|bench/i,
+    desc: "GPT-X-Codex 시스템 카드 · SWE-Bench · Terminal-Bench" },
 ];
 
 function renderTheme() {
@@ -695,12 +704,7 @@ function renderTheme() {
   let html = `<div class="theme-grid">`;
   const used = new Set();
   THEME_DEFS.forEach(t => {
-    let evs;
-    if (t.key === "blog") {
-      evs = filtered.filter(e => e.source === "Dev Blog" && !used.has(e));
-    } else {
-      evs = filtered.filter(e => !used.has(e) && t.match.test((e.title + " " + (e.summary||"") + " " + (e.version||"")).toLowerCase()));
-    }
+    const evs = filtered.filter(e => !used.has(e) && t.match.test((e.title + " " + (e.summary||"") + " " + (e.version||"")).toLowerCase()));
     if (evs.length === 0) return;
     evs.sort((a, b) => b.importance - a.importance || a._d - b._d);
     html += `<div class="tcard"><h4>${t.label} <span class="badge">${evs.length}</span></h4><div class="tc-desc">${t.desc}</div><ul>`;

@@ -11,7 +11,7 @@
 
 같은 저장소 안에 **두 개의 평행 타임라인**:
 - `index.html` — **Claude 2026** (2026-01-01 ~ 2026-05-14, 134일, Anthropic 공식 업데이트 **224건** × 8 lane)
-- `codex.html` — **Codex 2025–26** (2025-04-16 ~ 2026-05-17, 397일, OpenAI Codex 공식 업데이트 **59건** × 6 lane)
+- `codex.html` — **ChatGPT 2025–26** (2025-04-16 ~ 2026-05-17, 397일, OpenAI 코딩 생태계 공식 업데이트 **131건** × 9 lane). ADR-008 리브랜드 — Codex가 메인 thread이면서 GPT 본체·Realtime·Research·Community까지 포함.
 
 두 페이지는 헤더 토글로 한 클릭 전환. 디자인·인터랙션·검증 정책 공유, 데이터·컬러·시간 범위·다크 모드 상태는 독립.
 
@@ -129,15 +129,18 @@ Anthropic의 업데이트가 **8개 서로 다른 출처**에 흩어져 있다:
 │      ├─ ... (8개)
 │      └─ <script>render</script>
 │
-└── codex.html      ← Codex 2025–26
+└── codex.html      ← ChatGPT 2025–26 (9 lane, ADR-008 리브랜드)
        │
-       ├─ <nav class="page-toggle"> [Claude 2026] [Codex 2025–26 *active*]
-       ├─ <script src="data/codex/cli.js">       ← EVENTS_BY_SOURCE["Codex CLI"]
-       ├─ <script src="data/codex/app.js">       ← ["Codex App"]
-       ├─ <script src="data/codex/models.js">    ← ["Models"]
-       ├─ <script src="data/codex/platform.js">  ← ["Platform"]
-       ├─ <script src="data/codex/blog.js">      ← ["Dev Blog"]
-       ├─ <script src="data/codex/corp.js">      ← ["Corporate"]
+       ├─ <nav class="page-toggle"> [Claude 2026] [ChatGPT 2025–26 *active*]
+       ├─ <script src="data/codex/cli.js">         ← EVENTS_BY_SOURCE["Codex CLI"]
+       ├─ <script src="data/codex/app.js">         ← ["Codex App"]
+       ├─ <script src="data/codex/models.js">      ← ["Codex Models"]
+       ├─ <script src="data/codex/gpt-models.js">  ← ["GPT Models"]
+       ├─ <script src="data/codex/platform.js">    ← ["Platform"]
+       ├─ <script src="data/codex/research.js">    ← ["Research"]
+       ├─ <script src="data/codex/blog.js">        ← ["Dev Blog"]
+       ├─ <script src="data/codex/corp.js">        ← ["Corporate"]
+       ├─ <script src="data/codex/community.js">   ← ["Community"]
        └─ <script>render</script>
 ```
 
@@ -151,6 +154,7 @@ Anthropic의 업데이트가 **8개 서로 다른 출처**에 흩어져 있다:
 - 새 카테고리 추가 = 새 `data/X.js` (또는 `data/codex/X.js`) + SOURCES에 키 + `<script src>` 1개
 
 **Multi-page 분리 결정 이력**: [ADR-007](./decisions.md#adr-007--multi-page-구조-claude--codex)
+**ChatGPT 리브랜드 + 9 lane 결정 이력**: [ADR-008](./decisions.md#adr-008--codex--chatgpt-페이지-리브랜드--9-lane--밀도-보강)
 
 ## 9. Verification Policy
 
