@@ -1,0 +1,819 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude 2026 · a timeline</title>
+<style>
+:root {
+  --bg: #F5EFE3;
+  --bg-soft: #EFE7D5;
+  --bg-panel: #FAF5EA;
+  --ink: #1F1B17;
+  --ink-soft: #5C544A;
+  --ink-dim: #8A7F70;
+  --line: #DDD0B7;
+  --line-soft: #E7DEC9;
+  --accent: #B14A35;
+  --accent-soft: #C6604E;
+  --hover: #EFE5CD;
+  --c-cc: #C6604E;
+  --c-apps: #6B95B8;
+  --c-api: #B89968;
+  --c-eng: #A8A06D;
+  --c-red: #9C3344;
+  --c-res: #7DA67E;
+  --c-corp: #7A6B5D;
+  --c-stl: #6B5C8A;
+  --shadow: 0 6px 18px rgba(60,40,20,.10), 0 1px 2px rgba(60,40,20,.08);
+}
+[data-theme="dark"] {
+  --bg: #1F1B17;
+  --bg-soft: #28231D;
+  --bg-panel: #2A2520;
+  --ink: #F2EAD9;
+  --ink-soft: #C8BCA5;
+  --ink-dim: #8A7F70;
+  --line: #3A332B;
+  --line-soft: #2F2922;
+  --accent: #E37B66;
+  --accent-soft: #C6604E;
+  --hover: #322B23;
+  --shadow: 0 6px 18px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.3);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI", "Noto Sans KR", sans-serif;
+  font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+}
+.serif { font-family: "Iowan Old Style", "Apple Garamond", Georgia, "Times New Roman", serif; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+input { font: inherit; color: inherit; }
+
+/* ============ HEADER ============ */
+.hdr { padding: clamp(24px, 3vw, 44px) clamp(24px, 4vw, 64px) 18px; border-bottom: 1px solid var(--line); }
+.hdr-row { display: flex; justify-content: space-between; align-items: flex-start; gap: clamp(20px, 2.5vw, 40px); }
+.hdr h1 { margin: 0 0 14px; font-weight: 400; font-size: clamp(36px, 4.5vw, 68px); letter-spacing: -.02em; color: var(--ink); line-height: 1.05; }
+.hdr h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.hdr h1 .tl { font-size: clamp(14px, 1.4vw, 20px); color: var(--ink-dim); margin-left: 8px; letter-spacing: 0; font-style: italic; }
+.hdr p.lede { max-width: clamp(520px, 60vw, 880px); margin: 0; color: var(--ink-soft); font-size: clamp(13px, 1.05vw, 16px); line-height: 1.7; }
+.hdr-stats { display: flex; gap: clamp(18px, 2vw, 32px); align-items: flex-start; padding-top: 6px; }
+.stat { text-align: center; min-width: 56px; }
+.stat .label { font-size: 11px; color: var(--ink-dim); letter-spacing: .04em; }
+.stat .num { font-size: clamp(22px, 2.2vw, 32px); color: var(--accent); font-weight: 400; line-height: 1.1; margin-top: 2px; }
+.stat.alt .num { color: var(--ink); }
+.dark-btn { border: 1px solid var(--line); border-radius: 22px; padding: 7px 14px; font-size: 12px; color: var(--ink-soft);
+  display: inline-flex; align-items: center; gap: 6px; align-self: center; }
+.dark-btn:hover { background: var(--hover); }
+
+/* ============ VIEW TABS ============ */
+.tabs { padding: 0 48px; border-bottom: 1px solid var(--line); display: flex; gap: 28px; }
+.tab { padding: 14px 0 12px; color: var(--ink-soft); font-size: 13.5px; position: relative;
+  display: inline-flex; align-items: center; gap: 8px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab .ico { width: 14px; height: 14px; display: inline-block; opacity: .75; }
+.tab .sub { color: var(--ink-dim); font-size: 11.5px; margin-left: 4px; }
+.tab:hover { color: var(--ink); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab.active .sub { color: var(--accent); }
+
+/* ============ LAYOUT ============ */
+.layout { display: grid; grid-template-columns: 240px 1fr; gap: 0; min-height: 720px; }
+.sidebar { padding: 22px 22px 22px 48px; border-right: 1px solid var(--line); background: var(--bg); }
+.sb-h { font-size: 11px; letter-spacing: .14em; color: var(--accent); display: flex; align-items: center; gap: 8px; margin: 18px 0 10px; }
+.sb-h:first-child { margin-top: 0; }
+.sb-h .ico { color: var(--accent); }
+.search { width: 100%; padding: 9px 10px 9px 30px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg-panel);
+  color: var(--ink); position: relative; font-size: 13px; outline: none; }
+.search:focus { border-color: var(--accent-soft); }
+.sb-search { position: relative; }
+.sb-search::before { content: "🔍"; position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 11px; opacity: .55; }
+.zoom-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-dim); margin-bottom: 6px; }
+.zoom-row .lo { color: var(--ink-soft); }
+.zoom-row .hi { color: var(--accent); }
+.slider { width: 100%; -webkit-appearance: none; height: 2px; background: var(--line); border-radius: 2px; outline: none; }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 0 3px var(--bg); }
+.slider::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 3px solid var(--bg); }
+.sb-note { font-size: 11px; color: var(--ink-dim); margin-top: 6px; }
+.zoom-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px; }
+.zoom-btn { border: 1px solid var(--line); padding: 7px 0; border-radius: 5px; font-size: 12px; color: var(--ink-soft); background: var(--bg-panel); }
+.zoom-btn:hover { background: var(--hover); }
+.zoom-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+.zoom-meta { font-size: 11px; color: var(--ink-dim); margin: 8px 0 0; }
+
+.sources { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.src { display: flex; align-items: center; gap: 9px; padding: 5px 4px; cursor: pointer; border-radius: 4px; }
+.src:hover { background: var(--hover); }
+.src .chk { width: 13px; height: 13px; border: 1px solid var(--ink-soft); border-radius: 3px; display: inline-block; flex-shrink: 0; position: relative; background: var(--bg-panel); }
+.src.on .chk { background: var(--accent); border-color: var(--accent); }
+.src.on .chk::after { content: "✓"; color: white; font-size: 11px; line-height: 12px; position: absolute; top: -1px; left: 1px; }
+.src .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.src .name { font-size: 13px; color: var(--ink); flex: 1; }
+.src.off .name { color: var(--ink-dim); }
+.src .cnt { font-size: 11px; color: var(--ink-dim); }
+
+/* ============ MAIN ============ */
+.main { padding: 18px 32px 40px 28px; background: var(--bg); position: relative; min-width: 0; overflow: hidden; }
+.jumprow { display: flex; align-items: center; gap: 10px; padding: 0 0 14px; flex-wrap: wrap; }
+.jumprow .lbl { font-size: 11px; color: var(--ink-dim); letter-spacing: .14em; margin-right: 6px; }
+.jumpbtn { border: 1px solid var(--line); padding: 5px 12px; border-radius: 4px; font-size: 12px; color: var(--ink-soft); background: var(--bg-panel); }
+.jumpbtn:hover { background: var(--hover); }
+.jumpbtn.today { background: var(--accent); color: white; border-color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
+.jumpbtn.today::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: white; }
+.jumprow .right { margin-left: auto; font-size: 11px; color: var(--ink-dim); }
+.jumprow .right b { color: var(--ink); font-weight: 400; font-size: 13px; }
+
+.canvas-wrap { overflow-x: auto; overflow-y: hidden; position: relative; border-top: 1px solid var(--line-soft); }
+.canvas-wrap::-webkit-scrollbar { height: 10px; }
+.canvas-wrap::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+.canvas-wrap::-webkit-scrollbar-track { background: transparent; }
+
+svg.timeline { display: block; user-select: none; }
+.lane-bg { fill: var(--bg); }
+.lane-line { stroke: var(--line-soft); stroke-width: 1; }
+.month-line { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.month-label { fill: var(--ink-dim); font-size: 11px; letter-spacing: .12em; }
+.tick-line { stroke: var(--line); stroke-width: 1; }
+.lane-name { fill: var(--ink); font-size: 13.5px; font-weight: 500; }
+.lane-count { fill: var(--ink-dim); font-size: 11px; }
+.lane-dot { stroke: none; }
+.bubble { cursor: pointer; transition: stroke-width .15s; }
+.bubble.hidden { opacity: .08; pointer-events: none; }
+.bubble.fade { opacity: .15; }
+.bubble.major { stroke: var(--ink); stroke-width: 1.2; }
+.bubble.preview { stroke-dasharray: 2 2; stroke-width: 1.2; }
+.bubble:hover { stroke-width: 2; stroke: var(--ink); }
+.bubble-label { fill: var(--ink); font-size: 10.5px; pointer-events: none; }
+.bubble-label.hidden { display: none; }
+.today-mark { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 1 3; }
+.today-mark-label { fill: var(--accent); font-size: 10px; letter-spacing: .12em; }
+
+/* ============ TOOLTIP ============ */
+.tooltip { position: fixed; z-index: 100; background: var(--bg-panel); border: 1px solid var(--line); border-radius: 7px;
+  padding: 10px 12px; box-shadow: var(--shadow); min-width: 240px; max-width: 360px; pointer-events: none;
+  opacity: 0; transform: translateY(2px); transition: opacity .12s; cursor: pointer; }
+.tooltip.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.tooltip:hover { border-color: var(--accent-soft); }
+.tooltip .t-cta { color: var(--accent); }
+.tooltip .t-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 4px; line-height: 1.35; }
+.tooltip .t-meta { font-size: 11.5px; color: var(--ink-soft); }
+.tooltip .t-meta .dot { color: var(--ink-dim); margin: 0 5px; }
+.tooltip .t-stage { font-size: 11px; color: var(--ink-dim); margin-top: 2px; }
+.tooltip .t-stage .imp { color: var(--accent); }
+.tooltip .t-summary { font-size: 12px; color: var(--ink-soft); margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line-soft); line-height: 1.5; }
+.tooltip .t-cta { font-size: 10.5px; color: var(--ink-dim); margin-top: 6px; font-style: italic; }
+
+/* ============ MONTHLY VIEW ============ */
+.monthly-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding: 8px 0 30px; }
+.mcard { background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+.mcard h3 { margin: 0 0 4px; font-weight: 500; font-size: 16px; color: var(--ink); }
+.mcard .mc-sub { font-size: 11px; color: var(--ink-dim); margin-bottom: 14px; }
+.mcard .mevt { padding: 7px 0; border-top: 1px solid var(--line-soft); display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+.mcard .mevt:first-of-type { border-top: none; }
+.mcard .mevt:hover { background: var(--hover); margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 4px; }
+.mcard .mevt .md-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.mcard .mevt .md-body { flex: 1; min-width: 0; }
+.mcard .mevt .md-title { font-size: 12.5px; color: var(--ink); line-height: 1.35; }
+.mcard .mevt .md-meta { font-size: 11px; color: var(--ink-dim); margin-top: 2px; }
+
+/* ============ TOP VIEW ============ */
+.top-list { padding: 8px 0 30px; max-width: 880px; }
+.top-row { display: grid; grid-template-columns: 64px 90px 1fr 110px 80px; gap: 14px; padding: 11px 8px;
+  border-bottom: 1px solid var(--line-soft); align-items: center; cursor: pointer; }
+.top-row:hover { background: var(--hover); }
+.top-row .imp-bar { display: flex; gap: 2px; }
+.top-row .imp-bar i { width: 6px; height: 12px; background: var(--line); border-radius: 1px; }
+.top-row .imp-bar i.on { background: var(--accent); }
+.top-row .t-date { font-size: 12px; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
+.top-row .t-title { font-size: 13px; color: var(--ink); }
+.top-row .t-source { font-size: 11.5px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.top-row .t-source .dot { width: 7px; height: 7px; border-radius: 50%; }
+.top-row .t-stage { font-size: 11px; color: var(--ink-dim); }
+
+/* ============ THEME VIEW ============ */
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding: 8px 0 30px; }
+.tcard { background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+.tcard h4 { margin: 0 0 4px; font-size: 13px; color: var(--ink); display: flex; justify-content: space-between; align-items: center; }
+.tcard h4 .badge { font-size: 11px; color: var(--accent); font-weight: 400; }
+.tcard .tc-desc { font-size: 11.5px; color: var(--ink-dim); margin-bottom: 10px; }
+.tcard ul { list-style: none; margin: 0; padding: 0; }
+.tcard li { padding: 5px 0; font-size: 12px; color: var(--ink-soft); border-top: 1px solid var(--line-soft); display: flex; gap: 8px; cursor: pointer; }
+.tcard li:first-child { border-top: none; }
+.tcard li:hover { color: var(--ink); }
+.tcard li .dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.tcard li .ldate { color: var(--ink-dim); font-size: 10.5px; flex-shrink: 0; min-width: 36px; margin-top: 1px; }
+
+/* ============ FOOTER ============ */
+.foot { padding: 18px 48px 30px; border-top: 1px solid var(--line); color: var(--ink-dim); font-size: 11px; display: flex; justify-content: space-between; }
+.foot a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px dotted var(--ink-dim); }
+.foot a:hover { color: var(--accent); }
+
+@media (max-width: 1080px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { border-right: none; border-bottom: 1px solid var(--line); padding: 20px 24px; }
+  .hdr { padding: 24px 24px 14px; }
+  .hdr h1 { font-size: 40px; }
+  .tabs { padding: 0 24px; overflow-x: auto; }
+  .main { padding: 14px 24px 30px; }
+  .foot { padding: 18px 24px 24px; }
+  .monthly-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-row">
+    <div>
+      <h1 class="serif">Claude <em>2026</em><span class="tl">· a timeline</span></h1>
+      <p class="lede">Claude Code, Claude Apps, API Platform, Engineering, Research, Frontier Red Team, 그리고 코드 선행 배포까지 — 2026년 1월 1일부터 5월 14일까지의 기능 출시 연대기. 모든 항목은 공식 페이지(GitHub CHANGELOG · platform.claude.com · support.claude.com · anthropic.com/news · anthropic.com/research · alignment.anthropic.com · red.anthropic.com)에서 검증. 가로축은 시간, 세로축은 제품 라인.</p>
+    </div>
+    <div class="hdr-stats">
+      <div class="stat alt"><div class="label">전체</div><div class="num" id="stat-total">200</div></div>
+      <div class="stat"><div class="label">표시 중</div><div class="num" id="stat-shown">200</div></div>
+      <div class="stat alt"><div class="label">기간</div><div class="num"><span id="stat-days">116</span><span style="font-size:14px">일</span></div></div>
+      <button class="dark-btn" id="dark-btn"><span>☾</span><span>DARK</span></button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-view="timeline"><span class="ico">⤳</span> 타임라인 <span class="sub">가로 시간축</span></button>
+  <button class="tab" data-view="monthly"><span class="ico">▦</span> 월별 <span class="sub">4개 서머리</span></button>
+  <button class="tab" data-view="top"><span class="ico">↗</span> Top <span class="sub">중요도 순</span></button>
+  <button class="tab" data-view="theme"><span class="ico">⌗</span> 테마 <span class="sub">클러스터</span></button>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sb-h"><span class="ico">▽</span> FILTERS</div>
+
+    <div class="sb-h" style="color:var(--ink-soft)">SEARCH</div>
+    <div class="sb-search">
+      <input class="search" id="search" type="text" placeholder="ultraplan, routines...">
+    </div>
+
+    <div class="sb-h" style="color:var(--ink-soft); margin-top: 22px">의미론적 줌 <span style="margin-left:auto;color:var(--accent)" id="sem-label">전체</span></div>
+    <div class="zoom-row"><span class="lo">← coarse</span><span class="hi">fine →</span></div>
+    <input class="slider" id="sem-slider" type="range" min="1" max="5" step="1" value="1">
+    <div class="sb-note">중요도 ≥ <b id="sem-min">1</b> 이벤트 <b id="sem-count">213</b>개 표시</div>
+
+    <div class="sb-h" style="color:var(--ink-soft); margin-top: 22px">시간축 줌 <span style="margin-left:auto;color:var(--accent)" id="zoom-label">1×</span></div>
+    <div class="zoom-btns">
+      <button class="zoom-btn active" data-zoom="1">1×</button>
+      <button class="zoom-btn" data-zoom="2">2×</button>
+      <button class="zoom-btn" data-zoom="4">4×</button>
+      <button class="zoom-btn" data-zoom="8">8×</button>
+    </div>
+    <div class="zoom-meta">전체 기간 표시</div>
+
+    <div class="sb-h" style="color:var(--ink-soft); margin-top: 22px">SOURCES</div>
+    <div class="sources" id="sources"></div>
+  </aside>
+
+  <section class="main" id="main">
+    <div class="jumprow" id="jumprow">
+      <span class="lbl">JUMP</span>
+      <button class="jumpbtn" data-jump="2026-01-01">Jan</button>
+      <button class="jumpbtn" data-jump="2026-02-01">Feb</button>
+      <button class="jumpbtn" data-jump="2026-03-01">Mar</button>
+      <button class="jumpbtn" data-jump="2026-04-01">Apr</button>
+      <button class="jumpbtn" data-jump="2026-05-01">May</button>
+      <button class="jumpbtn today" data-jump="2026-05-14">TODAY</button>
+      <span class="right">zoom: <b id="zoom-num">1×</b></span>
+    </div>
+    <div id="view-host"></div>
+  </section>
+</div>
+
+<div class="tooltip" id="tooltip" role="tooltip"></div>
+
+<footer class="foot">
+  <span>Claude 2026 timeline · 데이터: GitHub CHANGELOG · platform.claude.com · support.claude.com · anthropic.com/news · anthropic.com/research · alignment.anthropic.com · red.anthropic.com · 유출소스 분석 글</span>
+  <span>2026-05-14 기준 · 모든 이벤트 공식 출처 검증</span>
+</footer>
+
+<!-- ===== Data files (split by source for verification·diff·rollback) ===== -->
+<script src="data/cc.js"></script>
+<script src="data/apps.js"></script>
+<script src="data/api.js"></script>
+<script src="data/eng.js"></script>
+<script src="data/red.js"></script>
+<script src="data/res.js"></script>
+<script src="data/corp.js"></script>
+<script src="data/stl.js"></script>
+
+<script>
+const SOURCES = [
+  { key: "Claude Code",   color: "#C6604E", letter: "Claude Code" },
+  { key: "Claude Apps",   color: "#6B95B8", letter: "Claude Apps" },
+  { key: "API Platform",  color: "#B89968", letter: "API Platform" },
+  { key: "Engineering",   color: "#A8A06D", letter: "Engineering" },
+  { key: "Red Team",      color: "#9C3344", letter: "Red Team" },
+  { key: "Research",      color: "#7DA67E", letter: "Research" },
+  { key: "Corporate",     color: "#7A6B5D", letter: "Corporate" },
+  { key: "Stealth (code)",color: "#6B5C8A", letter: "Stealth (code)" }
+];
+
+/* ===== EVENTS: source-split files merged at runtime from data/*.js ===== */
+const EVENTS = [];
+SOURCES.forEach(s => {
+  ((window.EVENTS_BY_SOURCE || {})[s.key] || []).forEach(e => {
+    EVENTS.push(Object.assign({source: s.key}, e));
+  });
+});
+
+/* ============================================================
+   STATE & UTILS
+============================================================ */
+const SRC_MAP = Object.fromEntries(SOURCES.map(s => [s.key, s]));
+const SRC_ORDER = SOURCES.map(s => s.key);
+
+function parseDate(s) { return new Date(s + "T00:00:00Z"); }
+EVENTS.forEach(e => { e._d = parseDate(e.date); });
+EVENTS.sort((a, b) => a._d - b._d);
+
+const D_MIN = parseDate("2026-01-01");
+const D_MAX = parseDate("2026-05-14");
+const D_TOTAL = (D_MAX - D_MIN) / 86400000 + 1;
+
+const state = {
+  view: "timeline",
+  sources: new Set(SRC_ORDER),
+  search: "",
+  semMin: 1,
+  zoom: 1,
+};
+
+function dayDelta(a, b) { return (b - a) / 86400000; }
+function fmtMD(s) { const d = parseDate(s); return (d.getUTCMonth()+1) + "/" + String(d.getUTCDate()).padStart(2,"0"); }
+
+function counts() {
+  const out = {};
+  SRC_ORDER.forEach(k => out[k] = 0);
+  EVENTS.forEach(e => out[e.source]++);
+  return out;
+}
+const TOTAL_BY_SRC = counts();
+const TOTAL_ALL = EVENTS.length;
+
+function getFiltered() {
+  const q = state.search.trim().toLowerCase();
+  return EVENTS.filter(e =>
+    state.sources.has(e.source) &&
+    e.importance >= state.semMin &&
+    (q === "" || (e.title + " " + (e.summary||"") + " " + (e.version||"") + " " + e.source).toLowerCase().includes(q))
+  );
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+const $main = document.getElementById("main");
+const $host = document.getElementById("view-host");
+const $tt = document.getElementById("tooltip");
+
+function render() {
+  document.getElementById("stat-total").textContent = TOTAL_ALL;
+  document.getElementById("stat-shown").textContent = getFiltered().length;
+  document.getElementById("stat-days").textContent = Math.round(D_TOTAL);
+  document.getElementById("sem-min").textContent = state.semMin;
+  document.getElementById("sem-count").textContent = getFiltered().length;
+  document.getElementById("sem-label").textContent = state.semMin === 1 ? "전체" : "≥" + state.semMin;
+  document.getElementById("zoom-num").textContent = state.zoom + "×";
+  document.getElementById("zoom-label").textContent = state.zoom + "×";
+  document.querySelectorAll(".zoom-btn").forEach(b => b.classList.toggle("active", +b.dataset.zoom === state.zoom));
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === state.view));
+
+  if (state.view === "timeline") renderTimeline();
+  else if (state.view === "monthly") renderMonthly();
+  else if (state.view === "top") renderTop();
+  else if (state.view === "theme") renderTheme();
+}
+
+/* ===== TIMELINE ===== */
+function renderTimeline() {
+  const filtered = getFiltered();
+  const baseW = Math.max($main.clientWidth - 60, 1000);
+  const W = baseW * state.zoom;
+  const laneH = 70;
+  const laneTop = 40;
+  const H = laneTop + SRC_ORDER.length * laneH + 30;
+  const padL = 130, padR = 40;
+  const innerW = W - padL - padR;
+
+  function xOf(d) { return padL + (dayDelta(D_MIN, d) / (D_TOTAL - 1)) * innerW; }
+  function xOfStr(s) { return xOf(parseDate(s)); }
+
+  const today = parseDate("2026-05-14");
+
+  let svg = `<svg class="timeline" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  // month grid
+  const MONTH_LBL = {"2026-02-01":"FEB 2026","2026-03-01":"MAR 2026","2026-04-01":"APR 2026","2026-05-01":"MAY 2026"};
+  Object.keys(MONTH_LBL).forEach(m => {
+    const x = xOfStr(m);
+    svg += `<line class="month-line" x1="${x}" y1="${laneTop-20}" x2="${x}" y2="${H-20}"/>`;
+    svg += `<text class="month-label" x="${x+8}" y="${laneTop-8}">${MONTH_LBL[m]}</text>`;
+  });
+  // today line
+  const tx = xOf(today);
+  svg += `<line class="today-mark" x1="${tx}" y1="${laneTop-20}" x2="${tx}" y2="${H-20}"/>`;
+  svg += `<text class="today-mark-label" x="${tx-22}" y="${H-6}">TODAY</text>`;
+
+  // lanes
+  SRC_ORDER.forEach((src, i) => {
+    const y = laneTop + i * laneH + laneH / 2;
+    const s = SRC_MAP[src];
+    const visible = state.sources.has(src);
+    const op = visible ? 1 : 0.18;
+    svg += `<g style="opacity:${op}">`;
+    svg += `<line class="lane-line" x1="${padL-10}" y1="${y}" x2="${W-padR}" y2="${y}"/>`;
+    svg += `<circle class="lane-dot" cx="${20}" cy="${y-2}" r="4" fill="${s.color}"/>`;
+    svg += `<text class="lane-name" x="${30}" y="${y-3}">${s.letter}</text>`;
+    svg += `<text class="lane-count" x="${30}" y="${y+12}">${TOTAL_BY_SRC[src]} events</text>`;
+    svg += `</g>`;
+  });
+
+  // bubbles
+  // group by lane to do horizontal jitter for collisions
+  const byLane = {};
+  SRC_ORDER.forEach(s => byLane[s] = []);
+  EVENTS.forEach(e => byLane[e.source].push(e));
+
+  SRC_ORDER.forEach((src, i) => {
+    const laneY = laneTop + i * laneH + laneH / 2;
+    const evs = byLane[src];
+    // sort by date within lane
+    evs.sort((a, b) => a._d - b._d);
+    // greedy collision avoidance: if x distance < (r1+r2+1), shift slightly
+    const placed = [];
+    evs.forEach(e => {
+      const r = 2 + e.importance * 1.6;
+      let cx = xOfStr(e.date);
+      let cy = laneY;
+      // try a few small vertical offsets if x too close to a previous bubble
+      let attempts = 0;
+      while (attempts < 6) {
+        let collide = placed.some(p => Math.hypot(p.cx - cx, p.cy - cy) < (p.r + r + 1));
+        if (!collide) break;
+        cy = laneY + (attempts % 2 === 0 ? 1 : -1) * Math.ceil(attempts / 2) * 6;
+        attempts++;
+      }
+      placed.push({ cx, cy, r, e });
+    });
+
+    placed.forEach(({ cx, cy, r, e }) => {
+      const isStealth = e.source === "Stealth (code)";
+      const isPreview = e.stage === "Preview";
+      const isMajor = e.importance === 5;
+      const visibleSrc = state.sources.has(e.source);
+      const passSem = e.importance >= state.semMin;
+      const q = state.search.trim().toLowerCase();
+      const matchSearch = q === "" || (e.title + " " + (e.summary||"") + " " + (e.version||"") + " " + e.source).toLowerCase().includes(q);
+      let cls = "bubble";
+      if (!visibleSrc || !passSem) cls += " hidden";
+      else if (q !== "" && !matchSearch) cls += " fade";
+      if (isPreview) cls += " preview";
+      if (isMajor) cls += " major";
+
+      const data = encodeURIComponent(JSON.stringify({
+        title: e.title, date: e.date, source: e.source, version: e.version,
+        stage: e.stage, importance: e.importance, summary: e.summary, url: e.url
+      }));
+
+      if (isStealth) {
+        // 5-point star
+        const star = starPath(cx, cy, r * 1.4, r * 0.6, 5);
+        svg += `<path class="${cls}" d="${star}" fill="${SRC_MAP[e.source].color}" stroke="${SRC_MAP[e.source].color}" data-evt="${data}" />`;
+      } else {
+        svg += `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}" fill="${SRC_MAP[e.source].color}" stroke="${SRC_MAP[e.source].color}" data-evt="${data}" />`;
+      }
+      // label for high-importance events
+      if (e.importance >= 4 && visibleSrc && passSem && (q === "" || matchSearch)) {
+        const labelOffset = cy > laneY ? cy + r + 10 : cy + r + 10;
+        const txt = (e.title.length > 36) ? e.title.slice(0, 34) + "…" : e.title;
+        svg += `<text class="bubble-label" x="${cx + 6}" y="${labelOffset}" text-anchor="start">${escapeXml(txt)}</text>`;
+      }
+    });
+  });
+
+  svg += `</svg>`;
+  $host.innerHTML = `<div class="canvas-wrap" id="canvas-wrap">${svg}</div>`;
+  attachBubbleHandlers();
+}
+
+function starPath(cx, cy, R, r, n) {
+  let d = "";
+  for (let i = 0; i < n * 2; i++) {
+    const ang = -Math.PI / 2 + (i * Math.PI) / n;
+    const rr = i % 2 === 0 ? R : r;
+    const x = cx + Math.cos(ang) * rr;
+    const y = cy + Math.sin(ang) * rr;
+    d += (i === 0 ? "M" : "L") + x.toFixed(2) + "," + y.toFixed(2);
+  }
+  return d + "Z";
+}
+
+function escapeXml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function attachBubbleHandlers() {
+  document.querySelectorAll(".bubble").forEach(el => {
+    el.addEventListener("mouseenter", showTip);
+    el.addEventListener("mousemove", moveTip);
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("click", openLink);
+  });
+}
+
+let _currentTipEvt = null;
+let _tipHideTimer = null;
+
+function showTip(ev) {
+  const data = JSON.parse(decodeURIComponent(ev.currentTarget.getAttribute("data-evt")));
+  _currentTipEvt = data;
+  clearTimeout(_tipHideTimer);
+  const verPart = data.version ? ' · <span style="color:var(--accent)">' + data.version + '</span>' : "";
+  $tt.innerHTML = `
+    <div class="t-title">${escapeHtml(data.title)}</div>
+    <div class="t-meta">${fmtMD(data.date)} <span class="dot">·</span> ${data.source}${verPart}</div>
+    <div class="t-stage">${data.stage} <span class="dot">·</span> imp <span class="imp">${data.importance}/5</span></div>
+    ${data.summary ? `<div class="t-summary">${escapeHtml(data.summary)}</div>` : ""}
+    ${data.url ? `<div class="t-cta">› 새 탭에서 열기</div>` : ""}
+  `;
+  $tt.classList.add("show");
+  moveTip(ev);
+}
+function moveTip(ev) {
+  const r = $tt.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > window.innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > window.innerHeight - 8) y = ev.clientY - r.height - 14;
+  $tt.style.left = Math.max(8, x) + "px";
+  $tt.style.top = Math.max(8, y) + "px";
+}
+function hideTip() {
+  clearTimeout(_tipHideTimer);
+  _tipHideTimer = setTimeout(() => {
+    $tt.classList.remove("show");
+    _currentTipEvt = null;
+  }, 180);
+}
+function openLink(ev) {
+  const data = JSON.parse(decodeURIComponent(ev.currentTarget.getAttribute("data-evt")));
+  if (data.url) window.open(data.url, "_blank", "noopener");
+}
+
+$tt.addEventListener("mouseenter", () => clearTimeout(_tipHideTimer));
+$tt.addEventListener("mouseleave", () => {
+  _tipHideTimer = setTimeout(() => {
+    $tt.classList.remove("show");
+    _currentTipEvt = null;
+  }, 120);
+});
+$tt.addEventListener("click", () => {
+  if (_currentTipEvt && _currentTipEvt.url) window.open(_currentTipEvt.url, "_blank", "noopener");
+});
+function escapeHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* ===== MONTHLY ===== */
+function renderMonthly() {
+  const filtered = getFiltered();
+  const months = [
+    { key: "2026-01", label: "January", sub: "Opus 4.6 시즌 시작" },
+    { key: "2026-02", label: "February", sub: "Sonnet 4.6, Worktree, Auto-Memory" },
+    { key: "2026-03", label: "March", sub: "PowerShell, Source Map Leak, Routines" },
+    { key: "2026-04", label: "April", sub: "Opus 4.7, /tui, Native Binary" },
+    { key: "2026-05", label: "May", sub: "AWS 출시, Fast mode Opus 4.7, SMB" },
+  ];
+  let html = `<div class="monthly-grid">`;
+  months.forEach(m => {
+    const evs = filtered.filter(e => e.date.startsWith(m.key)).sort((a, b) => b.importance - a.importance || a._d - b._d);
+    html += `<div class="mcard"><h3>${m.label} <span style="color:var(--accent);font-size:13px;">${evs.length}</span></h3><div class="mc-sub">${m.sub}</div>`;
+    evs.slice(0, 14).forEach(e => {
+      const c = SRC_MAP[e.source].color;
+      const data = encodeURIComponent(JSON.stringify({
+        title: e.title, date: e.date, source: e.source, version: e.version,
+        stage: e.stage, importance: e.importance, summary: e.summary, url: e.url
+      }));
+      html += `<div class="mevt" data-evt="${data}">
+        <span class="md-dot" style="background:${c}"></span>
+        <div class="md-body">
+          <div class="md-title">${escapeHtml(e.title)}</div>
+          <div class="md-meta">${fmtMD(e.date)} · ${e.source}${e.version ? " · " + e.version : ""} · imp ${e.importance}/5</div>
+        </div>
+      </div>`;
+    });
+    if (evs.length > 14) html += `<div class="md-meta" style="text-align:center;color:var(--ink-dim);padding-top:8px;">+ ${evs.length - 14} more</div>`;
+    if (evs.length === 0) html += `<div class="md-meta" style="color:var(--ink-dim);">표시할 이벤트가 없습니다.</div>`;
+    html += `</div>`;
+  });
+  html += `</div>`;
+  $host.innerHTML = html;
+  $host.querySelectorAll(".mevt").forEach(el => {
+    el.addEventListener("mouseenter", showTip);
+    el.addEventListener("mousemove", moveTip);
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("click", openLink);
+  });
+}
+
+/* ===== TOP ===== */
+function renderTop() {
+  const filtered = getFiltered().slice().sort((a, b) =>
+    b.importance - a.importance || a._d - b._d
+  );
+  let html = `<div class="top-list">`;
+  filtered.slice(0, 60).forEach(e => {
+    const c = SRC_MAP[e.source].color;
+    const bars = [1,2,3,4,5].map(n => `<i class="${n <= e.importance ? "on" : ""}"></i>`).join("");
+    const data = encodeURIComponent(JSON.stringify({
+      title: e.title, date: e.date, source: e.source, version: e.version,
+      stage: e.stage, importance: e.importance, summary: e.summary, url: e.url
+    }));
+    html += `<div class="top-row" data-evt="${data}">
+      <div class="imp-bar">${bars}</div>
+      <div class="t-date">${fmtMD(e.date)}</div>
+      <div class="t-title">${escapeHtml(e.title)}</div>
+      <div class="t-source"><span class="dot" style="background:${c}"></span>${e.source}</div>
+      <div class="t-stage">${e.stage}${e.version ? " · " + e.version : ""}</div>
+    </div>`;
+  });
+  if (filtered.length === 0) html += `<div style="padding:30px;color:var(--ink-dim);text-align:center;">표시할 이벤트가 없습니다.</div>`;
+  if (filtered.length > 60) html += `<div style="padding:14px;color:var(--ink-dim);text-align:center;font-size:12px;">상위 60개만 표시 · 전체 ${filtered.length}개</div>`;
+  html += `</div>`;
+  $host.innerHTML = html;
+  $host.querySelectorAll(".top-row").forEach(el => {
+    el.addEventListener("mouseenter", showTip);
+    el.addEventListener("mousemove", moveTip);
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("click", openLink);
+  });
+}
+
+/* ===== THEME (cluster) ===== */
+const THEME_DEFS = [
+  { key: "agents",     label: "Agents & Multi-agent",   match: /agent|teams|subagent|teammate|coordinator|kairos|managed agent|orchestr/i,
+    desc: "에이전트 팀·서브에이전트·코디네이터·매니지드 에이전트" },
+  { key: "models",     label: "Model Releases",         match: /opus 4\.[67]|sonnet 4\.6|haiku 4\.5|model rele/i,
+    desc: "Opus 4.6/4.7, Sonnet 4.6, Haiku 4.5 등 모델 출시" },
+  { key: "hooks",      label: "Hooks & Automation",     match: /hook|\/[a-z]+|loop|cron|scheduling|trigger/i,
+    desc: "PreToolUse/Stop/Compact 등 hook과 자동화 슬래시 커맨드" },
+  { key: "perm",       label: "Permissions & Sandbox",  match: /sandbox|permission|auto.?approve|denied|attest|cch|undercover/i,
+    desc: "권한·샌드박스·서명·언더커버 등 보안 체계" },
+  { key: "leak",       label: "Source Leak Aftermath",  match: /tengu|leak|source map|distill|fake tool|frustration|kairos|undercover|cch/i,
+    desc: "2026-03-31 소스맵 유출과 그 이후 발견된 숨은 기능들" },
+  { key: "platform",   label: "Cloud / Platform",       match: /bedrock|vertex|mantle|azure|gcp|aws|trainium|cloud|console|gateway|mcp/i,
+    desc: "Bedrock·Vertex·Azure·MCP 등 플랫폼 통합" },
+  { key: "ui",         label: "Terminal & UI",          match: /vim|powershell|tui|theme|color|render|terminal|ime|spinner|focus|streaming|flicker|focus/i,
+    desc: "터미널·테마·렌더링·스트리밍 UX 개선" },
+  { key: "memory",     label: "Memory & Context",       match: /memory|context|cache|prompt cach|recap|undo|rewind/i,
+    desc: "auto-memory, prompt caching, 1M context, /recap 등" },
+  { key: "research",   label: "Alignment Research",     match: /alignment|audit|petri|psm|persona|trustworthy|emotion|automated alignment|saboteur/i,
+    desc: "정렬·감사·평가 자각·페르소나 연구" },
+  { key: "biz",        label: "Business & Policy",      match: /partner|funding|series|fund|policy|fedramp|gov|board|cfo|enterprise|salesforce|deloitte|skt|azure mark|education|senate|fmf/i,
+    desc: "파트너십·펀딩·정책·정부·이사회" },
+  { key: "redteam",    label: "Red Team & Safety",      match: /red team|0.?day|cyber|bio|ctf|ara|injection|rsp/i,
+    desc: "Frontier Red Team 평가·취약점·RSP" },
+];
+
+function renderTheme() {
+  const filtered = getFiltered();
+  let html = `<div class="theme-grid">`;
+  const used = new Set();
+  THEME_DEFS.forEach(t => {
+    const evs = filtered.filter(e => t.match.test((e.title + " " + (e.summary||"") + " " + (e.version||"")).toLowerCase()));
+    if (evs.length === 0) return;
+    evs.sort((a, b) => b.importance - a.importance || a._d - b._d);
+    html += `<div class="tcard"><h4>${t.label} <span class="badge">${evs.length}</span></h4><div class="tc-desc">${t.desc}</div><ul>`;
+    evs.slice(0, 8).forEach(e => {
+      const c = SRC_MAP[e.source].color;
+      const data = encodeURIComponent(JSON.stringify({
+        title: e.title, date: e.date, source: e.source, version: e.version,
+        stage: e.stage, importance: e.importance, summary: e.summary, url: e.url
+      }));
+      html += `<li data-evt="${data}"><span class="dot" style="background:${c}"></span><span class="ldate">${fmtMD(e.date)}</span><span>${escapeHtml(e.title)}</span></li>`;
+      used.add(e);
+    });
+    if (evs.length > 8) html += `<li style="color:var(--ink-dim);font-size:11px;justify-content:center;border-top:1px solid var(--line-soft);">+ ${evs.length - 8} more</li>`;
+    html += `</ul></div>`;
+  });
+  // uncategorized
+  const remaining = filtered.filter(e => !used.has(e));
+  if (remaining.length > 0) {
+    html += `<div class="tcard"><h4>기타 <span class="badge">${remaining.length}</span></h4><div class="tc-desc">테마 매칭이 안 된 이벤트</div><ul>`;
+    remaining.slice(0, 8).forEach(e => {
+      const c = SRC_MAP[e.source].color;
+      const data = encodeURIComponent(JSON.stringify({
+        title: e.title, date: e.date, source: e.source, version: e.version,
+        stage: e.stage, importance: e.importance, summary: e.summary, url: e.url
+      }));
+      html += `<li data-evt="${data}"><span class="dot" style="background:${c}"></span><span class="ldate">${fmtMD(e.date)}</span><span>${escapeHtml(e.title)}</span></li>`;
+    });
+    html += `</ul></div>`;
+  }
+  html += `</div>`;
+  $host.innerHTML = html;
+  $host.querySelectorAll("li[data-evt]").forEach(el => {
+    el.addEventListener("mouseenter", showTip);
+    el.addEventListener("mousemove", moveTip);
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("click", openLink);
+  });
+}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+function buildSources() {
+  const host = document.getElementById("sources");
+  let html = "";
+  SRC_ORDER.forEach(k => {
+    const s = SRC_MAP[k];
+    html += `<div class="src on" data-src="${k}">
+      <span class="chk"></span>
+      <span class="dot" style="background:${s.color}"></span>
+      <span class="name">${s.letter}</span>
+      <span class="cnt">${TOTAL_BY_SRC[k]}</span>
+    </div>`;
+  });
+  host.innerHTML = html;
+  host.querySelectorAll(".src").forEach(el => {
+    el.addEventListener("click", () => {
+      const k = el.dataset.src;
+      if (state.sources.has(k)) state.sources.delete(k);
+      else state.sources.add(k);
+      el.classList.toggle("on", state.sources.has(k));
+      el.classList.toggle("off", !state.sources.has(k));
+      render();
+    });
+  });
+}
+
+document.getElementById("search").addEventListener("input", e => {
+  state.search = e.target.value;
+  render();
+});
+document.getElementById("sem-slider").addEventListener("input", e => {
+  state.semMin = +e.target.value;
+  render();
+});
+document.querySelectorAll(".zoom-btn").forEach(b => {
+  b.addEventListener("click", () => {
+    state.zoom = +b.dataset.zoom;
+    render();
+  });
+});
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    state.view = t.dataset.view;
+    render();
+  });
+});
+
+/* ============================================================
+   JUMP
+============================================================ */
+document.getElementById("jumprow").addEventListener("click", e => {
+  if (!e.target.matches("[data-jump]")) return;
+  if (state.view !== "timeline") { state.view = "timeline"; render(); }
+  setTimeout(() => {
+    const wrap = document.getElementById("canvas-wrap");
+    if (!wrap) return;
+    const baseW = Math.max($main.clientWidth - 60, 1000);
+    const W = baseW * state.zoom;
+    const padL = 130, padR = 40, innerW = W - padL - padR;
+    const target = parseDate(e.target.dataset.jump);
+    const x = padL + (dayDelta(D_MIN, target) / (D_TOTAL - 1)) * innerW;
+    wrap.scrollTo({ left: Math.max(0, x - wrap.clientWidth / 2), behavior: "smooth" });
+  }, 30);
+});
+
+/* ============================================================
+   DARK MODE
+============================================================ */
+const $dark = document.getElementById("dark-btn");
+function applyDark(d) {
+  document.documentElement.setAttribute("data-theme", d ? "dark" : "");
+  $dark.querySelector("span:first-child").textContent = d ? "☀" : "☾";
+  $dark.querySelector("span:last-child").textContent = d ? "LIGHT" : "DARK";
+}
+const savedDark = localStorage.getItem("c2026-dark") === "1";
+applyDark(savedDark);
+$dark.addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme") === "dark";
+  applyDark(!cur);
+  localStorage.setItem("c2026-dark", !cur ? "1" : "0");
+  render();
+});
+
+/* ============================================================
+   INIT
+============================================================ */
+buildSources();
+render();
+window.addEventListener("resize", () => { if (state.view === "timeline") renderTimeline(); });
+</script>
+</body>
+</html>
