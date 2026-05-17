@@ -460,6 +460,7 @@ function renderTimeline() {
       placed.push({ cx, cy, r, e });
     });
 
+    // Pass 1: render bubbles (label rendering moved to Pass 2 below)
     placed.forEach(({ cx, cy, r, e }) => {
       const isStealth = e.source === "Stealth (code)";
       const isPreview = e.stage === "Preview";
@@ -486,12 +487,35 @@ function renderTimeline() {
       } else {
         svg += `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}" fill="${SRC_MAP[e.source].color}" stroke="${SRC_MAP[e.source].color}" data-evt="${data}" />`;
       }
-      // label for high-importance events
-      if (e.importance >= 4 && visibleSrc && passSem && (q === "" || matchSearch)) {
-        const labelOffset = cy > laneY ? cy + r + 10 : cy + r + 10;
-        const txt = (e.title.length > 36) ? e.title.slice(0, 34) + "…" : e.title;
-        svg += `<text class="bubble-label" x="${cx + 6}" y="${labelOffset}" text-anchor="start">${escapeXml(txt)}</text>`;
-      }
+    });
+
+    // Pass 2: render labels with zoom-aware threshold + per-lane X-distance collision avoidance
+    //   zoom 1× / 2× = imp ≥5 only (default view stays clean)
+    //   zoom 4×       = imp ≥4
+    //   zoom 8×       = imp ≥3
+    //   search active = match-only (override zoom threshold)
+    const _zoom = state.zoom;
+    const _labelMinImp = _zoom >= 8 ? 3 : _zoom >= 4 ? 4 : 5;
+    const _q = state.search.trim().toLowerCase();
+    const LABEL_MIN_DX = 90; // px — empirical for 20-char @ 10.5px font
+    const labelCandidates = placed
+      .filter(({ e }) => {
+        if (!state.sources.has(e.source)) return false;
+        if (e.importance < state.semMin) return false;
+        if (_q !== "") {
+          const m = (e.title + " " + (e.summary||"") + " " + (e.version||"") + " " + e.source).toLowerCase().includes(_q);
+          return m; // search active: show matches regardless of zoom
+        }
+        return e.importance >= _labelMinImp;
+      })
+      .sort((a, b) => b.e.importance - a.e.importance || a.cx - b.cx); // imp desc, then x asc
+    const placedLabels = [];
+    labelCandidates.forEach(({ cx, cy, r, e }) => {
+      if (placedLabels.some(p => Math.abs(p.cx - cx) < LABEL_MIN_DX)) return;
+      placedLabels.push({ cx });
+      const labelOffset = cy + r + 10;
+      const txt = (e.title.length > 20) ? e.title.slice(0, 18) + "…" : e.title;
+      svg += `<text class="bubble-label" x="${cx + 6}" y="${labelOffset}" text-anchor="start">${escapeXml(txt)}</text>`;
     });
   });
 
