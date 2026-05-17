@@ -2,7 +2,7 @@
 
 2026년 1월 1일 ~ 5월 14일 기간의 **Anthropic 관련 공식 업데이트 214건**을 8개 카테고리로 묶어 가로 시간축에 시각화하는 단일 페이지.
 
-배포: https://&lt;username&gt;.github.io/claude-2026-timeline/ (Pages 활성화 후)
+배포: https://prodoo.github.io/ClaudeUpdate_Timeline/
 
 로컬 실행: `index.html` 더블클릭 → 의존성·빌드 없음.
 
