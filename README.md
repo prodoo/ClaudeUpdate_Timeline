@@ -1,17 +1,24 @@
-# Claude 2026 · a timeline
+# 두 개의 타임라인 — Claude 2026 + Codex 2025–26
 
-2026년 1월 1일 ~ 5월 14일 기간의 **Anthropic 관련 공식 업데이트 224건**을 8개 카테고리로 묶어 가로 시간축에 시각화하는 단일 페이지.
+같은 저장소 안에 **두 개의 평행 시각화**:
+- **`index.html`** — Claude 2026 (2026-01-01 ~ 2026-05-14, Anthropic 공식 업데이트 **224건** × 8 lane)
+- **`codex.html`** — Codex 2025–26 (2025-04-16 ~ 2026-05-17, OpenAI Codex 공식 업데이트 **59건** × 6 lane)
 
-배포: https://prodoo.github.io/ClaudeUpdate_Timeline/
+헤더 토글로 한 클릭 전환. 디자인·인터랙션 공유, 데이터·컬러·범위는 독립.
 
-로컬 실행: `index.html` 더블클릭 → 의존성·빌드 없음.
+배포:
+- Claude — https://prodoo.github.io/ClaudeUpdate_Timeline/
+- Codex — https://prodoo.github.io/ClaudeUpdate_Timeline/codex.html
+
+로컬 실행: `index.html` 또는 `codex.html` 더블클릭 → 의존성·빌드 없음.
 
 ## 구조
 
 ```
 .
-├── index.html                ← 시각화 페이지 (CSS·JS 인라인)
-├── data/
+├── index.html                ← Claude 시각화 (헤더 토글 포함)
+├── codex.html                ← Codex 시각화 (헤더 토글 포함)
+├── data/                     ← Claude 8개 데이터 파일
 │   ├── cc.js                 ← Claude Code 106건 (GitHub CHANGELOG + code.claude.com whats-new)
 │   ├── apps.js               ← Claude Apps 24건 (support.claude.com)
 │   ├── api.js                ← API Platform 28건 (platform.claude.com)
@@ -19,7 +26,18 @@
 │   ├── red.js                ← Frontier Red Team 6건 (red.anthropic.com)
 │   ├── res.js                ← Research 27건 (anthropic.com/research + alignment.anthropic.com)
 │   ├── corp.js               ← Corporate 15건 (anthropic.com/news)
-│   └── stl.js                ← Stealth 9건 (2026-03-31 source map leak 분석 글)
+│   ├── stl.js                ← Stealth 9건 (2026-03-31 source map leak 분석 글)
+│   └── codex/                ← Codex 6개 데이터 파일
+│       ├── cli.js            ← Codex CLI 22건 (github.com/openai/codex releases)
+│       ├── app.js            ← Codex App 6건 (openai.com/index/codex-*)
+│       ├── models.js         ← Models 10건 (GPT-5-Codex / 5.1 / 5.2 / 5.3 / Spark + system cards)
+│       ├── platform.js       ← Platform 8건 (developers.openai.com/codex/changelog)
+│       ├── blog.js           ← Dev Blog 7건 (developers.openai.com/blog Codex 토픽)
+│       └── corp.js           ← Corporate 6건 (GA · pricing · DevDay · Cerebras)
+├── docs/
+│   ├── prd.md                ← PRD (양 페이지 모두 다룸)
+│   ├── decisions.md          ← ADR-001~007 (multi-page는 ADR-007)
+│   └── codex-sources.md      ← Codex 검증 출처 표
 ├── README.md                 ← 이 파일
 ├── .gitignore                ← .claude/ 등 로컬 설정 제외
 └── .nojekyll                 ← GitHub Pages가 underscore 폴더 무시 안 하게
@@ -43,7 +61,7 @@
 
 `source` 필드는 파일명이 자동 주입 — 각 `data/*.js`는 카테고리 키로 push.
 
-## 8개 카테고리·출처
+## Claude 2026 — 8 카테고리·출처 (index.html)
 
 | 카테고리 (key)         | 컬러     | 건수 | 1차 출처 |
 |---|---|---|---|
@@ -56,6 +74,20 @@
 | Corporate              | `#7A6B5D` | 15 | https://www.anthropic.com/news |
 | Stealth (code)         | `#6B5C8A` |  9 | alex000kim.com · wavespeed.ai/blog · venturebeat.com (2026-03-31 leak 분석) |
 | **합계**               |         | **224** | |
+
+## Codex 2025–26 — 6 카테고리·출처 (codex.html)
+
+| 카테고리 (key)  | 컬러     | 건수 | 1차 출처 |
+|---|---|---|---|
+| Codex CLI       | `#10A37F` | 22 | https://github.com/openai/codex/releases (tag anchor) |
+| Codex App       | `#7C5BC8` |  6 | https://openai.com/index/ (introducing-codex, codex-app, codex-for-almost-everything 등) |
+| Models          | `#3A86FF` | 10 | https://openai.com/index/introducing-gpt-5-X-codex/ + system card PDF |
+| Platform        | `#6B7280` |  8 | https://developers.openai.com/codex/changelog (⚠️ month anchor only) |
+| Dev Blog        | `#F39C12` |  7 | https://developers.openai.com/blog/topic/codex |
+| Corporate       | `#E26D5C` |  6 | openai.com/index, developers.openai.com/codex/pricing, github.blog 등 |
+| **합계**        |          | **59** | |
+
+세부 출처 표·정밀도 정책은 [docs/codex-sources.md](./docs/codex-sources.md) 참조.
 
 ## 검증 정책
 
@@ -87,4 +119,4 @@
 
 ## 마지막 갱신
 
-2026-05-14 · 214건 검증 완료
+2026-05-17 · Claude 224건 + Codex 59건 = **총 283건** 검증 완료 · multi-page 분리

@@ -1,15 +1,19 @@
-# PRD — Claude 2026 · a timeline
+# PRD — Claude · Codex 타임라인 (2-page)
 
 | 항목 | 값 |
 |---|---|
-| **상태** | Live (2026-05-14 마지막 갱신) |
-| **배포** | https://prodoo.github.io/ClaudeUpdate_Timeline/ |
+| **상태** | Live (2026-05-17 마지막 갱신, multi-page) |
+| **배포** | https://prodoo.github.io/ClaudeUpdate_Timeline/ (Claude) + `/codex.html` (Codex) |
 | **저장소** | https://github.com/prodoo/ClaudeUpdate_Timeline |
-| **마지막 갱신** | 2026-05-17 (4차 작업, 라벨 전략 개선) |
+| **마지막 갱신** | 2026-05-17 (5차 작업, Codex 페이지 추가) |
 
 ## 1. What — 한 문장 정의
 
-2026년 1월 1일부터 5월 14일까지(134일) **Anthropic 관련 공식 업데이트 224건**을 8개 카테고리 lane으로 묶어 가로 시간축에 시각화하는 단일 페이지.
+같은 저장소 안에 **두 개의 평행 타임라인**:
+- `index.html` — **Claude 2026** (2026-01-01 ~ 2026-05-14, 134일, Anthropic 공식 업데이트 **224건** × 8 lane)
+- `codex.html` — **Codex 2025–26** (2025-04-16 ~ 2026-05-17, 397일, OpenAI Codex 공식 업데이트 **59건** × 6 lane)
+
+두 페이지는 헤더 토글로 한 클릭 전환. 디자인·인터랙션·검증 정책 공유, 데이터·컬러·시간 범위·다크 모드 상태는 독립.
 
 ## 2. Why — 문제 정의
 
@@ -113,26 +117,40 @@ Anthropic의 업데이트가 **8개 서로 다른 출처**에 흩어져 있다:
 | 접근성 | SVG `<text>` 라벨, 키보드 탭 가능한 버튼, role="tooltip" |
 | 호환성 | Chrome / Edge / Safari / Firefox 최신 |
 
-## 8. Architecture
+## 8. Architecture (multi-page)
 
 ```
-index.html (단일 페이지, SVG + 인라인 CSS/JS)
-   │
-   ├─ <script src="data/cc.js">     ← window.EVENTS_BY_SOURCE["Claude Code"]
-   ├─ <script src="data/apps.js">   ← window.EVENTS_BY_SOURCE["Claude Apps"]
-   ├─ <script src="data/api.js">    ← ...
-   ├─ ... (8개)
-   └─ <script>
-       const EVENTS = [];
-       SOURCES.forEach(s => EVENTS.push(...EVENTS_BY_SOURCE[s.key]));
-       // render
-     </script>
+저장소 root
+├── index.html      ← Claude 2026 (단일 페이지, SVG + 인라인 CSS/JS)
+│      │
+│      ├─ <nav class="page-toggle"> [Claude 2026 *active*] [Codex 2025–26]
+│      ├─ <script src="data/cc.js">      ← EVENTS_BY_SOURCE["Claude Code"]
+│      ├─ <script src="data/apps.js">    ← ["Claude Apps"]
+│      ├─ ... (8개)
+│      └─ <script>render</script>
+│
+└── codex.html      ← Codex 2025–26
+       │
+       ├─ <nav class="page-toggle"> [Claude 2026] [Codex 2025–26 *active*]
+       ├─ <script src="data/codex/cli.js">       ← EVENTS_BY_SOURCE["Codex CLI"]
+       ├─ <script src="data/codex/app.js">       ← ["Codex App"]
+       ├─ <script src="data/codex/models.js">    ← ["Models"]
+       ├─ <script src="data/codex/platform.js">  ← ["Platform"]
+       ├─ <script src="data/codex/blog.js">      ← ["Dev Blog"]
+       ├─ <script src="data/codex/corp.js">      ← ["Corporate"]
+       └─ <script>render</script>
 ```
 
-데이터·코드 분리로 다음을 보장:
-- 카테고리별 git diff 명료 (cc 1개 추가 vs api 1개 수정이 별도 파일)
+**공유**: 디자인 시스템(SVG 렌더링·툴팁·zoom·검색·다크 모드), 4뷰 탭, 사이드바, 라벨 전략(ADR-006), 검증 정책(ADR-004/005), 헤더 토글 markup.
+
+**독립**: 데이터 파일·SOURCES 키·컬러 팔레트·시간 범위·MONTH_LBL·다크 모드 localStorage 키(`c2026-dark` vs `codex2026-dark`).
+
+데이터·코드 분리(ADR-002)로 다음을 보장:
+- 카테고리별 git diff 명료
 - 데이터 추가 시 HTML 수정 불필요
-- 새 카테고리 추가 = 새 `data/X.js` + SOURCES에 키 + `<script src>` 1개
+- 새 카테고리 추가 = 새 `data/X.js` (또는 `data/codex/X.js`) + SOURCES에 키 + `<script src>` 1개
+
+**Multi-page 분리 결정 이력**: [ADR-007](./decisions.md#adr-007--multi-page-구조-claude--codex)
 
 ## 9. Verification Policy
 

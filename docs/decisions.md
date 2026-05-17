@@ -160,6 +160,48 @@ GitHub Public 저장소 (`prodoo/ClaudeUpdate_Timeline`) + GitHub Pages 호스�
 
 ---
 
+## ADR-007 · Multi-page 구조 (Claude + Codex)
+
+| 항목 | 값 |
+|---|---|
+| 날짜 | 2026-05-17 |
+| 상태 | Accepted |
+
+**Context**
+저장소 이름이 `ClaudeUpdate_Timeline`이지만, 사용자가 OpenAI Codex 업데이트도 같은 저장소·같은 디자인 언어로 시각화하길 원함. 기존 `index.html`은 Claude 8개 카테고리 224건 / 134일 범위에 맞춰 빌드돼 있고 그대로 두고 싶음.
+
+**Decision**
+**Per-domain 단일 페이지** 분리:
+- `index.html` ← Claude 2026
+- `codex.html` ← Codex 2025–26
+- `data/` ← Claude 8개 .js (변경 없음)
+- `data/codex/` ← Codex 6개 .js (신규)
+- 두 페이지 모두 동일 markup의 `<nav class="page-toggle">` 보유 (활성 페이지만 다름)
+- CSS와 JS는 양 페이지에 인라인 중복 (ADR-001 zero-build 유지)
+
+**대안**
+- **단일 페이지 + 카테고리 필터**: lane 8+6=14개 과부하, 두 도메인의 시간 범위·이벤트 밀도가 달라 시각적 합치 어려움 → 기각
+- **shared.js / shared.css 외부 파일**: zero-build 정책(ADR-001) 충돌, `file://` 더블클릭 호환 깨짐 → 기각
+- **별도 저장소(`CodexUpdate_Timeline`)**: 사용자가 같은 저장소 명시. URL 분리 시 두 페이지 토글 UX 불가능 → 기각
+
+**Consequences**
+- ✅ 두 페이지 독립적 시간 범위·컬러·카테고리·다크 모드 상태(`localStorage` 키 분리: `c2026-dark` vs `codex2026-dark`)
+- ✅ 데이터 무결성 (codex.html은 Claude data 미로드, vice versa)
+- ✅ 헤더 토글로 한 클릭 전환
+- ✅ ADR-002 데이터 분리 정책을 Codex에도 동일 적용 (`data/codex/{cli,app,models,platform,blog,corp}.js` 6개)
+- ⚠️ CSS·JS 일부 중복 (~30KB) — index.html 변경 시 codex.html 수동 동기화 필요
+- ⚠️ Codex Platform 카테고리는 changelog month anchor만 가능(ADR-005 정밀도 정책 부분 예외) — `docs/codex-sources.md` 명시
+
+**Platform 카테고리 URL 정밀도 예외**
+- `developers.openai.com/codex/changelog`는 항목별 anchor 없이 `#month-YYYY-MM` 월 수준 anchor만 제공
+- Codex Platform 8건은 이 month anchor 사용 — ADR-005 100% slug 정책 부분 미달이지만 출처 자체는 공식이며 추정 아님
+- 같은 사건이 GitHub release에도 있으면 CLI 카테고리에서 tag anchor URL 사용 (이중 등록 OK)
+
+**index.html 변경 최소화 원칙**
+헤더 토글 markup(`<nav class="page-toggle">`) + CSS 규칙(`.page-toggle`, `.pg-tab`, `.pg-tab.active`)만 추가. 데이터·렌더링·인터랙션·SOURCES 등 일체 변경 없음.
+
+---
+
 ## 결정 영향 매트릭스
 
 | ADR | Pages 호환 | 더블클릭 호환 | git 이력 명료 | 데이터 신뢰 |
@@ -170,5 +212,6 @@ GitHub Public 저장소 (`prodoo/ClaudeUpdate_Timeline`) + GitHub Pages 호스�
 | 004 추정 거부 | – | – | – | ✅✅ |
 | 005 URL 정확도 | – | – | – | ✅✅ |
 | 006 라벨 전략 | ✅ | ✅ | – | – |
+| 007 multi-page | ✅ | ✅ | ✅ | – |
 
 모든 ADR이 핵심 가치(zero-build · git · 신뢰)와 정합.

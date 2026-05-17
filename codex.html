@@ -1,44 +1,42 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Claude 2026 · a timeline</title>
+<title>Codex 2025–2026 · a timeline</title>
 <style>
 :root {
-  --bg: #F5EFE3;
-  --bg-soft: #EFE7D5;
-  --bg-panel: #FAF5EA;
-  --ink: #1F1B17;
-  --ink-soft: #5C544A;
-  --ink-dim: #8A7F70;
-  --line: #DDD0B7;
-  --line-soft: #E7DEC9;
-  --accent: #B14A35;
-  --accent-soft: #C6604E;
-  --hover: #EFE5CD;
-  --c-cc: #C6604E;
-  --c-apps: #6B95B8;
-  --c-api: #B89968;
-  --c-eng: #A8A06D;
-  --c-red: #9C3344;
-  --c-res: #7DA67E;
-  --c-corp: #7A6B5D;
-  --c-stl: #6B5C8A;
-  --shadow: 0 6px 18px rgba(60,40,20,.10), 0 1px 2px rgba(60,40,20,.08);
+  --bg: #F4F4EE;
+  --bg-soft: #ECECE3;
+  --bg-panel: #FAFAF5;
+  --ink: #131316;
+  --ink-soft: #4A4A50;
+  --ink-dim: #7A7A82;
+  --line: #D8D8D0;
+  --line-soft: #E5E5DD;
+  --accent: #10A37F;
+  --accent-soft: #14B894;
+  --hover: #ECECE0;
+  --c-cli:      #10A37F;
+  --c-app:      #7C5BC8;
+  --c-models:   #3A86FF;
+  --c-platform: #6B7280;
+  --c-blog:     #F39C12;
+  --c-corp:     #E26D5C;
+  --shadow: 0 6px 18px rgba(20,30,40,.10), 0 1px 2px rgba(20,30,40,.08);
 }
 [data-theme="dark"] {
-  --bg: #1F1B17;
-  --bg-soft: #28231D;
-  --bg-panel: #2A2520;
-  --ink: #F2EAD9;
-  --ink-soft: #C8BCA5;
-  --ink-dim: #8A7F70;
-  --line: #3A332B;
-  --line-soft: #2F2922;
-  --accent: #E37B66;
-  --accent-soft: #C6604E;
-  --hover: #322B23;
+  --bg: #131316;
+  --bg-soft: #1C1C20;
+  --bg-panel: #1F1F23;
+  --ink: #E8E8E0;
+  --ink-soft: #B8B8B0;
+  --ink-dim: #80807A;
+  --line: #2A2A2E;
+  --line-soft: #232328;
+  --accent: #1FC796;
+  --accent-soft: #10A37F;
+  --hover: #28282E;
   --shadow: 0 6px 18px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.3);
 }
 * { box-sizing: border-box; }
@@ -169,7 +167,7 @@ svg.timeline { display: block; user-select: none; }
 .tooltip .t-cta { font-size: 10.5px; color: var(--ink-dim); margin-top: 6px; font-style: italic; }
 
 /* ============ MONTHLY VIEW ============ */
-.monthly-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; padding: 8px 0 30px; }
+.monthly-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; padding: 8px 0 30px; }
 .mcard { background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
 .mcard h3 { margin: 0 0 4px; font-weight: 500; font-size: 16px; color: var(--ink); }
 .mcard .mc-sub { font-size: 11px; color: var(--ink-dim); margin-bottom: 14px; }
@@ -221,7 +219,6 @@ svg.timeline { display: block; user-select: none; }
   .tabs { padding: 0 24px; overflow-x: auto; }
   .main { padding: 14px 24px 30px; }
   .foot { padding: 18px 24px 24px; }
-  .monthly-grid { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -230,16 +227,16 @@ svg.timeline { display: block; user-select: none; }
   <div class="hdr-row">
     <div>
       <nav class="page-toggle">
-        <a href="index.html" class="pg-tab active">Claude 2026</a>
-        <a href="codex.html" class="pg-tab">Codex 2025–26</a>
+        <a href="index.html" class="pg-tab">Claude 2026</a>
+        <a href="codex.html" class="pg-tab active">Codex 2025–26</a>
       </nav>
-      <h1 class="serif">Claude <em>2026</em><span class="tl">· a timeline</span></h1>
-      <p class="lede">Claude Code, Claude Apps, API Platform, Engineering, Research, Frontier Red Team, 그리고 코드 선행 배포까지 — 2026년 1월 1일부터 5월 14일까지의 기능 출시 연대기. 모든 항목은 공식 페이지(GitHub CHANGELOG · platform.claude.com · support.claude.com · anthropic.com/news · anthropic.com/research · alignment.anthropic.com · red.anthropic.com)에서 검증. 가로축은 시간, 세로축은 제품 라인.</p>
+      <h1 class="serif">Codex <em>2025–26</em><span class="tl">· a timeline</span></h1>
+      <p class="lede">OpenAI Codex CLI, ChatGPT Codex 앱(web · macOS · Windows), GPT-5-Codex 계열 모델, Codex API/Platform, Developer Blog, GA·Pricing·DevDay·파트너십까지 — 2025년 4월 16일(출시) 부터 2026년 5월 17일까지의 연대기. 모든 항목은 공식 페이지(github.com/openai/codex · openai.com/index · developers.openai.com)에서 검증. 가로축은 시간, 세로축은 카테고리 lane.</p>
     </div>
     <div class="hdr-stats">
-      <div class="stat alt"><div class="label">전체</div><div class="num" id="stat-total">200</div></div>
-      <div class="stat"><div class="label">표시 중</div><div class="num" id="stat-shown">200</div></div>
-      <div class="stat alt"><div class="label">기간</div><div class="num"><span id="stat-days">116</span><span style="font-size:14px">일</span></div></div>
+      <div class="stat alt"><div class="label">전체</div><div class="num" id="stat-total">59</div></div>
+      <div class="stat"><div class="label">표시 중</div><div class="num" id="stat-shown">59</div></div>
+      <div class="stat alt"><div class="label">기간</div><div class="num"><span id="stat-days">397</span><span style="font-size:14px">일</span></div></div>
       <button class="dark-btn" id="dark-btn"><span>☾</span><span>DARK</span></button>
     </div>
   </div>
@@ -247,7 +244,7 @@ svg.timeline { display: block; user-select: none; }
 
 <nav class="tabs" id="tabs">
   <button class="tab active" data-view="timeline"><span class="ico">⤳</span> 타임라인 <span class="sub">가로 시간축</span></button>
-  <button class="tab" data-view="monthly"><span class="ico">▦</span> 월별 <span class="sub">4개 서머리</span></button>
+  <button class="tab" data-view="monthly"><span class="ico">▦</span> 월별 <span class="sub">13개 서머리</span></button>
   <button class="tab" data-view="top"><span class="ico">↗</span> Top <span class="sub">중요도 순</span></button>
   <button class="tab" data-view="theme"><span class="ico">⌗</span> 테마 <span class="sub">클러스터</span></button>
 </nav>
@@ -258,13 +255,13 @@ svg.timeline { display: block; user-select: none; }
 
     <div class="sb-h" style="color:var(--ink-soft)">SEARCH</div>
     <div class="sb-search">
-      <input class="search" id="search" type="text" placeholder="ultraplan, routines...">
+      <input class="search" id="search" type="text" placeholder="gpt-5-codex, sandbox, vim...">
     </div>
 
     <div class="sb-h" style="color:var(--ink-soft); margin-top: 22px">의미론적 줌 <span style="margin-left:auto;color:var(--accent)" id="sem-label">전체</span></div>
     <div class="zoom-row"><span class="lo">← coarse</span><span class="hi">fine →</span></div>
     <input class="slider" id="sem-slider" type="range" min="1" max="5" step="1" value="1">
-    <div class="sb-note">중요도 ≥ <b id="sem-min">1</b> 이벤트 <b id="sem-count">213</b>개 표시</div>
+    <div class="sb-note">중요도 ≥ <b id="sem-min">1</b> 이벤트 <b id="sem-count">59</b>개 표시</div>
 
     <div class="sb-h" style="color:var(--ink-soft); margin-top: 22px">시간축 줌 <span style="margin-left:auto;color:var(--accent)" id="zoom-label">1×</span></div>
     <div class="zoom-btns">
@@ -282,12 +279,12 @@ svg.timeline { display: block; user-select: none; }
   <section class="main" id="main">
     <div class="jumprow" id="jumprow">
       <span class="lbl">JUMP</span>
-      <button class="jumpbtn" data-jump="2026-01-01">Jan</button>
-      <button class="jumpbtn" data-jump="2026-02-01">Feb</button>
-      <button class="jumpbtn" data-jump="2026-03-01">Mar</button>
-      <button class="jumpbtn" data-jump="2026-04-01">Apr</button>
-      <button class="jumpbtn" data-jump="2026-05-01">May</button>
-      <button class="jumpbtn today" data-jump="2026-05-14">TODAY</button>
+      <button class="jumpbtn" data-jump="2025-04-16">Launch</button>
+      <button class="jumpbtn" data-jump="2025-07-01">Q3 '25</button>
+      <button class="jumpbtn" data-jump="2025-10-01">Q4 '25</button>
+      <button class="jumpbtn" data-jump="2026-01-01">Q1 '26</button>
+      <button class="jumpbtn" data-jump="2026-04-01">Q2 '26</button>
+      <button class="jumpbtn today" data-jump="2026-05-17">TODAY</button>
       <span class="right">zoom: <b id="zoom-num">1×</b></span>
     </div>
     <div id="view-host"></div>
@@ -297,33 +294,29 @@ svg.timeline { display: block; user-select: none; }
 <div class="tooltip" id="tooltip" role="tooltip"></div>
 
 <footer class="foot">
-  <span>Claude 2026 timeline · 데이터: GitHub CHANGELOG · platform.claude.com · support.claude.com · anthropic.com/news · anthropic.com/research · alignment.anthropic.com · red.anthropic.com · 유출소스 분석 글</span>
-  <span>2026-05-14 기준 · 모든 이벤트 공식 출처 검증</span>
+  <span>Codex 2025–26 timeline · 데이터: github.com/openai/codex · openai.com/index · developers.openai.com/codex · developers.openai.com/blog</span>
+  <span>2026-05-17 기준 · 모든 이벤트 공식 출처 검증</span>
 </footer>
 
-<!-- ===== Data files (split by source for verification·diff·rollback) ===== -->
-<script src="data/cc.js"></script>
-<script src="data/apps.js"></script>
-<script src="data/api.js"></script>
-<script src="data/eng.js"></script>
-<script src="data/red.js"></script>
-<script src="data/res.js"></script>
-<script src="data/corp.js"></script>
-<script src="data/stl.js"></script>
+<!-- ===== Data files (split by category for verification·diff·rollback) ===== -->
+<script src="data/codex/cli.js"></script>
+<script src="data/codex/app.js"></script>
+<script src="data/codex/models.js"></script>
+<script src="data/codex/platform.js"></script>
+<script src="data/codex/blog.js"></script>
+<script src="data/codex/corp.js"></script>
 
 <script>
 const SOURCES = [
-  { key: "Claude Code",   color: "#C6604E", letter: "Claude Code" },
-  { key: "Claude Apps",   color: "#6B95B8", letter: "Claude Apps" },
-  { key: "API Platform",  color: "#B89968", letter: "API Platform" },
-  { key: "Engineering",   color: "#A8A06D", letter: "Engineering" },
-  { key: "Red Team",      color: "#9C3344", letter: "Red Team" },
-  { key: "Research",      color: "#7DA67E", letter: "Research" },
-  { key: "Corporate",     color: "#7A6B5D", letter: "Corporate" },
-  { key: "Stealth (code)",color: "#6B5C8A", letter: "Stealth (code)" }
+  { key: "Codex CLI",  color: "#10A37F", letter: "Codex CLI" },
+  { key: "Codex App",  color: "#7C5BC8", letter: "Codex App" },
+  { key: "Models",     color: "#3A86FF", letter: "Models" },
+  { key: "Platform",   color: "#6B7280", letter: "Platform" },
+  { key: "Dev Blog",   color: "#F39C12", letter: "Dev Blog" },
+  { key: "Corporate",  color: "#E26D5C", letter: "Corporate" }
 ];
 
-/* ===== EVENTS: source-split files merged at runtime from data/*.js ===== */
+/* ===== EVENTS: source-split files merged at runtime from data/codex/*.js ===== */
 const EVENTS = [];
 SOURCES.forEach(s => {
   ((window.EVENTS_BY_SOURCE || {})[s.key] || []).forEach(e => {
@@ -341,8 +334,8 @@ function parseDate(s) { return new Date(s + "T00:00:00Z"); }
 EVENTS.forEach(e => { e._d = parseDate(e.date); });
 EVENTS.sort((a, b) => a._d - b._d);
 
-const D_MIN = parseDate("2026-01-01");
-const D_MAX = parseDate("2026-05-14");
+const D_MIN = parseDate("2025-04-16");
+const D_MAX = parseDate("2026-05-17");
 const D_TOTAL = (D_MAX - D_MIN) / 86400000 + 1;
 
 const state = {
@@ -354,7 +347,12 @@ const state = {
 };
 
 function dayDelta(a, b) { return (b - a) / 86400000; }
-function fmtMD(s) { const d = parseDate(s); return (d.getUTCMonth()+1) + "/" + String(d.getUTCDate()).padStart(2,"0"); }
+function fmtMD(s) {
+  const d = parseDate(s);
+  const y = d.getUTCFullYear();
+  const md = (d.getUTCMonth()+1) + "/" + String(d.getUTCDate()).padStart(2,"0");
+  return y === 2025 ? "'25 " + md : md;
+}
 
 function counts() {
   const out = {};
@@ -413,11 +411,15 @@ function renderTimeline() {
   function xOf(d) { return padL + (dayDelta(D_MIN, d) / (D_TOTAL - 1)) * innerW; }
   function xOfStr(s) { return xOf(parseDate(s)); }
 
-  const today = parseDate("2026-05-14");
+  const today = parseDate("2026-05-17");
 
   let svg = `<svg class="timeline" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-  // month grid
-  const MONTH_LBL = {"2026-02-01":"FEB 2026","2026-03-01":"MAR 2026","2026-04-01":"APR 2026","2026-05-01":"MAY 2026"};
+  // month grid — 14 months (2025-05 to 2026-05) with quarterly headers more prominent
+  const MONTH_LBL = {
+    "2025-05-01":"MAY 2025","2025-06-01":"JUN","2025-07-01":"JUL","2025-08-01":"AUG","2025-09-01":"SEP",
+    "2025-10-01":"OCT","2025-11-01":"NOV","2025-12-01":"DEC",
+    "2026-01-01":"JAN 2026","2026-02-01":"FEB","2026-03-01":"MAR","2026-04-01":"APR","2026-05-01":"MAY"
+  };
   Object.keys(MONTH_LBL).forEach(m => {
     const x = xOfStr(m);
     svg += `<line class="month-line" x1="${x}" y1="${laneTop-20}" x2="${x}" y2="${H-20}"/>`;
@@ -443,7 +445,6 @@ function renderTimeline() {
   });
 
   // bubbles
-  // group by lane to do horizontal jitter for collisions
   const byLane = {};
   SRC_ORDER.forEach(s => byLane[s] = []);
   EVENTS.forEach(e => byLane[e.source].push(e));
@@ -451,15 +452,12 @@ function renderTimeline() {
   SRC_ORDER.forEach((src, i) => {
     const laneY = laneTop + i * laneH + laneH / 2;
     const evs = byLane[src];
-    // sort by date within lane
     evs.sort((a, b) => a._d - b._d);
-    // greedy collision avoidance: if x distance < (r1+r2+1), shift slightly
     const placed = [];
     evs.forEach(e => {
       const r = 2 + e.importance * 1.6;
       let cx = xOfStr(e.date);
       let cy = laneY;
-      // try a few small vertical offsets if x too close to a previous bubble
       let attempts = 0;
       while (attempts < 6) {
         let collide = placed.some(p => Math.hypot(p.cx - cx, p.cy - cy) < (p.r + r + 1));
@@ -470,9 +468,8 @@ function renderTimeline() {
       placed.push({ cx, cy, r, e });
     });
 
-    // Pass 1: render bubbles (label rendering moved to Pass 2 below)
+    // Pass 1: render bubbles
     placed.forEach(({ cx, cy, r, e }) => {
-      const isStealth = e.source === "Stealth (code)";
       const isPreview = e.stage === "Preview";
       const isMajor = e.importance === 5;
       const visibleSrc = state.sources.has(e.source);
@@ -490,35 +487,25 @@ function renderTimeline() {
         stage: e.stage, importance: e.importance, summary: e.summary, url: e.url
       }));
 
-      if (isStealth) {
-        // 5-point star
-        const star = starPath(cx, cy, r * 1.4, r * 0.6, 5);
-        svg += `<path class="${cls}" d="${star}" fill="${SRC_MAP[e.source].color}" stroke="${SRC_MAP[e.source].color}" data-evt="${data}" />`;
-      } else {
-        svg += `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}" fill="${SRC_MAP[e.source].color}" stroke="${SRC_MAP[e.source].color}" data-evt="${data}" />`;
-      }
+      svg += `<circle class="${cls}" cx="${cx}" cy="${cy}" r="${r}" fill="${SRC_MAP[e.source].color}" stroke="${SRC_MAP[e.source].color}" data-evt="${data}" />`;
     });
 
-    // Pass 2: render labels with zoom-aware threshold + per-lane X-distance collision avoidance
-    //   zoom 1× / 2× = imp ≥5 only (default view stays clean)
-    //   zoom 4×       = imp ≥4
-    //   zoom 8×       = imp ≥3
-    //   search active = match-only (override zoom threshold)
+    // Pass 2: zoom-aware labels with X-distance collision avoidance
     const _zoom = state.zoom;
     const _labelMinImp = _zoom >= 8 ? 3 : _zoom >= 4 ? 4 : 5;
     const _q = state.search.trim().toLowerCase();
-    const LABEL_MIN_DX = 90; // px — empirical for 20-char @ 10.5px font
+    const LABEL_MIN_DX = 90;
     const labelCandidates = placed
       .filter(({ e }) => {
         if (!state.sources.has(e.source)) return false;
         if (e.importance < state.semMin) return false;
         if (_q !== "") {
           const m = (e.title + " " + (e.summary||"") + " " + (e.version||"") + " " + e.source).toLowerCase().includes(_q);
-          return m; // search active: show matches regardless of zoom
+          return m;
         }
         return e.importance >= _labelMinImp;
       })
-      .sort((a, b) => b.e.importance - a.e.importance || a.cx - b.cx); // imp desc, then x asc
+      .sort((a, b) => b.e.importance - a.e.importance || a.cx - b.cx);
     const placedLabels = [];
     labelCandidates.forEach(({ cx, cy, r, e }) => {
       if (placedLabels.some(p => Math.abs(p.cx - cx) < LABEL_MIN_DX)) return;
@@ -532,18 +519,6 @@ function renderTimeline() {
   svg += `</svg>`;
   $host.innerHTML = `<div class="canvas-wrap" id="canvas-wrap">${svg}</div>`;
   attachBubbleHandlers();
-}
-
-function starPath(cx, cy, R, r, n) {
-  let d = "";
-  for (let i = 0; i < n * 2; i++) {
-    const ang = -Math.PI / 2 + (i * Math.PI) / n;
-    const rr = i % 2 === 0 ? R : r;
-    const x = cx + Math.cos(ang) * rr;
-    const y = cy + Math.sin(ang) * rr;
-    d += (i === 0 ? "M" : "L") + x.toFixed(2) + "," + y.toFixed(2);
-  }
-  return d + "Z";
 }
 
 function escapeXml(s) {
@@ -615,11 +590,20 @@ function escapeHtml(s) {
 function renderMonthly() {
   const filtered = getFiltered();
   const months = [
-    { key: "2026-01", label: "January", sub: "Opus 4.6 시즌 시작" },
-    { key: "2026-02", label: "February", sub: "Sonnet 4.6, Worktree, Auto-Memory" },
-    { key: "2026-03", label: "March", sub: "PowerShell, Source Map Leak, Routines" },
-    { key: "2026-04", label: "April", sub: "Opus 4.7, /tui, Native Binary" },
-    { key: "2026-05", label: "May", sub: "AWS 출시, Fast mode Opus 4.7, SMB" },
+    { key: "2025-04", label: "Apr 2025", sub: "Codex CLI · codex-mini-latest 출시" },
+    { key: "2025-05", label: "May 2025", sub: "Cloud agent 리서치 프리뷰" },
+    { key: "2025-06", label: "Jun 2025", sub: "초기 마이너 릴리스" },
+    { key: "2025-07", label: "Jul 2025", sub: "reasoning summaries · trusted commands" },
+    { key: "2025-08", label: "Aug 2025", sub: "Rust CLI npm 기본화" },
+    { key: "2025-09", label: "Sep 2025", sub: "GPT-5-Codex 출시" },
+    { key: "2025-10", label: "Oct 2025", sub: "Codex GA · DevDay 2025" },
+    { key: "2025-11", label: "Nov 2025", sub: "GPT-5.1-Codex 출시" },
+    { key: "2025-12", label: "Dec 2025", sub: "Codex Max · GPT-5.2-Codex" },
+    { key: "2026-01", label: "Jan 2026", sub: "Cerebras 파트너십" },
+    { key: "2026-02", label: "Feb 2026", sub: "macOS 앱, GPT-5.3-Codex, Spark" },
+    { key: "2026-03", label: "Mar 2026", sub: "Windows 앱 출시" },
+    { key: "2026-04", label: "Apr 2026", sub: "Codex for (almost) everything" },
+    { key: "2026-05", label: "May 2026", sub: "Chrome ext, Vim mode, remote work" },
   ];
   let html = `<div class="monthly-grid">`;
   months.forEach(m => {
@@ -686,30 +670,24 @@ function renderTop() {
   });
 }
 
-/* ===== THEME (cluster) ===== */
+/* ===== THEME (cluster) — Codex topic-specific ===== */
 const THEME_DEFS = [
-  { key: "agents",     label: "Agents & Multi-agent",   match: /agent|teams|subagent|teammate|coordinator|kairos|managed agent|orchestr/i,
-    desc: "에이전트 팀·서브에이전트·코디네이터·매니지드 에이전트" },
-  { key: "models",     label: "Model Releases",         match: /opus 4\.[67]|sonnet 4\.6|haiku 4\.5|model rele/i,
-    desc: "Opus 4.6/4.7, Sonnet 4.6, Haiku 4.5 등 모델 출시" },
-  { key: "hooks",      label: "Hooks & Automation",     match: /hook|\/[a-z]+|loop|cron|scheduling|trigger/i,
-    desc: "PreToolUse/Stop/Compact 등 hook과 자동화 슬래시 커맨드" },
-  { key: "perm",       label: "Permissions & Sandbox",  match: /sandbox|permission|auto.?approve|denied|attest|cch|undercover/i,
-    desc: "권한·샌드박스·서명·언더커버 등 보안 체계" },
-  { key: "leak",       label: "Source Leak Aftermath",  match: /tengu|leak|source map|distill|fake tool|frustration|kairos|undercover|cch/i,
-    desc: "2026-03-31 소스맵 유출과 그 이후 발견된 숨은 기능들" },
-  { key: "platform",   label: "Cloud / Platform",       match: /bedrock|vertex|mantle|azure|gcp|aws|trainium|cloud|console|gateway|mcp/i,
-    desc: "Bedrock·Vertex·Azure·MCP 등 플랫폼 통합" },
-  { key: "ui",         label: "Terminal & UI",          match: /vim|powershell|tui|theme|color|render|terminal|ime|spinner|focus|streaming|flicker|focus/i,
-    desc: "터미널·테마·렌더링·스트리밍 UX 개선" },
-  { key: "memory",     label: "Memory & Context",       match: /memory|context|cache|prompt cach|recap|undo|rewind/i,
-    desc: "auto-memory, prompt caching, 1M context, /recap 등" },
-  { key: "research",   label: "Alignment Research",     match: /alignment|audit|petri|psm|persona|trustworthy|emotion|automated alignment|saboteur/i,
-    desc: "정렬·감사·평가 자각·페르소나 연구" },
-  { key: "biz",        label: "Business & Policy",      match: /partner|funding|series|fund|policy|fedramp|gov|board|cfo|enterprise|salesforce|deloitte|skt|azure mark|education|senate|fmf/i,
-    desc: "파트너십·펀딩·정책·정부·이사회" },
-  { key: "redteam",    label: "Red Team & Safety",      match: /red team|0.?day|cyber|bio|ctf|ara|injection|rsp/i,
-    desc: "Frontier Red Team 평가·취약점·RSP" },
+  { key: "models",     label: "Codex Models",            match: /gpt-5|codex-mini|codex-max|spark|model/i,
+    desc: "GPT-5-Codex / 5.1 / 5.2 / 5.3 / Spark / codex-mini" },
+  { key: "agentic",    label: "Agentic & Long-horizon",  match: /agent|computer use|long.?horizon|wake|background|persisted|review|orchestr/i,
+    desc: "computer use · 장시간 작업 · PR 리뷰 · wake-up" },
+  { key: "ide",        label: "IDE / Editor Integrations", match: /mcp|figma|jetbrains|vscode|chrome|browser|vim|extension/i,
+    desc: "MCP · Figma · JetBrains · Chrome extension · Vim mode" },
+  { key: "platform",   label: "Platform & Sandbox",      match: /windows|macos|linux|sandbox|powershell|sso|enterprise|access token|governance/i,
+    desc: "Windows / macOS / 샌드박스 / 거버넌스 / 액세스 토큰" },
+  { key: "workflows",  label: "Workflows & UX",          match: /\/[a-z]+|tui|resume|plan|task|workflow|tooltip|hook|sharing/i,
+    desc: "/resume · /review · TUI · hooks · 플러그인 공유" },
+  { key: "pricing",    label: "Pricing & Plans",         match: /pricing|token|rate|plan|plus|pro|business|enterprise|tier/i,
+    desc: "Plus/Pro/Business/Enterprise · token-based pricing" },
+  { key: "blog",       label: "Engineering Blog",        match: /^/i,
+    desc: "developers.openai.com/blog 케이스 스터디·튜토리얼" },
+  { key: "research",   label: "Research & System Cards", match: /system card|research|paper|spark/i,
+    desc: "GPT-5.x-Codex 시스템 카드 · Cerebras 파트너십" },
 ];
 
 function renderTheme() {
@@ -717,7 +695,12 @@ function renderTheme() {
   let html = `<div class="theme-grid">`;
   const used = new Set();
   THEME_DEFS.forEach(t => {
-    const evs = filtered.filter(e => t.match.test((e.title + " " + (e.summary||"") + " " + (e.version||"")).toLowerCase()));
+    let evs;
+    if (t.key === "blog") {
+      evs = filtered.filter(e => e.source === "Dev Blog" && !used.has(e));
+    } else {
+      evs = filtered.filter(e => !used.has(e) && t.match.test((e.title + " " + (e.summary||"") + " " + (e.version||"")).toLowerCase()));
+    }
     if (evs.length === 0) return;
     evs.sort((a, b) => b.importance - a.importance || a._d - b._d);
     html += `<div class="tcard"><h4>${t.label} <span class="badge">${evs.length}</span></h4><div class="tc-desc">${t.desc}</div><ul>`;
@@ -733,7 +716,6 @@ function renderTheme() {
     if (evs.length > 8) html += `<li style="color:var(--ink-dim);font-size:11px;justify-content:center;border-top:1px solid var(--line-soft);">+ ${evs.length - 8} more</li>`;
     html += `</ul></div>`;
   });
-  // uncategorized
   const remaining = filtered.filter(e => !used.has(e));
   if (remaining.length > 0) {
     html += `<div class="tcard"><h4>기타 <span class="badge">${remaining.length}</span></h4><div class="tc-desc">테마 매칭이 안 된 이벤트</div><ul>`;
@@ -833,12 +815,12 @@ function applyDark(d) {
   $dark.querySelector("span:first-child").textContent = d ? "☀" : "☾";
   $dark.querySelector("span:last-child").textContent = d ? "LIGHT" : "DARK";
 }
-const savedDark = localStorage.getItem("c2026-dark") === "1";
+const savedDark = localStorage.getItem("codex2026-dark") === "1";
 applyDark(savedDark);
 $dark.addEventListener("click", () => {
   const cur = document.documentElement.getAttribute("data-theme") === "dark";
   applyDark(!cur);
-  localStorage.setItem("c2026-dark", !cur ? "1" : "0");
+  localStorage.setItem("codex2026-dark", !cur ? "1" : "0");
   render();
 });
 
