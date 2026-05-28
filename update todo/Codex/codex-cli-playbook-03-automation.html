@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 플레이북 03 — 비대화형 자동화</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 중립 */
+    --navy:#1c2433; --navy2:#283448; --ink:#222831;
+    --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --page:#dfe3ea;
+    /* 6단계 액센트 */
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    padding:40px 20px;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  /* ---------- SHEET ---------- */
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    box-shadow:0 18px 48px rgba(20,28,42,.20);
+    overflow:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy);
+    padding:34px 38px 40px;
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:4px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c1);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:41px;
+    font-weight:800;
+    line-height:1.28;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .sub{
+    display:block;
+    font-size:21px;
+    font-weight:600;
+    color:var(--soft-gray);
+    margin-top:10px;
+    letter-spacing:0;
+  }
+
+  .summary-box{
+    width:392px;
+    flex-shrink:0;
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .thesis{
+    font-size:13.5px;
+    color:#cdd5e0;
+    line-height:1.7;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid #3a4860;
+  }
+  .mini{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+  }
+  .mini div{display:flex;flex-direction:column;gap:2px;}
+  .mini code{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+  }
+  .mini span{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    letter-spacing:.02em;
+  }
+
+  /* ---------- BODY ---------- */
+  .body{padding:24px 26px 30px;}
+
+  /* ---------- SUMMARY ROW ---------- */
+  .sumrow{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .sumcard{
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-top:3px solid var(--cAccent);
+    border-radius:8px;
+    padding:16px 18px 17px;
+  }
+  .sumcard.s1{--cAccent:var(--c1);}
+  .sumcard.s2{--cAccent:var(--c3);}
+  .sumcard.s3{--cAccent:var(--c5);}
+  .sumcard .step{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--cAccent);
+    margin-bottom:7px;
+  }
+  .sumcard h3{
+    font-size:15.5px;
+    font-weight:800;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .sumcard p{
+    font-size:12.5px;
+    color:var(--gray);
+    line-height:1.65;
+  }
+
+  /* ---------- DETAIL GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card.k1{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .card.k2{--cN:var(--c2);--cNbg:var(--c2bg);}
+  .card.k3{--cN:var(--c3);--cNbg:var(--c3bg);}
+  .card.k4{--cN:var(--c4);--cNbg:var(--c4bg);}
+  .card.k5{--cN:var(--c5);--cNbg:var(--c5bg);}
+  .card.k6{--cN:var(--c6c);--cNbg:var(--c6bg);}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:13px;
+  }
+  .cmd-badge{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:15px;
+    color:var(--cN);
+    background:var(--cNbg);
+    padding:5px 11px;
+    border-radius:6px;
+    letter-spacing:-.01em;
+  }
+  .cmd-badge.long{font-size:13.5px;}
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    color:var(--cN);
+    border:1px solid var(--cN);
+    padding:3px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .card h2{
+    font-size:19px;
+    font-weight:800;
+    margin-bottom:9px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .lead{
+    font-size:13px;
+    color:var(--gray);
+    line-height:1.72;
+    margin-bottom:15px;
+  }
+  .lead b{color:var(--ink);font-weight:700;}
+  .lead code{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1.5px 5px;
+    border-radius:4px;
+  }
+
+  .rows{margin-bottom:15px;}
+  .kv{
+    display:grid;
+    grid-template-columns:78px 1fr;
+    gap:10px;
+    padding:7px 0;
+    border-top:1px solid var(--line);
+    font-size:12px;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .lbl{
+    font-weight:700;
+    color:var(--cN);
+    font-size:11.5px;
+  }
+  .kv .val{color:var(--gray);line-height:1.6;}
+  .kv .val code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1px 4px;
+    border-radius:3px;
+  }
+
+  .example{
+    background:var(--navy);
+    border-radius:8px;
+    padding:13px 15px 14px;
+    margin-top:auto;
+  }
+  .ex-lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--soft-gray);
+    margin-bottom:8px;
+  }
+  .ex-body{
+    font-family:var(--mono);
+    font-size:11.5px;
+    line-height:1.85;
+    color:#dfe5ee;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .ex-body .p{color:var(--c1);font-weight:700;}      /* 프롬프트 기호 */
+  .ex-body .c{color:#5fd6c8;font-weight:700;}        /* teal 강조 */
+  .ex-body .m{color:#7e8a9a;}                        /* 회색 주석 */
+  .ex-body .y{color:#f0c46a;font-weight:700;}        /* 노랑 강조 */
+  .ex-body .key{
+    display:inline-block;
+    background:#3a4860;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:1px 7px;
+    border-radius:4px;
+    margin:0 1px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .arc{
+    font-size:11.5px;
+    color:var(--gray);
+    line-height:1.7;
+    max-width:62%;
+  }
+  .arc b{color:var(--ink);font-weight:700;display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;}
+  .arc .flow code{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--c3);
+    font-weight:700;
+  }
+  .stamp{text-align:right;flex-shrink:0;}
+  .stamp .ver{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+  .stamp .caveat{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    line-height:1.65;
+    max-width:300px;
+  }
+  .stamp .caveat code{font-family:var(--mono);font-size:10px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    body{padding:20px 12px;}
+    .hero{flex-direction:column;gap:22px;padding:26px 22px 30px;}
+    .hero h1{font-size:30px;}
+    .hero h1 .sub{font-size:17px;}
+    .summary-box{width:100%;}
+    .body{padding:20px 16px 24px;}
+    .sumrow{grid-template-columns:1fr;gap:12px;}
+    .grid{grid-template-columns:1fr;gap:14px;}
+    footer{flex-direction:column;gap:16px;}
+    .arc{max-width:100%;}
+    .stamp{text-align:left;}
+    .stamp .caveat{max-width:100%;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Codex CLI Playbook · 03</div>
+      <h1>
+        비대화형 자동화
+        <span class="sub">사람 없이 굴리기</span>
+      </h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        터미널에 붙어 있지 않아도 Codex가 일하게 만든다 — 비대화형 실행, 기계가 읽는 출력,
+        <b style="color:#fff">CI용 권한 고정</b>, 외부 도구 연결, 워크플로 패키징, 클라우드 위임의 6단계.
+      </div>
+      <div class="mini">
+        <div><code>codex exec</code><span>Run headless</span></div>
+        <div><code>--json</code><span>Machine-readable</span></div>
+        <div><code>--sandbox · -a</code><span>Lock it for CI</span></div>
+        <div><code>codex mcp</code><span>Wire tools</span></div>
+        <div><code>Skills · Hooks</code><span>Package it</span></div>
+        <div><code>codex cloud</code><span>Offload</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div class="body">
+
+    <!-- 요약 카드 3장 -->
+    <div class="sumrow">
+      <div class="sumcard s1">
+        <div class="step">STEP 1—2</div>
+        <h3>헤드리스로 돌리기</h3>
+        <p><code style="font-family:var(--mono);font-size:11px">codex exec</code>로 대화형 TUI 없이 실행하고, <code style="font-family:var(--mono);font-size:11px">--json</code>으로 결과를 기계가 읽게 만든다.</p>
+      </div>
+      <div class="sumcard s2">
+        <div class="step">STEP 3—4</div>
+        <h3>안전하게 연결하기</h3>
+        <p>CI에선 샌드박스·승인 모드를 명시적으로 고정하고, <code style="font-family:var(--mono);font-size:11px">codex mcp</code>로 외부 도구를 붙인다.</p>
+      </div>
+      <div class="sumcard s3">
+        <div class="step">STEP 5—6</div>
+        <h3>패키징하고 위임하기</h3>
+        <p>Skills·Hooks로 반복 워크플로를 패키징하고, <code style="font-family:var(--mono);font-size:11px">codex cloud</code>로 무거운 작업을 클라우드에 넘긴다.</p>
+      </div>
+    </div>
+
+    <!-- 상세 카드 6장 -->
+    <div class="grid">
+
+      <!-- Card 1 -->
+      <div class="card k1">
+        <div class="card-top">
+          <span class="cmd-badge">codex exec</span>
+          <span class="tag">Run headless</span>
+        </div>
+        <h2>비대화형으로 실행</h2>
+        <p class="lead">
+          <code>codex exec "작업 설명"</code>은 대화형 TUI를 열지 않고 Codex를 한 번 돌린다 — 별칭은 <code>codex e</code>.
+          결과를 stdout 또는 JSONL로 스트리밍하고, 이전 세션을 이어받을 수도 있다.
+          스크립트·크론·CI에 그대로 박아 넣는 진입점이다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">사람의 개입 없이 정해진 작업을 1회 실행할 때</span></div>
+          <div class="kv"><span class="lbl">별칭·인자</span><span class="val"><code>codex e "..."</code> — 글로벌 플래그는 서브커맨드 뒤에 (<code>codex exec --oss ...</code>)</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">제출 실패 시 non-zero로 종료 — CI에서 실패 감지에 활용 가능</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex exec <span class="c">"실패한 파서 테스트 고쳐줘"</span>
+<span class="p">$</span> codex e "린트 에러 정리" \
+    --sandbox workspace-write     <span class="m"># 편집 허용</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card k2">
+        <div class="card-top">
+          <span class="cmd-badge long">--json · --output-last-message</span>
+          <span class="tag">Machine-readable</span>
+        </div>
+        <h2>결과를 기계가 읽게</h2>
+        <p class="lead">
+          <code>--json</code>을 붙이면 Codex가 줄 단위 JSON 이벤트(JSONL)를 내보내, 프로그램이 진행 상황을
+          파싱할 수 있다 — 추론 토큰 사용량도 보고된다. <code>--output-last-message</code>는 최종 응답만
+          파일로 저장한다. 후속 파이프라인 단계가 결과를 받아 쓰기 좋다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">exec 결과를 다른 스크립트·도구가 소비해야 할 때</span></div>
+          <div class="kv"><span class="lbl">출력 형태</span><span class="val"><code>--json</code> 줄 단위 JSON 이벤트 / <code>--output-last-message</code> 최종 응답 파일</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val"><code>codex exec</code>와 함께. 인증은 기존 CLI 로그인을 따름</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex exec "릴리스 노트 작성" --json \
+    --output-last-message <span class="y">out.md</span>
+  {"type":"item.completed",...}     <span class="m"># JSONL 스트림</span></div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card k3">
+        <div class="card-top">
+          <span class="cmd-badge long">--sandbox · -a never</span>
+          <span class="tag">Lock it down for CI</span>
+        </div>
+        <h2>CI용 권한 고정</h2>
+        <p class="lead">
+          CI처럼 사람이 없는 환경에선 권한을 명시적으로 박아야 한다. <code>--sandbox</code>로 모델 셸 명령의
+          샌드박스 정책을(예: <code>workspace-write</code>), <code>-a / --ask-for-approval</code>로 승인 시점을 정한다.
+          비대화형은 <code>never</code>가 권장값 — 멈춰서 물어볼 사람이 없기 때문이다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">CI·크론 등 무인 실행 파이프라인</span></div>
+          <div class="kv"><span class="lbl">권장 조합</span><span class="val"><code>--sandbox workspace-write</code> + <code>-a never</code> (비대화형 기준)</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val"><code>on-failure</code> 승인 모드·<code>--full-auto</code>는 deprecated — 명시적 플래그 사용 (상세는 ⑤)</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex exec "마이그레이션 적용" \
+    --sandbox workspace-write <span class="c">-a never</span>
+  <span class="m"># 멈춤 없이 끝까지 실행</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card k4">
+        <div class="card-top">
+          <span class="cmd-badge">codex mcp</span>
+          <span class="tag">Wire external tools</span>
+        </div>
+        <h2>외부 도구 연결</h2>
+        <p class="lead">
+          <code>codex mcp</code> 명령으로 Model Context Protocol 서버를 등록하면, Codex가 세션 시작 시
+          자동으로 띄워 그 도구들을 빌트인 옆에 노출한다. STDIO·streaming HTTP 서버를
+          <code>~/.codex/config.toml</code>에 직접 적거나 <code>codex mcp add</code>로 추가한다.
+          Codex 자체를 MCP 서버로 돌릴 수도 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val"><code>codex mcp add &lt;이름&gt; &lt;URL&gt;</code> 또는 config.toml 직접 편집</span></div>
+          <div class="kv"><span class="lbl">설정 위치</span><span class="val"><code>~/.codex/config.toml</code>의 <code>mcp_servers</code> — 세션 시작 시 자동 기동</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">필요한 도구만 1~2개부터. 세션 내 확인은 <code>/mcp</code>(<code>verbose</code>로 상세)</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex mcp add db-tools https://...
+<span class="m"># 세션에서 확인</span>
+<span class="p">&gt;</span> /mcp verbose <span class="c">연결된 서버·도구 표시</span></div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card k5">
+        <div class="card-top">
+          <span class="cmd-badge long">Skills · Hooks</span>
+          <span class="tag">Package the workflow</span>
+        </div>
+        <h2>워크플로 패키징</h2>
+        <p class="lead">
+          반복되는 작업은 길어진 프롬프트 대신 <b>Skill</b>로 묶는다 — <code>SKILL.md</code>에 지시·맥락·보조
+          로직을 담으며, CLI·IDE·App에서 공통으로 동작한다. <b>Hooks</b>는 정식 기능으로, 특정 이벤트에
+          스크립트를 거는 설정 기반 자동화다. 각 Skill은 한 가지 일에만 좁게 맞춘다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">무엇인가</span><span class="val">Skill = <code>SKILL.md</code> 패키지 / Hooks = 이벤트 트리거 스크립트</span></div>
+          <div class="kv"><span class="lbl">적용 범위</span><span class="val">Skill은 CLI·IDE·App 공통. Hooks는 config 기반, 플러그인 번들 가능</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">Skill은 2~3개 구체 유스케이스부터, "무엇을·언제"를 description에 명시</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># .codex/skills/release/SKILL.md</span>
+name: <span class="c">release-notes</span>
+description: PR 묶어 릴리스 노트 생성</div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card k6">
+        <div class="card-top">
+          <span class="cmd-badge long">codex cloud · apply</span>
+          <span class="tag">Offload to cloud</span>
+        </div>
+        <h2>클라우드로 넘기기</h2>
+        <p class="lead">
+          무거운 작업은 <code>codex cloud</code>(별칭 <code>codex cloud-tasks</code>)로 Codex Cloud 작업을 띄워
+          터미널을 떠나지 않고 탐색·실행한다. 환경은 <code>Ctrl+O</code>로 고른다. 완료된 작업의 diff는
+          <code>codex apply</code>(별칭 <code>codex a</code>)로 로컬 작업 트리에 가져온다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val"><code>codex cloud</code>로 작업 띄우기·탐색, <code>Ctrl+O</code>로 환경 선택</span></div>
+          <div class="kv"><span class="lbl">흐름</span><span class="val">클라우드 작업 실행 → diff 생성 → <code>codex apply</code>로 로컬 반영</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">환경 ID는 Codex cloud 설정에서 옴 — 정확한 값은 대시보드로 확인</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex cloud        <span class="m"># 작업 띄우고 환경 선택</span>
+<span class="p">$</span> codex apply        <span class="c"># 결과 diff를 로컬에 적용</span></div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="arc">
+        <b>6단계 아크</b>
+        <div class="flow">
+          <code>헤드리스 실행</code> → <code>기계가 읽는 출력</code> → <code>CI 권한 고정</code> → <code>외부 도구</code> → <code>패키징</code> → <code>클라우드 위임</code>
+        </div>
+        <div style="margin-top:6px">사람이 붙어 있던 ②편의 사이클을 무인 파이프라인으로 옮기는 단계 — 권한 고정의 디테일은 ⑤편에서 더 판다.</div>
+      </div>
+      <div class="stamp">
+        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="caveat">
+          Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /body -->
+</div><!-- /sheet -->
+<script>
+window.COMMAND_DETAILS = {
+  "codex exec": {
+    source: "https://developers.openai.com/codex/cli/reference#codex-exec",
+    sourceLabel: "developers.openai.com · codex exec",
+    summary: "<code>codex exec</code>(짧은 형태 <code>codex e</code>)는 Codex를 <b>비대화형으로 실행</b>한다. 결과를 stdout 또는 JSONL로 스트리밍하며, 이전 세션을 이어 받을 수 있다. 사람의 개입 없이 끝나야 하는 스크립트·CI 스타일 실행에 적합하다. 주요 플래그로 <code>--json</code>(텍스트 대신 줄바꿈 구분 JSON 이벤트 출력), <code>--output-last-message, -o</code>(어시스턴트 최종 메시지를 파일로 기록), <code>--ephemeral</code>(세션 롤아웃 파일을 디스크에 남기지 않음)이 있다.",
+    example: "codex exec \"테스트를 모두 실행해줘\"\ncodex exec resume [SESSION_ID]",
+    caution: "",
+    version: "v0.134.0"
+  },
+  "codex mcp": {
+    source: "https://developers.openai.com/codex/cli/reference#codex-mcp",
+    sourceLabel: "developers.openai.com · codex mcp",
+    summary: "구성 파일에 등록된 Model Context Protocol(MCP) 서버 항목을 관리한다(목록 조회, 추가, 제거, 인증). 하위 명령으로 <code>add</code>, <code>get</code>, <code>list</code>, <code>login</code>, <code>logout</code>, <code>remove</code>가 있다.",
+    example: "codex mcp list\ncodex mcp add [NAME]\ncodex mcp remove [NAME]",
+    caution: "",
+    version: "v0.134.0"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

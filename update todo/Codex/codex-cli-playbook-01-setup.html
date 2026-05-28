@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 플레이북 01 — 환경 세팅</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 중립 */
+    --navy:#1c2433; --navy2:#283448; --ink:#222831;
+    --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --page:#dfe3ea;
+    /* 6단계 액센트 */
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    padding:40px 20px;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  /* ---------- SHEET ---------- */
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    box-shadow:0 18px 48px rgba(20,28,42,.20);
+    overflow:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy);
+    padding:34px 38px 40px;
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:4px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c1);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:41px;
+    font-weight:800;
+    line-height:1.28;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .sub{
+    display:block;
+    font-size:21px;
+    font-weight:600;
+    color:var(--soft-gray);
+    margin-top:10px;
+    letter-spacing:0;
+  }
+
+  .summary-box{
+    width:392px;
+    flex-shrink:0;
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .thesis{
+    font-size:13.5px;
+    color:#cdd5e0;
+    line-height:1.7;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid #3a4860;
+  }
+  .mini{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+  }
+  .mini div{display:flex;flex-direction:column;gap:2px;}
+  .mini code{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+  }
+  .mini span{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    letter-spacing:.02em;
+  }
+
+  /* ---------- BODY ---------- */
+  .body{padding:24px 26px 30px;}
+
+  /* ---------- SUMMARY ROW ---------- */
+  .sumrow{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .sumcard{
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-top:3px solid var(--cAccent);
+    border-radius:8px;
+    padding:16px 18px 17px;
+  }
+  .sumcard.s1{--cAccent:var(--c1);}
+  .sumcard.s2{--cAccent:var(--c3);}
+  .sumcard.s3{--cAccent:var(--c5);}
+  .sumcard .step{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--cAccent);
+    margin-bottom:7px;
+  }
+  .sumcard h3{
+    font-size:15.5px;
+    font-weight:800;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .sumcard p{
+    font-size:12.5px;
+    color:var(--gray);
+    line-height:1.65;
+  }
+
+  /* ---------- DETAIL GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card.k1{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .card.k2{--cN:var(--c2);--cNbg:var(--c2bg);}
+  .card.k3{--cN:var(--c3);--cNbg:var(--c3bg);}
+  .card.k4{--cN:var(--c4);--cNbg:var(--c4bg);}
+  .card.k5{--cN:var(--c5);--cNbg:var(--c5bg);}
+  .card.k6{--cN:var(--c6c);--cNbg:var(--c6bg);}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:13px;
+  }
+  .cmd-badge{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:15px;
+    color:var(--cN);
+    background:var(--cNbg);
+    padding:5px 11px;
+    border-radius:6px;
+    letter-spacing:-.01em;
+  }
+  .cmd-badge.long{font-size:13.5px;}
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    color:var(--cN);
+    border:1px solid var(--cN);
+    padding:3px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .card h2{
+    font-size:19px;
+    font-weight:800;
+    margin-bottom:9px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .lead{
+    font-size:13px;
+    color:var(--gray);
+    line-height:1.72;
+    margin-bottom:15px;
+  }
+  .lead b{color:var(--ink);font-weight:700;}
+  .lead code{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1.5px 5px;
+    border-radius:4px;
+  }
+
+  .rows{margin-bottom:15px;}
+  .kv{
+    display:grid;
+    grid-template-columns:78px 1fr;
+    gap:10px;
+    padding:7px 0;
+    border-top:1px solid var(--line);
+    font-size:12px;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .lbl{
+    font-weight:700;
+    color:var(--cN);
+    font-size:11.5px;
+  }
+  .kv .val{color:var(--gray);line-height:1.6;}
+  .kv .val code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1px 4px;
+    border-radius:3px;
+  }
+
+  .example{
+    background:var(--navy);
+    border-radius:8px;
+    padding:13px 15px 14px;
+    margin-top:auto;
+  }
+  .ex-lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--soft-gray);
+    margin-bottom:8px;
+  }
+  .ex-body{
+    font-family:var(--mono);
+    font-size:11.5px;
+    line-height:1.85;
+    color:#dfe5ee;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .ex-body .p{color:var(--c1);font-weight:700;}      /* 프롬프트 기호 */
+  .ex-body .c{color:#5fd6c8;font-weight:700;}        /* teal 강조 */
+  .ex-body .m{color:#7e8a9a;}                        /* 회색 주석 */
+  .ex-body .y{color:#f0c46a;font-weight:700;}        /* 노랑 강조 */
+  .ex-body .key{
+    display:inline-block;
+    background:#3a4860;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:1px 7px;
+    border-radius:4px;
+    margin:0 1px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .arc{
+    font-size:11.5px;
+    color:var(--gray);
+    line-height:1.7;
+    max-width:62%;
+  }
+  .arc b{color:var(--ink);font-weight:700;display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;}
+  .arc .flow code{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--c3);
+    font-weight:700;
+  }
+  .stamp{text-align:right;flex-shrink:0;}
+  .stamp .ver{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+  .stamp .caveat{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    line-height:1.65;
+    max-width:300px;
+  }
+  .stamp .caveat code{font-family:var(--mono);font-size:10px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    body{padding:20px 12px;}
+    .hero{flex-direction:column;gap:22px;padding:26px 22px 30px;}
+    .hero h1{font-size:30px;}
+    .hero h1 .sub{font-size:17px;}
+    .summary-box{width:100%;}
+    .body{padding:20px 16px 24px;}
+    .sumrow{grid-template-columns:1fr;gap:12px;}
+    .grid{grid-template-columns:1fr;gap:14px;}
+    footer{flex-direction:column;gap:16px;}
+    .arc{max-width:100%;}
+    .stamp{text-align:left;}
+    .stamp .caveat{max-width:100%;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Codex CLI Playbook · 01</div>
+      <h1>
+        환경 세팅
+        <span class="sub">처음 켜서 일할 환경 만들기</span>
+      </h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        설치·인증부터 권한 정책, <b style="color:#fff">AGENTS.md</b>, <b style="color:#fff">config.toml</b>까지 —
+        Codex CLI가 당신의 저장소에서 안전하게 일하도록 바닥을 까는 6단계.
+      </div>
+      <div class="mini">
+        <div><code>codex</code><span>Install &amp; sign in</span></div>
+        <div><code>/model · /fast</code><span>Pick the engine</span></div>
+        <div><code>/permissions</code><span>Set the guardrails</span></div>
+        <div><code>/init</code><span>Persist instructions</span></div>
+        <div><code>config.toml</code><span>Tune defaults</span></div>
+        <div><code>/status</code><span>Verify setup</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div class="body">
+
+    <!-- 요약 카드 3장 -->
+    <div class="sumrow">
+      <div class="sumcard s1">
+        <div class="step">STEP 1—2</div>
+        <h3>켜고 들어가기</h3>
+        <p>npm으로 설치하고 ChatGPT 계정 또는 API 키로 인증한 뒤, 작업 성격에 맞는 모델과 속도를 고른다.</p>
+      </div>
+      <div class="sumcard s2">
+        <div class="step">STEP 3—4</div>
+        <h3>정책과 지침 깔기</h3>
+        <p>승인·샌드박스 정책을 정하고, AGENTS.md로 저장소 컨벤션을 고정해 모든 세션이 같은 맥락을 공유하게 한다.</p>
+      </div>
+      <div class="sumcard s3">
+        <div class="step">STEP 5—6</div>
+        <h3>기본값 굳히고 검증</h3>
+        <p>config.toml로 기본값을 박아 두고, <code style="font-family:var(--mono);font-size:11px">/status</code>·<code style="font-family:var(--mono);font-size:11px">/debug-config</code>로 설정이 의도대로 먹었는지 확인한다.</p>
+      </div>
+    </div>
+
+    <!-- 상세 카드 6장 -->
+    <div class="grid">
+
+      <!-- Card 1 -->
+      <div class="card k1">
+        <div class="card-top">
+          <span class="cmd-badge">codex</span>
+          <span class="tag">Install &amp; sign in</span>
+        </div>
+        <h2>설치하고 로그인하기</h2>
+        <p class="lead">
+          <code>npm i -g @openai/codex</code>로 설치하고 터미널에서 <code>codex</code>를 실행하면
+          첫 실행 때 로그인 화면이 뜬다. <b>ChatGPT 계정</b>(Plus·Pro·Business·Edu·Enterprise 포함) 또는
+          <b>API 키</b> 중 하나로 인증한다. Codex CLI는 macOS·Windows·Linux를 지원하며 Rust로 작성된 오픈소스다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">설치</span><span class="val"><code>npm i -g @openai/codex</code> 또는 <code>brew install --cask codex</code></span></div>
+          <div class="kv"><span class="lbl">인증</span><span class="val"><code>codex</code> 실행 → <b style="color:var(--ink)">Sign in with ChatGPT</b>, 또는 API 키</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">Windows는 네이티브 PowerShell(샌드박스) 또는 WSL2. 업데이트는 <code>codex update</code></span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> npm i -g @openai/codex
+<span class="p">$</span> codex            <span class="m"># 첫 실행 → 로그인 안내</span>
+<span class="p">&gt;</span> <span class="c">Sign in with ChatGPT</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card k2">
+        <div class="card-top">
+          <span class="cmd-badge long">/model · /fast</span>
+          <span class="tag">Pick the engine</span>
+        </div>
+        <h2>모델과 속도 고르기</h2>
+        <p class="lead">
+          세션 안에서 <code>/model</code>로 활성 모델과 추론 강도를 바꾼다 — GPT-5.5·GPT-5.4·GPT-5.3-Codex 등에서 선택.
+          <code>/fast</code>는 지원 모델에서 <b>Fast 모드</b>를 켜고 끈다. TUI에서는
+          <b>Alt+,</b> / <b>Alt+.</b> 로 추론 강도를 즉시 낮추거나 올릴 수도 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">빠른 모델 ↔ 깊은 추론 모델을 작업 성격에 맞춰 전환할 때</span></div>
+          <div class="kv"><span class="lbl">선택지</span><span class="val"><code>/model</code>(모델·추론 강도), <code>/fast on|off|status</code></span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">변경 확인은 <code>/status</code>, 푸터 상시 표시는 <code>/statusline</code></span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /model           <span class="m"># 팝업에서 모델 선택</span>
+<span class="p">&gt;</span> /fast on          <span class="m"># Fast 모드 켜기</span>
+<span class="p">&gt;</span> /status           <span class="c"># 적용 확인</span></div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card k3">
+        <div class="card-top">
+          <span class="cmd-badge">/permissions</span>
+          <span class="tag">Set the guardrails</span>
+        </div>
+        <h2>승인·샌드박스 정책 잡기</h2>
+        <p class="lead">
+          <code>/permissions</code>로 Codex가 묻지 않고 할 수 있는 범위를 정한다. 검토 위주면 <b>Read Only</b>,
+          맡기는 작업이면 <b>Auto</b> 같은 프리셋을 고른다. 승인 모드와 샌드박스 모드는 별개 손잡이이며,
+          새로 시작할 땐 기본값으로 두고 신뢰하는 저장소에서만 풀어주는 게 안전하다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">세션 도중 승인 강도를 조이거나 풀어줄 때</span></div>
+          <div class="kv"><span class="lbl">모드</span><span class="val">Read Only / Auto 등 프리셋 — <code>/approvals</code>는 별칭(팝업 비표시)</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">자세한 권한 설계는 Playbook ⑤에서. <code>on-failure</code> 승인 모드는 deprecated</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /permissions
+  ▸ Read Only       <span class="m"># 편집 전 검토</span>
+  ▸ <span class="c">Auto</span>            <span class="m"># 핸즈오프 실행</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card k4">
+        <div class="card-top">
+          <span class="cmd-badge">/init</span>
+          <span class="tag">Persist instructions</span>
+        </div>
+        <h2>AGENTS.md로 맥락 고정</h2>
+        <p class="lead">
+          <code>/init</code>을 실행하면 현재 디렉터리에 <b>AGENTS.md</b> 스캐폴드가 생성된다.
+          저장소 컨벤션·빌드 방법·주의사항을 여기 적어 두면 이후 모든 세션이 같은 맥락을 공유한다.
+          생성된 파일을 다듬어 커밋하는 흐름이다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val">맥락을 둘 디렉터리에서 <code>/init</code> 실행</span></div>
+          <div class="kv"><span class="lbl">담는 내용</span><span class="val">빌드·테스트 명령, 코드 컨벤션, 하지 말 것</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">하위 디렉터리별로도 둘 수 있음. 팀 리뷰 규칙은 <code>code_review.md</code> 분리 권장</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /init             <span class="m"># AGENTS.md 생성</span>
+<span class="m"># 내용 편집 후 커밋</span>
+<span class="p">$</span> git add <span class="y">AGENTS.md</span></div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card k5">
+        <div class="card-top">
+          <span class="cmd-badge">config.toml</span>
+          <span class="tag">Tune defaults</span>
+        </div>
+        <h2>config.toml로 기본값 조정</h2>
+        <p class="lead">
+          Codex는 기본값을 <code>~/.codex/config.toml</code>에서 읽는다. 모델·승인 정책·샌드박스·MCP 서버·
+          <code>tui.status_line</code> 같은 항목을 미리 박아 두면 매번 슬래시로 바꿀 필요가 없다.
+          CLI에서 <code>-c key=value</code>로 그때그때 덮어쓸 수도 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">위치</span><span class="val"><code>~/.codex/config.toml</code> (<code>CODEX_HOME</code> 설정 시 그 경로)</span></div>
+          <div class="kv"><span class="lbl">핵심 키</span><span class="val">model, 승인·샌드박스, <code>mcp_servers</code>, <code>tui.status_line</code>, <code>[features]</code></span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">일회성 오버라이드는 <code>-c key=value</code>. CLI·IDE·App이 같은 설정을 공유</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># ~/.codex/config.toml</span>
+model = <span class="c">"gpt-5.5"</span>
+<span class="p">$</span> codex -c model=gpt-5.4   <span class="m"># 1회 덮어쓰기</span></div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card k6">
+        <div class="card-top">
+          <span class="cmd-badge long">/status · /debug-config</span>
+          <span class="tag">Verify setup</span>
+        </div>
+        <h2>설정이 먹었는지 확인</h2>
+        <p class="lead">
+          <code>/status</code>는 활성 모델·승인 정책·쓰기 가능 루트·토큰 사용량을 한 화면에 보여 준다.
+          설정이 의도대로 안 먹을 땐 <code>/debug-config</code>로 설정 레이어 우선순위와 정책 출처를 들여다본다 —
+          <code>config.toml</code> 값과 실제 적용값이 왜 다른지 추적하는 용도다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">작업 시작 전, 또는 설정이 의심스러울 때</span></div>
+          <div class="kv"><span class="lbl">확인 항목</span><span class="val">모델·승인 정책·쓰기 루트·토큰 / 설정 레이어 우선순위</span></div>
+          <div class="kv"><span class="lbl">트러블슈팅</span><span class="val"><code>/debug-config</code>로 <code>allowed_*</code> 정책·experimental 제약 확인</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /status           <span class="c"># 모델·정책·토큰 요약</span>
+<span class="p">&gt;</span> /debug-config     <span class="m"># 레이어·정책 출처 진단</span></div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="arc">
+        <b>6단계 아크</b>
+        <div class="flow">
+          <code>설치·인증</code> → <code>모델·속도</code> → <code>권한·샌드박스</code> → <code>AGENTS.md</code> → <code>config.toml</code> → <code>검증</code>
+        </div>
+        <div style="margin-top:6px">한 번 깔아 두면 이후 플레이북(작업 완주 · 자동화 · 멀티스레드 · 권한 심화)이 모두 이 바닥 위에서 돈다.</div>
+      </div>
+      <div class="stamp">
+        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="caveat">
+          Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /body -->
+</div><!-- /sheet -->
+<script>
+window.COMMAND_DETAILS = {
+  "codex": {
+    source: "https://developers.openai.com/codex/cli/reference",
+    sourceLabel: "developers.openai.com · codex (대화형)",
+    summary: "서브커맨드 없이 <code>codex</code>를 실행하면 터미널 UI(대화형 모드)가 시작된다. 위 글로벌 플래그를 모두 받으며 선택적으로 프롬프트나 이미지 첨부를 함께 전달할 수 있다. 웹 검색은 기본적으로 캐시 모드로 동작하며, 라이브 브라우징이 필요하면 <code>--search</code>로 전환한다.",
+    example: "codex\ncodex \"이 저장소를 점검해줘\"",
+    caution: "",
+    version: "v0.134.0"
+  },
+  "/permissions": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#update-permissions-with-permissions",
+    sourceLabel: "developers.openai.com · /permissions",
+    summary: "Codex가 별도 확인 없이 수행할 수 있는 작업의 범위를 설정합니다. 세션 도중에 Auto와 Read Only 사이를 전환하는 등 승인 요구 수준을 완화하거나 강화할 때 사용합니다. <code>/permissions</code>를 입력하고 Enter를 누른 뒤 본인의 허용 수준에 맞는 승인 프리셋을 선택합니다.",
+    example: "/permissions",
+    caution: "",
+    version: "rust-v0.134.0"
+  },
+  "/init": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#generate-agentsmd-with-init",
+    sourceLabel: "developers.openai.com · /init",
+    summary: "현재 디렉토리에 <code>AGENTS.md</code> 스캐폴드를 생성합니다. 작업 중인 저장소 또는 하위 디렉토리에 영구적으로 적용할 지시사항을 기록할 때 사용합니다. <code>/init</code>을 실행한 뒤 생성된 파일을 검토하고 저장소 컨벤션에 맞게 편집합니다.",
+    example: "/init",
+    caution: "",
+    version: "rust-v0.134.0"
+  },
+  "config.toml": {
+    source: "https://developers.openai.com/codex/config-basic",
+    sourceLabel: "developers.openai.com · Codex Configuration Basics",
+    summary: "Codex는 사용자 수준 설정을 <code>~/.codex/config.toml</code>에 저장하며, 저장소 내의 <code>.codex/config.toml</code>로 프로젝트별 재정의가 가능하다. <b>우선순위</b>(높음→낮음): ① CLI 플래그와 <code>--config</code> 재정의 → ② 프로젝트 설정 파일(작업 디렉토리에 가까운 것 우선) → ③ 프로필 파일 → ④ 사용자 설정(<code>~/.codex/config.toml</code>) → ⑤ 시스템 설정 → ⑥ 내장 기본값. 주요 키: <code>model</code>(모델 선택), <code>approval_policy</code>(승인 동작), <code>sandbox_mode</code>(샌드박스 접근 수준 — <code>read-only</code>·<code>workspace-write</code>·<code>danger-full-access</code>), <code>web_search</code>(<code>cached</code>·<code>live</code>·<code>disabled</code>), <code>model_reasoning_effort</code>(지원 시 추론 강도).",
+    example: "# ~/.codex/config.toml\nmodel = \"gpt-5.5\"\napproval_policy = \"on-request\"\nsandbox_mode = \"workspace-write\"\nweb_search = \"cached\"\nmodel_reasoning_effort = \"high\"",
+    caution: "프로젝트 설정 파일은 <b>신뢰된 디렉토리</b>에서만 로드된다 — 보안을 위해 기본 동작.",
+    version: "v0.134.0"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

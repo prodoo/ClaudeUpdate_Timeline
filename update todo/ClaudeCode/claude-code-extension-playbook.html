@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 확장 노하우 — Skills · Plugins · MCP</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2433; --navy2:#283448;
+    --ink:#222831; --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,sans-serif;
+    background:#dfe3ea;color:var(--ink);
+    padding:30px 16px;-webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1180px;margin:0 auto;background:var(--bg);
+    border-radius:6px;overflow:hidden;box-shadow:0 8px 44px rgba(20,28,45,.17);
+  }
+  .hero{
+    background:var(--navy);color:#fff;padding:34px 38px 40px;
+    display:flex;justify-content:space-between;gap:36px;align-items:flex-start;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:6px;}
+  .eyebrow{font-size:12px;letter-spacing:.3em;color:#8e9ab2;font-weight:600;margin-bottom:14px;}
+  .hero h1{font-size:42px;font-weight:800;line-height:1.16;letter-spacing:-.02em;}
+  .hero h1 .acc{color:#5fd0c3;}
+  .summary-box{
+    background:var(--navy2);border:1px solid #3a4860;border-radius:10px;
+    padding:20px 22px;width:392px;flex-shrink:0;
+  }
+  .summary-box .thesis{font-size:13.5px;line-height:1.7;color:#cdd5e2;font-weight:500;margin-bottom:15px;}
+  .mini{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;align-items:baseline;}
+  .mini code{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;}
+  .mini span{font-family:var(--mono);font-size:11px;color:#8e9ab2;text-align:left;}
+
+  .body{padding:24px 26px 30px;}
+  .sumrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .sumcard{
+    background:var(--bg);border:1px solid var(--line);
+    border-top:3px solid var(--cc);border-radius:8px;padding:15px 17px 16px;
+  }
+  .sumcard .step{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    color:var(--cc);letter-spacing:.04em;margin-bottom:6px;
+  }
+  .sumcard h3{font-size:15px;font-weight:800;margin-bottom:7px;}
+  .sumcard p{font-size:12px;line-height:1.62;color:var(--gray);}
+  .sumcard p b{color:#3a4452;font-weight:700;font-family:var(--mono);font-size:11.5px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px 22px;display:flex;flex-direction:column;
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;}
+  .cmd-badge{
+    font-family:var(--mono);font-size:14.5px;font-weight:700;
+    padding:6px 13px;border-radius:8px;background:var(--cbg);color:var(--cc);
+  }
+  .tag{
+    font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;
+    border:1px solid var(--cc);color:var(--cc);background:var(--bg);white-space:nowrap;
+  }
+  .card h2{font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.32;margin-bottom:9px;}
+  .card .lead{font-size:12.5px;line-height:1.68;color:var(--gray);margin-bottom:16px;}
+  .card .lead b{color:#3a4452;font-weight:700;}
+  .card .lead code{font-family:var(--mono);font-size:11.5px;font-weight:700;color:#3a4452;}
+
+  .rows{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+  .kv{
+    display:grid;grid-template-columns:84px 1fr;gap:14px;
+    padding:9px 0;border-top:1px solid var(--line);align-items:start;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .k{font-size:11.5px;font-weight:700;color:var(--soft-gray);}
+  .kv .v{font-size:12px;line-height:1.6;color:#3f4956;}
+  .kv .v b{color:#1f2731;font-weight:700;}
+  .kv .v code{
+    font-family:var(--mono);font-size:11px;font-weight:700;color:#2f3742;
+    background:var(--soft);padding:1px 4px;border-radius:3px;
+  }
+
+  .example{margin-top:auto;background:var(--navy);border-radius:8px;padding:13px 15px;}
+  .example .ex-lbl{font-size:9.5px;font-weight:700;letter-spacing:.14em;color:#7785a0;margin-bottom:7px;}
+  .example .ex-body{font-family:var(--mono);font-size:11.5px;line-height:1.62;color:#e8ecf3;font-weight:500;}
+  .example .ex-body .c{color:#5fd0c3;font-weight:700;}
+  .example .ex-body .m{color:#8e9ab2;}
+  .example .ex-body .y{color:#e8c07a;}
+
+  footer{
+    padding:16px 32px 24px;font-size:11px;color:#9aa3b2;
+    display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);
+  }
+  footer b{color:#7b8696;}
+
+  @media (max-width:880px){
+    .hero{flex-direction:column;gap:22px;}
+    .hero h1{font-size:32px;}
+    .summary-box{width:100%;}
+    .sumrow{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">CLAUDE CODE EXTENSION PLAYBOOK</div>
+      <h1>Claude Code를 <span class="acc">내 도메인에</span><br>맞게 키우는 법</h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        네 가지 확장 수단을 구분하고, SKILL.md로 스킬을 만들고, 호출 방식을 익히고,
+        Plugins로 배포하고, MCP로 외부 도구를 연결하고, 임의 코드 실행을 전제로 안전하게 설치합니다.
+      </div>
+      <div class="mini">
+        <code>4 mechanisms</code><span>orientation</span>
+        <code>SKILL.md</code><span>build a skill</span>
+        <code>/skills</code><span>invoke</span>
+        <code>/plugin</code><span>distribution</span>
+        <code>/mcp</code><span>connect tools</span>
+        <code>extension safety</code><span>arbitrary code</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ============ SUMMARY CARDS ============ -->
+    <div class="sumrow">
+      <div class="sumcard" style="--cc:var(--c1);">
+        <div class="step">STEP 1 — 2 · 스킬의 정체와 제작</div>
+        <h3>무엇을, 어떻게 만드는지</h3>
+        <p>Skills·MCP·Subagents·<b>Plugins</b> 네 수단을 구분하고, <b>SKILL.md</b> 하나로 스킬을 만든다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c3);">
+        <div class="step">STEP 3 — 4 · 호출과 배포</div>
+        <h3>불러오고, 묶어서 나눈다</h3>
+        <p>이름 멘션·<b>/슬래시</b>·자율 호출로 스킬을 부르고, <b>/plugin</b>으로 묶어서 배포한다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c5);">
+        <div class="step">STEP 5 — 6 · 연결과 안전</div>
+        <h3>도구를 잇되, 검토하고 설치</h3>
+        <p><b>/mcp</b>로 외부 도구를 연결하고, 임의 코드 실행을 전제로 출처를 검토한 뒤 설치한다.</p>
+      </div>
+    </div>
+
+    <!-- ============ DETAIL CARDS ============ -->
+    <div class="grid">
+
+      <!-- 1 -->
+      <div class="card" style="--cc:var(--c1);--cbg:var(--c1bg);">
+        <div class="card-top">
+          <span class="cmd-badge">4 mechanisms</span>
+          <span class="tag">Orientation</span>
+        </div>
+        <h2>네 가지 확장 메커니즘을 먼저 구분한다</h2>
+        <p class="lead">
+          Claude 생태계엔 헷갈리기 쉬운 네 가지 확장 수단이 있다. 비유하자면 <b>MCP는 부엌</b>(칼·냄비·재료=도구),
+          <b>스킬은 레시피</b>(그 도구를 어떻게 쓸지)다 — 둘은 서로 결합된다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">Skills</div><div class="v">작업 방법을 알려주는 지시문 — 가장 가볍고 이식성이 높음(Codex·Cursor 등 공통)</div></div>
+          <div class="kv"><div class="k">MCP</div><div class="v">외부 도구·데이터 소스를 표준 프로토콜로 노출하는 실행 프로세스</div></div>
+          <div class="kv"><div class="k">Subagent / Plugin</div><div class="v">격리된 작업자 / 위 모두를 묶는 <b>배포 단위</b></div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># Sentry 코드 리뷰 스킬 = PR 분석 워크플로는 </span><span class="c">SKILL.md</span><span class="m">, 에러 데이터는 </span><span class="c">MCP</span></div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card" style="--cc:var(--c2);--cbg:var(--c2bg);">
+        <div class="card-top">
+          <span class="cmd-badge">SKILL.md</span>
+          <span class="tag">Build a skill</span>
+        </div>
+        <h2>SKILL.md 하나로 스킬을 만든다</h2>
+        <p class="lead">
+          스킬은 SKILL.md 파일을 담은 폴더다 — YAML frontmatter(<code>name</code>·<code>description</code>)와
+          마크다운 지시문, 선택적 스크립트·리소스. Claude가 작업 맥락에 맞춰 자동 호출하고,
+          안 쓰일 땐 컨텍스트를 안 차지하게 <b>점진 로딩</b>된다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">위치</div><div class="v"><code>.claude/skills/&lt;name&gt;/</code>(프로젝트) / <code>~/.claude/skills/&lt;name&gt;/</code>(유저)</div></div>
+          <div class="kv"><div class="k">두 종류</div><div class="v"><b>Capability Uplift</b>(없던 능력 부여, 실행 스크립트 포함) vs <b>Encoded Preference</b>(우리 팀 방식을 박제)</div></div>
+          <div class="kv"><div class="k">제작</div><div class="v">반복 설명하는 워크플로가 보이면 그때 — <b>Skill Creator</b>의 인터랙티브 Q&amp;A로 골격 생성</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="y">description</span><span class="m">을 명확히 — Claude가 "언제 이 스킬을 쓸지" 판단하는 근거</span></div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card" style="--cc:var(--c3);--cbg:var(--c3bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/skills</span>
+          <span class="tag">Invoke</span>
+        </div>
+        <h2>이름 멘션·슬래시·자율 호출로 불러온다</h2>
+        <p class="lead">
+          스킬은 세 가지 방식으로 발동한다. 이름을 멘션하거나("PDF 스킬 써서…"),
+          <code>/name</code> 슬래시로 직접 부르거나, Claude가 맥락을 보고 자율적으로 호출한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">명령 통합</div><div class="v">커스텀 슬래시 명령이 스킬로 통합됨(v2.1.101) — <code>.claude/commands/</code>는 레거시, <code>.claude/skills/&lt;name&gt;/SKILL.md</code> 권장</div></div>
+          <div class="kv"><div class="k">인자</div><div class="v"><code>$ARGUMENTS</code>·<code>$1</code>·<code>$2</code>로 명령 뒤 텍스트를 받음</div></div>
+          <div class="kv"><div class="k">frontmatter</div><div class="v"><code>allowed-tools</code>·<code>model</code>·<code>argument-hint</code>·<code>effort</code>로 동작 제어</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/skills</span> <span class="m">— 설치된 스킬 목록 확인 (타입 입력 필터 검색 지원)</span></div>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card" style="--cc:var(--c4);--cbg:var(--c4bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/plugin</span>
+          <span class="tag">Distribution</span>
+        </div>
+        <h2>Plugins로 묶어서 배포한다</h2>
+        <p class="lead">
+          플러그인은 배포 포맷이다. 스킬·서브에이전트·훅·MCP 서버·슬래시 명령을 하나의 설치 단위로 묶는다 —
+          <b>"플러그인은 배포 포맷, 스킬은 내용물."</b>
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">구조</div><div class="v"><code>.claude-plugin/plugin.json</code> 매니페스트 + <code>skills/</code>·<code>agents/</code>·<code>hooks/</code>·<code>.mcp.json</code></div></div>
+          <div class="kv"><div class="k">설치</div><div class="v"><code>/plugin marketplace add &lt;github-repo&gt;</code> → <code>/plugin install &lt;name&gt;@&lt;marketplace&gt;</code></div></div>
+          <div class="kv"><div class="k">출처</div><div class="v">공식 Anthropic 마켓플레이스(검증됨) vs 커뮤니티 GitHub repo(품질 편차 큼)</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/plugin marketplace add</span> <span class="m">— 팀 전용 마켓플레이스 등록 후 일괄 설치</span></div>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card" style="--cc:var(--c5);--cbg:var(--c5bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/mcp</span>
+          <span class="tag">Connect tools</span>
+        </div>
+        <h2>MCP로 외부 도구를 연결한다</h2>
+        <p class="lead">
+          MCP 서버는 표준 프로토콜로 도구와 데이터 소스를 Claude에 노출한다.
+          연결하면 각 서버의 프롬프트가 <b>동적 슬래시 명령</b>으로 나타난다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">관리</div><div class="v"><code>/mcp</code>로 서버 연결·관리; <code>.mcp.json</code> 편집은 재연결로 반영</div></div>
+          <div class="kv"><div class="k">동적 명령</div><div class="v">연결 후 <code>/mcp__server__prompt</code> 형식 명령이 자동 생성 (예: <code>/mcp__github__list_prs</code>)</div></div>
+          <div class="kv"><div class="k">스킬과 결합</div><div class="v">MCP=도구, 스킬=사용법 — SKILL.md가 MCP 도구 사용 워크플로를 정의</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body">GitHub MCP 연결 <span class="m">→</span> <span class="c">/mcp__github__create_pr</span> <span class="m">로 PR 생성</span></div>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="card" style="--cc:var(--c6c);--cbg:var(--c6bg);">
+        <div class="card-top">
+          <span class="cmd-badge">extension safety</span>
+          <span class="tag">Arbitrary code</span>
+        </div>
+        <h2>임의 코드 실행을 전제로 검토 후 설치한다</h2>
+        <p class="lead">
+          스킬·플러그인은 Claude 환경에서 <b>임의 코드를 실행</b>할 수 있다. 특히 훅·MCP 서버를 포함한
+          플러그인은 내 머신에서 코드를 돌린다 — 커뮤니티 마켓플레이스는 공식만큼 검수되지 않는다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">검토 습관</div><div class="v">신뢰 못 할 출처는 <code>SKILL.md</code>와 <code>scripts/</code> 폴더를 직접 읽을 것 — Bash 명령·네트워크 요청 주의</div></div>
+          <div class="kv"><div class="k">안전 테스트</div><div class="v"><code>--plugin-dir</code>로 로컬 복사본 우선 로드, <code>--plugin-url</code>은 해당 세션만; <code>/reload-plugins</code>로 재시작 없이 갱신</div></div>
+          <div class="kv"><div class="k">출처 확인</div><div class="v">공식 플러그인은 검증됨, 커뮤니티는 제작자 프로필·저장소 활동을 확인</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># 설치 전 — 훅·MCP 서버 포함 여부와 plugin.json을 먼저 확인</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>Claude Code Extension Playbook · 구분 → 제작 → 호출 → 배포 → 연결 → 안전</span>
+    <span>2026년 5월 14일 기준 · v2.1.141 · Skills·Plugins 구조는 진화 중 — <b>공식 docs</b>로 확인 권장</span>
+  </footer>
+
+</div>
+<script>
+window.COMMAND_DETAILS = {
+  "SKILL.md": {
+    source: "https://code.claude.com/docs/ko/skills",
+    sourceLabel: "code.claude.com · skills · SKILL.md",
+    summary: "<code>SKILL.md</code> 파일을 지침과 함께 생성하면 Claude가 이를 자신의 도구 모음에 추가합니다. Claude는 관련이 있을 때 skills를 사용하거나 <code>/skill-name</code>으로 직접 호출할 수 있습니다. 모든 skill에는 두 부분이 있는 <code>SKILL.md</code> 파일이 필요합니다: Claude에게 skill을 언제 사용할지 알려주는 <b>YAML frontmatter</b>(<code>---</code> 마커 사이)와 skill이 실행될 때 Claude가 따르는 지침이 있는 markdown 콘텐츠입니다. 디렉토리 이름이 입력하는 명령어가 되고, <code>description</code>은 Claude가 자동으로 skill을 로드할 시기를 결정하는 데 도움이 됩니다. 위치: Personal <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code> · Project <code>.claude/skills/&lt;name&gt;/SKILL.md</code> · Plugin <code>&lt;plugin&gt;/skills/&lt;name&gt;/SKILL.md</code>.",
+    example: "---\ndescription: Summarizes uncommitted changes and flags anything risky. Use when the user asks what changed.\n---\n\n## Current changes\n\n!`git diff HEAD`\n\n## Instructions\n\nSummarize the changes above in two or three bullet points, then list any risks you notice.",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/skills": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /skills",
+    summary: "사용 가능한 skills를 나열합니다. <code>t</code>를 눌러 토큰 수로 정렬합니다. <code>Space</code>를 눌러 Claude 또는 <code>/</code> 메뉴에서 skill을 숨기고, <code>Enter</code>를 눌러 저장합니다.",
+    example: "> /skills",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/plugin": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /plugin",
+    summary: "Claude Code plugins를 관리합니다.",
+    example: "> /plugin",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/mcp": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /mcp",
+    summary: "<b>MCP 서버 연결</b> 및 <b>OAuth 인증</b>을 관리합니다.",
+    example: "# MCP 서버 연결·인증 관리\n&gt; /mcp",
+    caution: "",
+    version: "v2.1.141"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

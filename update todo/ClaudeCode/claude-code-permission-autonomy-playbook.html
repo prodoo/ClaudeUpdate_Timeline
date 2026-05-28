@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 권한 & 자율성 노하우</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2433; --navy2:#283448;
+    --ink:#222831; --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,sans-serif;
+    background:#dfe3ea;color:var(--ink);
+    padding:30px 16px;-webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1180px;margin:0 auto;background:var(--bg);
+    border-radius:6px;overflow:hidden;box-shadow:0 8px 44px rgba(20,28,45,.17);
+  }
+  .hero{
+    background:var(--navy);color:#fff;padding:34px 38px 40px;
+    display:flex;justify-content:space-between;gap:36px;align-items:flex-start;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:6px;}
+  .eyebrow{font-size:12px;letter-spacing:.3em;color:#8e9ab2;font-weight:600;margin-bottom:14px;}
+  .hero h1{font-size:40px;font-weight:800;line-height:1.16;letter-spacing:-.02em;}
+  .hero h1 .acc{color:#5fd0c3;}
+  .summary-box{
+    background:var(--navy2);border:1px solid #3a4860;border-radius:10px;
+    padding:20px 22px;width:392px;flex-shrink:0;
+  }
+  .summary-box .thesis{font-size:13.5px;line-height:1.7;color:#cdd5e2;font-weight:500;margin-bottom:15px;}
+  .mini{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;align-items:baseline;}
+  .mini code{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;}
+  .mini span{font-family:var(--mono);font-size:11px;color:#8e9ab2;text-align:left;}
+
+  .body{padding:24px 26px 30px;}
+  .sumrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .sumcard{
+    background:var(--bg);border:1px solid var(--line);
+    border-top:3px solid var(--cc);border-radius:8px;padding:15px 17px 16px;
+  }
+  .sumcard .step{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    color:var(--cc);letter-spacing:.04em;margin-bottom:6px;
+  }
+  .sumcard h3{font-size:15px;font-weight:800;margin-bottom:7px;}
+  .sumcard p{font-size:12px;line-height:1.62;color:var(--gray);}
+  .sumcard p b{color:#3a4452;font-weight:700;font-family:var(--mono);font-size:11.5px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px 22px;display:flex;flex-direction:column;
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;}
+  .cmd-badge{
+    font-family:var(--mono);font-size:13.5px;font-weight:700;
+    padding:6px 13px;border-radius:8px;background:var(--cbg);color:var(--cc);
+  }
+  .tag{
+    font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;
+    border:1px solid var(--cc);color:var(--cc);background:var(--bg);white-space:nowrap;
+  }
+  .card h2{font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.32;margin-bottom:9px;}
+  .card .lead{font-size:12.5px;line-height:1.68;color:var(--gray);margin-bottom:16px;}
+  .card .lead b{color:#3a4452;font-weight:700;}
+  .card .lead code{font-family:var(--mono);font-size:11.5px;font-weight:700;color:#3a4452;}
+
+  .rows{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+  .kv{
+    display:grid;grid-template-columns:84px 1fr;gap:14px;
+    padding:9px 0;border-top:1px solid var(--line);align-items:start;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .k{font-size:11.5px;font-weight:700;color:var(--soft-gray);}
+  .kv .v{font-size:12px;line-height:1.6;color:#3f4956;}
+  .kv .v b{color:#1f2731;font-weight:700;}
+  .kv .v code{
+    font-family:var(--mono);font-size:11px;font-weight:700;color:#2f3742;
+    background:var(--soft);padding:1px 4px;border-radius:3px;
+  }
+
+  .example{margin-top:auto;background:var(--navy);border-radius:8px;padding:13px 15px;}
+  .example .ex-lbl{font-size:9.5px;font-weight:700;letter-spacing:.14em;color:#7785a0;margin-bottom:7px;}
+  .example .ex-body{font-family:var(--mono);font-size:11.5px;line-height:1.62;color:#e8ecf3;font-weight:500;word-break:break-all;}
+  .example .ex-body .c{color:#5fd0c3;font-weight:700;}
+  .example .ex-body .m{color:#8e9ab2;}
+  .example .ex-body .y{color:#e8c07a;}
+
+  footer{
+    padding:16px 32px 24px;font-size:11px;color:#9aa3b2;
+    display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);
+  }
+  footer b{color:#7b8696;}
+
+  @media (max-width:880px){
+    .hero{flex-direction:column;gap:22px;}
+    .hero h1{font-size:30px;}
+    .summary-box{width:100%;}
+    .sumrow{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">CLAUDE CODE PERMISSION &amp; AUTONOMY PLAYBOOK</div>
+      <h1><span class="acc">자율성과 안전</span> 사이에서<br>다이얼을 돌린다</h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        읽기 전용 기본 자세에서 출발해, 모드로 개입 강도를 조절하고, allow·deny·ask 규칙으로 박고,
+        평가 순서의 함정을 피하고, 샌드박스로 OS 방어선을 치고, auto와 bypass의 경계를 압니다.
+      </div>
+      <div class="mini">
+        <code>least privilege</code><span>read-only default</span>
+        <code>permission modes</code><span>the dial</span>
+        <code>allow / deny / ask</code><span>declarative rules</span>
+        <code>eval order</code><span>deny always wins</span>
+        <code>/sandbox</code><span>OS-level isolation</span>
+        <code>auto vs bypass</code><span>the autonomy edge</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ============ SUMMARY CARDS ============ -->
+    <div class="sumrow">
+      <div class="sumcard" style="--cc:var(--c1);">
+        <div class="step">STEP 1 — 2 · 기본과 모드</div>
+        <h3>읽기 전용에서 시작해 조절</h3>
+        <p>Claude Code는 <b>읽기 전용</b>이 기본 — 다섯 <b>권한 모드</b>로 개입 강도를 다이얼처럼 조절한다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c3);">
+        <div class="step">STEP 3 — 4 · 규칙과 순서</div>
+        <h3>규칙으로 박고, 순서를 안다</h3>
+        <p><b>allow·deny·ask</b> 규칙으로 도구 접근을 박되, <b>평가 순서</b>의 함정(deny 우선)을 안다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c5);">
+        <div class="step">STEP 5 — 6 · 격리와 자율성</div>
+        <h3>방어선을 치고, 끝을 안다</h3>
+        <p><b>샌드박스</b>로 OS 레벨 방어선을 치고, <b>auto 모드</b>와 bypass의 경계를 구분한다.</p>
+      </div>
+    </div>
+
+    <!-- ============ DETAIL CARDS ============ -->
+    <div class="grid">
+
+      <!-- 1 -->
+      <div class="card" style="--cc:var(--c1);--cbg:var(--c1bg);">
+        <div class="card-top">
+          <span class="cmd-badge">least privilege</span>
+          <span class="tag">Default posture</span>
+        </div>
+        <h2>Claude Code는 읽기 전용에서 시작한다</h2>
+        <p class="lead">
+          Claude Code는 기본적으로 읽기 전용이다 — 파일 편집과 명령 실행은 명시적 승인을 요구하고,
+          실행된 디렉터리와 하위 폴더에만 접근한다. 이 동작을 네 가지 메커니즘이 통제한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">4가지 통제</div><div class="v">권한 모드 / allow·deny·ask 규칙 / Hooks / 샌드박스</div></div>
+          <div class="kv"><div class="k">모델 ≠ 통제</div><div class="v">프롬프트·CLAUDE.md는 Claude가 "시도하려는 것"을 바꿀 뿐 — 허용 여부는 <b>Claude Code가 강제</b></div></div>
+          <div class="kv"><div class="k">점검</div><div class="v"><code>/permissions</code>로 활성 규칙과 출처를, <code>/config</code>로 병합된 전체 설정을 확인</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># 새 저장소·낯선 코드는 plan 모드로 시작 — 읽기만 하고 변경 없음</span></div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card" style="--cc:var(--c2);--cbg:var(--c2bg);">
+        <div class="card-top">
+          <span class="cmd-badge">permission modes</span>
+          <span class="tag">The dial</span>
+        </div>
+        <h2>권한 모드로 개입 강도를 조절한다</h2>
+        <p class="lead">
+          다섯 가지 모드가 "얼마나 물어볼지"를 정한다. <code>Shift+Tab</code>으로 세션 중 순환하거나,
+          settings.json의 <code>defaultMode</code>로 고정한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">default / acceptEdits</div><div class="v">안전 기본 / 파일 편집 자동 승인 (활발한 개발용)</div></div>
+          <div class="kv"><div class="k">plan</div><div class="v">읽기·분석만, 변경 불가 — 큰 작업 전 검토</div></div>
+          <div class="kv"><div class="k">dontAsk / bypass</div><div class="v">권한 프롬프트를 전부 거부(사전 승인 도구만) / 모든 도구 자동 승인(YOLO) — deny·훅은 그래도 먼저 평가</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="y">"defaultMode"</span>: <span class="c">"acceptEdits"</span> <span class="m">— 세션마다 적절한 모드로 시작</span></div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card" style="--cc:var(--c3);--cbg:var(--c3bg);">
+        <div class="card-top">
+          <span class="cmd-badge">allow / deny / ask</span>
+          <span class="tag">Declarative rules</span>
+        </div>
+        <h2>allow·deny·ask 규칙으로 도구 접근을 박는다</h2>
+        <p class="lead">
+          settings.json의 <code>permissions</code> 객체에 규칙을 선언한다. 모드가 큰 다이얼이라면,
+          규칙은 개별 도구·명령 단위의 정밀 제어다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">형식</div><div class="v"><code>Tool</code> 또는 <code>Tool(specifier)</code> — 글로브 <code>*</code> 지원 (<code>Bash(npm run *)</code>)</div></div>
+          <div class="kv"><div class="k">세 종류</div><div class="v"><b>allow</b>(승인 없이 사용) / <b>deny</b>(차단) / <b>ask</b>(매번 확인)</div></div>
+          <div class="kv"><div class="k">범위 한계</div><div class="v">Read·Edit 규칙은 내장 파일 도구와 인식된 Bash 명령(<code>cat</code>·<code>sed</code> 등)에만 — Python·Node 스크립트가 직접 여는 파일엔 안 먹음</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="y">deny</span>: [<span class="c">"Bash(rm -rf:*)"</span>, <span class="c">"Read(./.env*)"</span>]</div>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card" style="--cc:var(--c4);--cbg:var(--c4bg);">
+        <div class="card-top">
+          <span class="cmd-badge">eval order</span>
+          <span class="tag">Deny always wins</span>
+        </div>
+        <h2>평가 순서를 알아야 함정을 피한다</h2>
+        <p class="lead">
+          도구 호출은 <b>Hooks → deny → allow → ask → 모드</b> 순으로 평가된다.
+          첫 매칭 규칙이 이기고, <b>deny는 bypassPermissions 모드에서도 항상 우선</b>한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">흔한 함정</div><div class="v"><code>deny: Bash(npm *)</code>가 있으면 <code>allow: Bash(npm run test)</code>를 넣어도 차단됨 — deny가 먼저</div></div>
+          <div class="kv"><div class="k">계층</div><div class="v">관리자 &gt; 프로젝트 &gt; 로컬 &gt; 유저 — 프로젝트 설정이 유저 설정을 이긴다</div></div>
+          <div class="kv"><div class="k">신뢰성 주의</div><div class="v">Read/Write deny 규칙은 동작 불안정 이력(공개 이슈) — 보안 핵심 제약은 <b>PreToolUse 훅과 함께</b> 이중으로</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># 규칙이 안 먹으면 </span><span class="c">/permissions</span><span class="m"> 로 어느 규칙에 걸렸는지 확인</span></div>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card" style="--cc:var(--c5);--cbg:var(--c5bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/sandbox</span>
+          <span class="tag">OS-level isolation</span>
+        </div>
+        <h2>샌드박스로 OS 레벨 방어선을 친다</h2>
+        <p class="lead">
+          권한이 "Claude가 무엇을 시도할 수 있나"라면, 샌드박스는 <b>OS 레벨 강제</b>다 —
+          Bash 명령과 그 자식 프로세스의 파일시스템·네트워크 접근을 제한한다. 둘은 상호 보완이다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">적용 범위</div><div class="v">Bash 도구 전용 (Read·Edit·WebFetch 등엔 권한 규칙으로)</div></div>
+          <div class="kv"><div class="k">설치</div><div class="v">macOS는 Seatbelt로 기본 동작, Linux·WSL2는 <code>bubblewrap</code>·<code>socat</code> 필요</div></div>
+          <div class="kv"><div class="k">핵심 가치</div><div class="v">프롬프트 인젝션이 Claude의 판단을 뚫어도, 샌드박스 경계는 못 넘는다</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/sandbox</span> 활성 + <span class="y">autoAllowBashIfSandboxed</span> <span class="m">— 막아주니 bash 프롬프트 생략</span></div>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="card" style="--cc:var(--c6c);--cbg:var(--c6bg);">
+        <div class="card-top">
+          <span class="cmd-badge">auto vs bypass</span>
+          <span class="tag">The autonomy edge</span>
+        </div>
+        <h2>자율성의 양 끝 — auto 모드와 bypass</h2>
+        <p class="lead">
+          완전 자율로 가는 길은 둘이다. <b>auto 모드</b>는 분류기가 호출마다 위험을 평가해
+          안전한 건 승인·위험한 건 차단한다 — <code>--dangerously-skip-permissions</code>보다 안전한 대안.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">auto 모드</div><div class="v">분류기가 대량 삭제·데이터 유출·악성 코드를 차단; "don't push" 같은 명시적 경계도 존중 (가용 플랜은 확장 중 — 공식 docs 확인)</div></div>
+          <div class="kv"><div class="k">bypass</div><div class="v"><code>--dangerously-skip-permissions</code>는 모든 프롬프트 우회 — <b>격리된 컨테이너·VM에서만</b> (Docker <code>--network none</code>)</div></div>
+          <div class="kv"><div class="k">조직 잠금</div><div class="v"><code>disableBypassPermissionsMode</code>로 사용자의 bypass 자체를 차단</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># 자율 작업은 auto 모드 우선 — bypass는 격리 환경 한정</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>Claude Code Permission &amp; Autonomy Playbook · 기본 → 모드 → 규칙 → 순서 → 격리 → 자율성</span>
+    <span>2026년 5월 14일 기준 · v2.1.141 · 모드·auto 가용성은 플랜·버전에 따라 다름 — <b>공식 permissions docs</b> 확인 권장</span>
+  </footer>
+
+</div>
+<script>
+window.COMMAND_DETAILS = {
+  "/sandbox": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /sandbox",
+    summary: "sandbox mode를 전환합니다. <b>지원되는 플랫폼</b>에서만 사용 가능합니다.",
+    example: "> /sandbox",
+    caution: "",
+    version: "v2.1.141"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

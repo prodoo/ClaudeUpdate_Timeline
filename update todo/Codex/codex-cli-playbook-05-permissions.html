@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 플레이북 05 — 권한·보안 심화</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 중립 */
+    --navy:#1c2433; --navy2:#283448; --ink:#222831;
+    --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --page:#dfe3ea;
+    /* 6단계 액센트 */
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    padding:40px 20px;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  /* ---------- SHEET ---------- */
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    box-shadow:0 18px 48px rgba(20,28,42,.20);
+    overflow:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy);
+    padding:34px 38px 40px;
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:4px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c1);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:41px;
+    font-weight:800;
+    line-height:1.28;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .sub{
+    display:block;
+    font-size:21px;
+    font-weight:600;
+    color:var(--soft-gray);
+    margin-top:10px;
+    letter-spacing:0;
+  }
+
+  .summary-box{
+    width:392px;
+    flex-shrink:0;
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .thesis{
+    font-size:13.5px;
+    color:#cdd5e0;
+    line-height:1.7;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid #3a4860;
+  }
+  .mini{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+  }
+  .mini div{display:flex;flex-direction:column;gap:2px;}
+  .mini code{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+  }
+  .mini span{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    letter-spacing:.02em;
+  }
+
+  /* ---------- BODY ---------- */
+  .body{padding:24px 26px 30px;}
+
+  /* ---------- SUMMARY ROW ---------- */
+  .sumrow{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .sumcard{
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-top:3px solid var(--cAccent);
+    border-radius:8px;
+    padding:16px 18px 17px;
+  }
+  .sumcard.s1{--cAccent:var(--c1);}
+  .sumcard.s2{--cAccent:var(--c3);}
+  .sumcard.s3{--cAccent:var(--c5);}
+  .sumcard .step{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--cAccent);
+    margin-bottom:7px;
+  }
+  .sumcard h3{
+    font-size:15.5px;
+    font-weight:800;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .sumcard p{
+    font-size:12.5px;
+    color:var(--gray);
+    line-height:1.65;
+  }
+
+  /* ---------- DETAIL GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card.k1{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .card.k2{--cN:var(--c2);--cNbg:var(--c2bg);}
+  .card.k3{--cN:var(--c3);--cNbg:var(--c3bg);}
+  .card.k4{--cN:var(--c4);--cNbg:var(--c4bg);}
+  .card.k5{--cN:var(--c5);--cNbg:var(--c5bg);}
+  .card.k6{--cN:var(--c6c);--cNbg:var(--c6bg);}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:13px;
+  }
+  .cmd-badge{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:15px;
+    color:var(--cN);
+    background:var(--cNbg);
+    padding:5px 11px;
+    border-radius:6px;
+    letter-spacing:-.01em;
+  }
+  .cmd-badge.long{font-size:13.5px;}
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    color:var(--cN);
+    border:1px solid var(--cN);
+    padding:3px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .card h2{
+    font-size:19px;
+    font-weight:800;
+    margin-bottom:9px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .lead{
+    font-size:13px;
+    color:var(--gray);
+    line-height:1.72;
+    margin-bottom:15px;
+  }
+  .lead b{color:var(--ink);font-weight:700;}
+  .lead code{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1.5px 5px;
+    border-radius:4px;
+  }
+
+  .rows{margin-bottom:15px;}
+  .kv{
+    display:grid;
+    grid-template-columns:78px 1fr;
+    gap:10px;
+    padding:7px 0;
+    border-top:1px solid var(--line);
+    font-size:12px;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .lbl{
+    font-weight:700;
+    color:var(--cN);
+    font-size:11.5px;
+  }
+  .kv .val{color:var(--gray);line-height:1.6;}
+  .kv .val code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1px 4px;
+    border-radius:3px;
+  }
+
+  .example{
+    background:var(--navy);
+    border-radius:8px;
+    padding:13px 15px 14px;
+    margin-top:auto;
+  }
+  .ex-lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--soft-gray);
+    margin-bottom:8px;
+  }
+  .ex-body{
+    font-family:var(--mono);
+    font-size:11.5px;
+    line-height:1.85;
+    color:#dfe5ee;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .ex-body .p{color:var(--c1);font-weight:700;}      /* 프롬프트 기호 */
+  .ex-body .c{color:#5fd6c8;font-weight:700;}        /* teal 강조 */
+  .ex-body .m{color:#7e8a9a;}                        /* 회색 주석 */
+  .ex-body .y{color:#f0c46a;font-weight:700;}        /* 노랑 강조 */
+  .ex-body .key{
+    display:inline-block;
+    background:#3a4860;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:1px 7px;
+    border-radius:4px;
+    margin:0 1px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .arc{
+    font-size:11.5px;
+    color:var(--gray);
+    line-height:1.7;
+    max-width:62%;
+  }
+  .arc b{color:var(--ink);font-weight:700;display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;}
+  .arc .flow code{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--c3);
+    font-weight:700;
+  }
+  .stamp{text-align:right;flex-shrink:0;}
+  .stamp .ver{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+  .stamp .caveat{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    line-height:1.65;
+    max-width:300px;
+  }
+  .stamp .caveat code{font-family:var(--mono);font-size:10px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    body{padding:20px 12px;}
+    .hero{flex-direction:column;gap:22px;padding:26px 22px 30px;}
+    .hero h1{font-size:30px;}
+    .hero h1 .sub{font-size:17px;}
+    .summary-box{width:100%;}
+    .body{padding:20px 16px 24px;}
+    .sumrow{grid-template-columns:1fr;gap:12px;}
+    .grid{grid-template-columns:1fr;gap:14px;}
+    footer{flex-direction:column;gap:16px;}
+    .arc{max-width:100%;}
+    .stamp{text-align:left;}
+    .stamp .caveat{max-width:100%;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Codex CLI Playbook · 05</div>
+      <h1>
+        권한·보안 심화
+        <span class="sub">안전하게 풀어주기</span>
+      </h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        샌드박스와 승인은 <b style="color:#fff">별개의 두 손잡이</b>다 — 모드 이해, 승인 정책, 권한 프로파일,
+        스마트 승인, Windows 샌드박스, 정책 진단까지 자율성을 안전하게 푸는 6단계.
+      </div>
+      <div class="mini">
+        <div><code>--sandbox</code><span>Sandbox modes</span></div>
+        <div><code>-a / --ask-for-approval</code><span>Approval policy</span></div>
+        <div><code>permission profiles</code><span>Reusable presets</span></div>
+        <div><code>/experimental</code><span>Smart Approvals</span></div>
+        <div><code>/sandbox-add-read-dir</code><span>Windows sandbox</span></div>
+        <div><code>/debug-config</code><span>Audit the policy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div class="body">
+
+    <!-- 요약 카드 3장 -->
+    <div class="sumrow">
+      <div class="sumcard s1">
+        <div class="step">STEP 1—2</div>
+        <h3>두 손잡이 이해</h3>
+        <p>샌드박스 모드(파일·네트워크 경계)와 승인 정책(언제 멈춰 묻나)은 서로 독립된 손잡이다.</p>
+      </div>
+      <div class="sumcard s2">
+        <div class="step">STEP 3—4</div>
+        <h3>재사용하고 자동화</h3>
+        <p>권한 프로파일로 정책 묶음을 재사용하고, Smart Approvals로 승인 검토를 리뷰어 에이전트에 맡긴다.</p>
+      </div>
+      <div class="sumcard s3">
+        <div class="step">STEP 5—6</div>
+        <h3>플랫폼과 진단</h3>
+        <p>Windows 샌드박스의 읽기 경로를 다루고, <code style="font-family:var(--mono);font-size:11px">/debug-config</code>로 정책이 왜 그렇게 먹는지 추적한다.</p>
+      </div>
+    </div>
+
+    <!-- 상세 카드 6장 -->
+    <div class="grid">
+
+      <!-- Card 1 -->
+      <div class="card k1">
+        <div class="card-top">
+          <span class="cmd-badge">--sandbox</span>
+          <span class="tag">Sandbox modes</span>
+        </div>
+        <h2>샌드박스 3단계 이해</h2>
+        <p class="lead">
+          <code>--sandbox</code>(<code>-s</code>)는 모델이 만든 셸 명령의 파일·네트워크 경계를 정한다.
+          <b>read-only</b>는 전체 파일시스템 읽기만·네트워크 없음, <b>workspace-write</b>는 워크스페이스 안
+          편집과 일상 명령 허용(로컬 작업 기본값), <b>danger-full-access</b>는 경계 없음 — 컨테이너·VM처럼
+          이미 격리된 환경에서만 쓴다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">모드</span><span class="val"><code>read-only</code> / <code>workspace-write</code> / <code>danger-full-access</code></span></div>
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">검토는 read-only, 로컬 개발은 workspace-write, 격리 환경만 full-access</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">workspace-write 기본 쓰기 루트는 cwd·/tmp·$TMPDIR, 네트워크는 기본 차단</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex -s read-only "코드 구조 분석"
+<span class="p">$</span> codex -s workspace-write <span class="c">"버그 수정"</span>
+<span class="m"># danger-full-access는 격리 환경 전용</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card k2">
+        <div class="card-top">
+          <span class="cmd-badge long">-a / --ask-for-approval</span>
+          <span class="tag">Approval policy</span>
+        </div>
+        <h2>승인 시점 고르기</h2>
+        <p class="lead">
+          <code>-a / --ask-for-approval</code>(config <code>approval_policy</code>)는 Codex가 명령 실행 전
+          <b>언제 멈춰 물을지</b>를 정한다. <code>untrusted</code>는 항상, <code>on-request</code>는 샌드박스 경계를
+          넘을 때, <code>never</code>는 묻지 않는다. 샌드박스 모드와는 독립된 손잡이 — 둘을 같이 맞춰야
+          의도한 자율성이 나온다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">옵션</span><span class="val"><code>untrusted</code> 항상 / <code>on-request</code> 경계 넘을 때 / <code>never</code> 안 물음</span></div>
+          <div class="kv"><span class="lbl">권장</span><span class="val">로컬 저자동화는 <code>workspace-write</code> + <code>on-request</code> 조합</span></div>
+          <div class="kv"><span class="lbl">폐기</span><span class="val"><code>on-failure</code> deprecated. <code>--full-auto</code>도 deprecated 편의 플래그 — 명시적 플래그 권장</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">$</span> codex -a on-request \
+    -s workspace-write <span class="c">"기능 추가"</span>
+<span class="m"># --yolo = --dangerously-bypass-... (비권장)</span></div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card k3">
+        <div class="card-top">
+          <span class="cmd-badge long">permission profiles</span>
+          <span class="tag">Reusable presets</span>
+        </div>
+        <h2>권한 프로파일로 재사용</h2>
+        <p class="lead">
+          같은 정책 묶음을 매번 플래그로 치기 싫으면 <b>named 권한 프로파일</b>로 묶는다.
+          <code>config.toml</code>의 <code>[profiles.NAME]</code>에 <code>sandbox_mode</code>·<code>approval_policy</code> 등을
+          적고 <code>codex -p NAME</code>으로 실행한다. 빌트인 프로파일로 <code>:read-only</code>·<code>:workspace</code>·<code>:danger-no-sandbox</code>가 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">위치</span><span class="val"><code>config.toml</code>의 <code>[profiles.&lt;이름&gt;]</code> 섹션</span></div>
+          <div class="kv"><span class="lbl">구성</span><span class="val"><code>sandbox_mode</code>, <code>approval_policy</code>, writable roots 등을 한 묶음으로</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val"><code>codex -p &lt;이름&gt;</code>으로 적용. 빌트인 <code>:read-only</code>·<code>:workspace</code>·<code>:danger-no-sandbox</code></span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># config.toml</span>
+[profiles.safe]
+sandbox_mode = <span class="c">"read-only"</span>
+<span class="p">$</span> codex -p safe "구조만 분석"</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card k4">
+        <div class="card-top">
+          <span class="cmd-badge">/experimental</span>
+          <span class="tag">Smart Approvals</span>
+        </div>
+        <h2>스마트 승인 켜기</h2>
+        <p class="lead">
+          <code>/experimental</code>로 실험적 기능을 토글한다 — 그중 <b>Smart Approvals</b>는 승인 가능한
+          요청을 자동 리뷰어 에이전트에 먼저 보내 실행 전 검토하게 한다. config의 <code>approvals_reviewer</code>를
+          <code>user</code>(수동)에서 <code>auto_review</code>(자동 검토)로 바꾸는 방식. 토글 후 재시작 안내가 뜨면 재시작한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val"><code>/experimental</code> → 기능 토글 (Apps·Smart Approvals 등)</span></div>
+          <div class="kv"><span class="lbl">효과</span><span class="val">승인 요청을 자동 리뷰어가 실행 전 검토 — config <code>approvals_reviewer = "auto_review"</code></span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">experimental — 동작·키는 버전에 따라 변할 수 있음. 토글 후 재시작 필요할 수 있음</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /experimental
+  <span class="c">☑ Smart Approvals</span>
+<span class="m"># config: approvals_reviewer = "auto_review"</span></div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card k5">
+        <div class="card-top">
+          <span class="cmd-badge long">/sandbox-add-read-dir</span>
+          <span class="tag">Windows sandbox</span>
+        </div>
+        <h2>Windows 샌드박스 다루기</h2>
+        <p class="lead">
+          <code>/sandbox-add-read-dir</code>는 <b>Windows에서 네이티브 실행할 때만</b> 쓰는 명령이다.
+          절대 경로를 주면 Codex가 Windows 샌드박스 정책을 갱신해, 이후 샌드박스 안 명령이 그 디렉터리를
+          읽을 수 있게 한다. 현재 읽기 루트 밖의 경로를 읽어야 하는 명령을 풀어주는 용도.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">플랫폼</span><span class="val">Windows 네이티브 실행 전용 (WSL2 아님)</span></div>
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">읽기 루트 밖 절대 경로를 명령이 읽어야 할 때</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">인자는 실존하는 절대 디렉터리여야 함. 쓰기 확장은 <code>--add-write-dir</code></span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /sandbox-add-read-dir C:\data\refs
+  ▸ <span class="c">Windows 샌드박스 정책 갱신</span>
+  ▸ 해당 경로 읽기 허용         <span class="m"># 이후 명령에 적용</span></div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card k6">
+        <div class="card-top">
+          <span class="cmd-badge">/debug-config</span>
+          <span class="tag">Audit the policy</span>
+        </div>
+        <h2>정책 진단하기</h2>
+        <p class="lead">
+          설정이 의도대로 안 먹을 때 <code>/debug-config</code>가 설정 레이어 우선순위(낮은 우선순위부터)와
+          정책 출처를 찍어 준다. <code>allowed_approval_policies</code>·<code>allowed_sandbox_modes</code>·<code>rules</code>·
+          <code>experimental_network</code> 같은 항목까지 보여 줘, 관리 환경의 <code>requirements.toml</code> 제약이
+          왜 적용됐는지 추적할 수 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val"><code>config.toml</code> 값과 실제 적용값이 다를 때</span></div>
+          <div class="kv"><span class="lbl">확인 항목</span><span class="val">레이어 우선순위, <code>allowed_*</code> 정책, <code>rules</code>, <code>experimental_network</code></span></div>
+          <div class="kv"><span class="lbl">트러블슈팅</span><span class="val">관리 환경은 <code>requirements.toml</code>이 <code>never</code>·<code>danger-full-access</code>를 막을 수 있음</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /debug-config
+  layer 우선순위 (낮은 것부터)   <span class="m"># 어디서 덮였나</span>
+  <span class="c">allowed_sandbox_modes: [...]</span></div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="arc">
+        <b>6단계 아크</b>
+        <div class="flow">
+          <code>샌드박스 모드</code> → <code>승인 정책</code> → <code>권한 프로파일</code> → <code>Smart Approvals</code> → <code>Windows 샌드박스</code> → <code>정책 진단</code>
+        </div>
+        <div style="margin-top:6px">권한은 풀수록 빠르지만 위험도 같이 커진다 — 기본값에서 시작해 신뢰하는 저장소에서만 한 칸씩 푼다. 이로써 플레이북 5편 완결.</div>
+      </div>
+      <div class="stamp">
+        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="caveat">
+          Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /body -->
+</div><!-- /sheet -->
+<script>
+window.COMMAND_DETAILS = {
+  "--sandbox": {
+    source: "https://developers.openai.com/codex/cli/reference#global-flags",
+    sourceLabel: "developers.openai.com · CLI 참조 · --sandbox",
+    summary: "모델이 생성한 셸 명령에 적용할 <b>샌드박스 정책</b>을 선택한다(Select the sandbox policy for model-generated shell commands). 허용 값은 <code>read-only</code>, <code>workspace-write</code>, <code>danger-full-access</code>이며 명령 실행 단계에서 적용되는 샌드박스 강도를 제어한다.",
+    example: "codex -s workspace-write \"리팩터링 진행\"",
+    caution: "",
+    version: "v0.49"
+  },
+  "/experimental": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#toggle-experimental-features-with-experimental",
+    sourceLabel: "developers.openai.com · /experimental",
+    summary: "실험적 기능을 켜거나 끈다. 서브에이전트나 Apps 같은 선택 기능을 CLI에서 바로 토글할 수 있어, 설정 파일을 손대지 않고도 옵트인 동작을 빠르게 시험해 볼 수 있다.",
+    example: "/experimental",
+    caution: "일부 항목은 변경 후 Codex 재시작이 필요할 수 있다.",
+    version: "v0.49"
+  },
+  "/debug-config": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#inspect-config-layers-with-debug-config",
+    sourceLabel: "developers.openai.com · /debug-config",
+    summary: "설정 레이어와 요구 사항 진단 결과를 출력한다. 우선순위와 정책 출처(네트워크 제약, 서버 설정 등)를 함께 살펴 어떤 레이어가 현재 값을 결정했는지 추적할 수 있다.",
+    example: "/debug-config",
+    caution: "",
+    version: "v0.49"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

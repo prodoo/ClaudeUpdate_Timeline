@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 레퍼런스 — 전체판</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 중립 */
+    --navy:#1c2433; --navy2:#283448; --ink:#222831;
+    --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --page:#dfe3ea;
+    /* 6단계 액센트 */
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    padding:40px 20px;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  /* ---------- SHEET ---------- */
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    box-shadow:0 18px 48px rgba(20,28,42,.20);
+    overflow:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy);
+    padding:32px 38px 34px;
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:2px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c1);
+    margin-bottom:13px;
+  }
+  .hero h1{
+    font-size:38px;
+    font-weight:800;
+    line-height:1.25;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .sub{
+    display:block;
+    font-size:18px;
+    font-weight:600;
+    color:var(--soft-gray);
+    margin-top:9px;
+    letter-spacing:0;
+  }
+  .hero-note{
+    width:372px;
+    flex-shrink:0;
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:17px 20px;
+    font-size:12.5px;
+    color:#cdd5e0;
+    line-height:1.72;
+  }
+  .hero-note b{color:#fff;font-weight:700;}
+
+  /* ---------- BODY ---------- */
+  .body{padding:22px 26px 30px;}
+
+  /* ---------- LEGEND ---------- */
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    margin-bottom:16px;
+    font-size:11px;
+    color:var(--gray);
+  }
+  .legend span{display:flex;align-items:center;}
+
+  .minitag{
+    font-family:var(--mono);
+    font-size:8.5px;
+    font-weight:700;
+    padding:1.5px 4px;
+    border-radius:3px;
+    margin-right:5px;
+    letter-spacing:.04em;
+    vertical-align:middle;
+  }
+  .row .minitag{margin-right:0;margin-left:4px;}
+  .minitag.exp{background:var(--c4bg);color:var(--c4);}
+  .minitag.win{background:var(--c2bg);color:var(--c2);}
+  .minitag.dep{background:var(--c6bg);color:var(--c6c);}
+
+  /* ---------- PANELS GRID ---------- */
+  .panels{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:14px;
+  }
+  .panel{
+    grid-column:span 2;
+    align-self:start;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px 7px;
+  }
+  .panel.wide{grid-column:span 6;}
+  .panel.a{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .panel.b{--cN:var(--c2);--cNbg:var(--c2bg);}
+  .panel.c{--cN:var(--c3);--cNbg:var(--c3bg);}
+  .panel.d{--cN:var(--c4);--cNbg:var(--c4bg);}
+  .panel.e{--cN:var(--c5);--cNbg:var(--c5bg);}
+  .panel.f{--cN:var(--c6c);--cNbg:var(--c6bg);}
+  .panel.g{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .panel.h{--cN:var(--c3);--cNbg:var(--c3bg);}
+
+  .panel-head{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:8px;
+    padding-bottom:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .badge{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:13px;
+    color:var(--cN);
+    background:var(--cNbg);
+    width:24px;height:24px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:6px;
+    flex-shrink:0;
+  }
+  .panel-title{
+    font-size:13.5px;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .panel-title .en{
+    font-family:var(--mono);
+    font-size:9.5px;
+    font-weight:500;
+    color:var(--soft-gray);
+    margin-left:6px;
+    letter-spacing:.02em;
+  }
+
+  .rows.two{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 26px;
+  }
+  .row{
+    display:grid;
+    grid-template-columns:minmax(120px,max-content) 1fr;
+    gap:11px;
+    padding:6px 0;
+    border-top:1px solid var(--line);
+    align-items:baseline;
+  }
+  .row:first-of-type{border-top:none;}
+  .rows.two .row:first-of-type{border-top:1px solid var(--line);}
+  .rows.two .row:nth-child(1),
+  .rows.two .row:nth-child(2){border-top:none;}
+  .row code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    color:var(--cN);
+    letter-spacing:-.01em;
+    white-space:nowrap;
+  }
+  .row .desc{
+    font-size:11px;
+    color:var(--gray);
+    line-height:1.55;
+  }
+  .row .desc code{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:500;
+    color:var(--ink);
+    background:var(--soft);
+    padding:1px 4px;
+    border-radius:3px;
+    white-space:normal;
+  }
+
+  /* ---------- VERSION-DEPENDENT STRIP ---------- */
+  .labelstrip{
+    margin-top:14px;
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-left:3px solid var(--c4);
+    border-radius:8px;
+    padding:13px 17px 14px;
+  }
+  .labelstrip h4{
+    font-size:12px;
+    font-weight:800;
+    color:var(--ink);
+    margin-bottom:3px;
+  }
+  .labelstrip .sub{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    margin-bottom:9px;
+  }
+  .labelstrip .lrow{
+    display:grid;
+    grid-template-columns:minmax(120px,max-content) 1fr;
+    gap:11px;
+    padding:5px 0;
+    border-top:1px solid var(--line);
+    font-size:11px;
+    align-items:baseline;
+  }
+  .labelstrip .lrow code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    color:var(--c4);
+    white-space:nowrap;
+  }
+  .labelstrip .lrow .desc{color:var(--gray);line-height:1.55;}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:22px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .arc{
+    font-size:11.5px;
+    color:var(--gray);
+    line-height:1.7;
+    max-width:60%;
+  }
+  .arc b{color:var(--ink);font-weight:700;display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;}
+  .arc .flow code{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--c3);
+    font-weight:700;
+  }
+  .stamp{text-align:right;flex-shrink:0;}
+  .stamp .ver{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+  .stamp .caveat{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    line-height:1.65;
+    max-width:300px;
+  }
+  .stamp .caveat code{font-family:var(--mono);font-size:10px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    body{padding:20px 12px;}
+    .hero{flex-direction:column;gap:20px;padding:26px 22px 28px;}
+    .hero h1{font-size:28px;}
+    .hero h1 .sub{font-size:15px;}
+    .hero-note{width:100%;}
+    .body{padding:20px 16px 24px;}
+    .panels{grid-template-columns:1fr;}
+    .panel,.panel.wide{grid-column:span 1;}
+    .rows.two{grid-template-columns:1fr;}
+    .rows.two .row:nth-child(2){border-top:1px solid var(--line);}
+    footer{flex-direction:column;gap:16px;}
+    .arc{max-width:100%;}
+    .stamp{text-align:left;}
+    .stamp .caveat{max-width:100%;}
+  }
+</style>
+<style>
+  /* ============ Command-detail drawer (interaction layer)
+     기존 디자인 토큰·클래스에 손대지 않는 추가 레이어.
+     모든 신규 클래스는 cmd-detail-* prefix.
+     .row 와 .lrow 둘 다 트리거 대상이 된다.
+  ============ */
+  .row.cmd-detail-trigger,
+  .lrow.cmd-detail-trigger { cursor: pointer; border-radius: 4px;
+    transition: background .15s; }
+  .row.cmd-detail-trigger:hover,
+  .lrow.cmd-detail-trigger:hover { background: rgba(43,179,163,.06); }
+  .row.cmd-detail-trigger code::after,
+  .lrow.cmd-detail-trigger code::after { content: " ↗"; color: var(--c1);
+    font-weight: 700; opacity: 0; transition: opacity .15s; font-size: .85em; }
+  .row.cmd-detail-trigger:hover code::after,
+  .lrow.cmd-detail-trigger:hover code::after { opacity: 1; }
+
+  .cmd-detail-backdrop { position: fixed; inset: 0; background: rgba(20,28,42,.42);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease-out; z-index: 998; }
+
+  .cmd-detail-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 480px;
+    max-width: 100vw; background: var(--bg); color: var(--ink);
+    border-left: 1px solid var(--line);
+    box-shadow: -20px 0 60px rgba(20,28,42,.14), -2px 0 8px rgba(20,28,42,.06);
+    transform: translateX(100%); transition: transform .22s ease-out;
+    z-index: 999; display: flex; flex-direction: column;
+    font-family: 'Pretendard',-apple-system,sans-serif; }
+  .cmd-detail-drawer.open { transform: translateX(0); }
+  .cmd-detail-drawer[aria-hidden="true"] { visibility: hidden; }
+  .cmd-detail-drawer[aria-hidden="false"],
+  .cmd-detail-drawer.open { visibility: visible; }
+
+  .cmd-detail-head { display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 22px 24px 16px; border-bottom: 1px solid var(--line);
+    background: var(--bg); position: sticky; top: 0; z-index: 1; }
+  .cmd-detail-badge { font-family: var(--mono); font-size: 16px; font-weight: 700;
+    color: var(--c1); background: rgba(43,179,163,.1);
+    border: 1px solid rgba(43,179,163,.32);
+    padding: 6px 13px; border-radius: 8px; max-width: 320px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cmd-detail-close { width: 44px; height: 44px; border-radius: 8px;
+    border: 1px solid var(--line); color: var(--gray);
+    background: var(--bg); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; padding: 0; flex-shrink: 0; }
+  .cmd-detail-close:hover { background: var(--soft); color: var(--ink); }
+  .cmd-detail-close:focus-visible { outline: 2px solid var(--c1); outline-offset: 2px; }
+
+  .cmd-detail-body { padding: 18px 24px 28px; overflow-y: auto; flex: 1; }
+  .cmd-detail-section { margin-bottom: 22px; }
+  .cmd-detail-section:last-child { margin-bottom: 0; }
+  .cmd-detail-label { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: #8b95a3; font-weight: 700; margin-bottom: 8px; }
+  .cmd-detail-source a { font-family: var(--mono); font-size: 12.5px; color: var(--c1);
+    text-decoration: none; word-break: break-all; line-height: 1.6;
+    display: inline-flex; align-items: center; gap: 4px; }
+  .cmd-detail-source a:hover { text-decoration: underline; }
+  .cmd-detail-summary { font-size: 13px; line-height: 1.7; color: #3f4956; }
+  .cmd-detail-summary b { color: var(--ink); font-weight: 700; }
+  .cmd-detail-summary code { font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    color: #1a8470; background: rgba(43,179,163,.08);
+    padding: 1px 5px; border-radius: 3px; }
+  .cmd-detail-example { font-family: var(--mono); font-size: 11.5px; line-height: 1.66;
+    background: var(--soft); color: var(--ink);
+    padding: 14px 16px; border-radius: 7px;
+    border: 1px solid var(--line); white-space: pre-wrap; word-break: break-word;
+    margin: 0; }
+  .cmd-detail-caution { font-size: 12.5px; line-height: 1.7; color: #6b4f0e;
+    background: rgba(240,168,48,.08); border-left: 3px solid var(--c4);
+    padding: 11px 14px; border-radius: 4px; }
+  .cmd-detail-caution code { font-family: var(--mono); font-size: 11px; font-weight: 700;
+    color: #6b4f0e; background: rgba(240,168,48,.18);
+    padding: 1px 5px; border-radius: 3px; }
+  .cmd-detail-version { font-family: var(--mono); font-size: 11.5px; color: var(--gray); }
+
+  @media (max-width: 780px) {
+    .cmd-detail-drawer { width: 100%; max-width: none; }
+    .cmd-detail-head { padding: 18px 20px 14px; }
+    .cmd-detail-body { padding: 16px 20px 24px; }
+    .cmd-detail-backdrop.open { opacity: 1; pointer-events: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cmd-detail-drawer, .cmd-detail-backdrop,
+    .row.cmd-detail-trigger, .lrow.cmd-detail-trigger,
+    .row.cmd-detail-trigger code::after,
+    .lrow.cmd-detail-trigger code::after { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Codex CLI Reference · Complete</div>
+      <h1>
+        Codex CLI 전체 명령어
+        <span class="sub">슬래시 명령어 · 서브커맨드 · 플래그 전수</span>
+      </h1>
+    </div>
+    <div class="hero-note">
+      Codex CLI의 공개 <b>슬래시 명령어</b>와 <b>codex 서브커맨드</b>를 빠짐없이 정리한 전체판.
+      experimental · Windows 전용 · deprecated 항목은 라벨로 구분하고, 공식 슬래시 문서에 아직 없는
+      항목은 하단 〈버전 의존〉으로 분리한다.
+    </div>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div class="body">
+
+    <div class="legend">
+      <span><span class="minitag exp">EXP</span>experimental — 기능 플래그 필요</span>
+      <span><span class="minitag win">WIN</span>Windows 네이티브 실행 전용</span>
+      <span><span class="minitag dep">DEP</span>deprecated — 명시적 대체 권장</span>
+    </div>
+
+    <div class="panels">
+
+      <!-- Panel A -->
+      <div class="panel a">
+        <div class="panel-head">
+          <span class="badge">A</span>
+          <span class="panel-title">세션·모델 슬래시<span class="en">Session &amp; model</span></span>
+        </div>
+        <div class="rows">
+          <div class="row"><code>/model</code><span class="desc">활성 모델·추론 강도 전환</span></div>
+          <div class="row"><code>/fast</code><span class="desc">Fast 모드 <code>on|off|status</code></span></div>
+          <div class="row"><code>/personality</code><span class="desc">응답 스타일 (friendly·pragmatic·none)</span></div>
+          <div class="row"><code>/plan</code><span class="desc">plan 모드 진입 — 인라인 프롬프트 가능</span></div>
+          <div class="row"><code>/goal</code><span class="desc">장기 작업 목표 설정·조회·정리<span class="minitag exp">EXP</span></span></div>
+          <div class="row"><code>/status</code><span class="desc">모델·정책·쓰기 루트·토큰 요약</span></div>
+        </div>
+      </div>
+
+      <!-- Panel B -->
+      <div class="panel b">
+        <div class="panel-head">
+          <span class="badge">B</span>
+          <span class="panel-title">권한·샌드박스 슬래시<span class="en">Permissions</span></span>
+        </div>
+        <div class="rows">
+          <div class="row"><code>/permissions</code><span class="desc">승인 프리셋 전환 — 별칭 <code>/approvals</code></span></div>
+          <div class="row"><code>/experimental</code><span class="desc">실험 기능 토글 (Apps·Smart Approvals 등)</span></div>
+          <div class="row"><code>/debug-config</code><span class="desc">설정 레이어·정책 출처 진단</span></div>
+          <div class="row"><code>/sandbox-add-read-dir</code><span class="desc">샌드박스 읽기 경로 추가<span class="minitag win">WIN</span></span></div>
+        </div>
+      </div>
+
+      <!-- Panel C -->
+      <div class="panel c">
+        <div class="panel-head">
+          <span class="badge">C</span>
+          <span class="panel-title">컨텍스트·스레드 슬래시<span class="en">Threads</span></span>
+        </div>
+        <div class="rows">
+          <div class="row"><code>/new</code><span class="desc">세션 내 새 대화 (화면 유지)</span></div>
+          <div class="row"><code>/clear</code><span class="desc">화면+대화 함께 리셋</span></div>
+          <div class="row"><code>/compact</code><span class="desc">대화 요약·컨텍스트 확보</span></div>
+          <div class="row"><code>/resume</code><span class="desc">저장 세션 transcript 복원</span></div>
+          <div class="row"><code>/fork</code><span class="desc">현재 대화를 새 스레드로 분기</span></div>
+          <div class="row"><code>/side</code><span class="desc">휘발성 곁가지 대화</span></div>
+          <div class="row"><code>/agent</code><span class="desc">활성 에이전트 스레드 전환</span></div>
+        </div>
+      </div>
+
+      <!-- Panel D -->
+      <div class="panel d">
+        <div class="panel-head">
+          <span class="badge">D</span>
+          <span class="panel-title">검토·파일 슬래시<span class="en">Review &amp; files</span></span>
+        </div>
+        <div class="rows">
+          <div class="row"><code>/review</code><span class="desc">작업 트리 리뷰 — 이슈 요약</span></div>
+          <div class="row"><code>/diff</code><span class="desc">Git diff 보기 (미추적 포함)</span></div>
+          <div class="row"><code>/copy</code><span class="desc">최근 완료 출력 복사 (<code>Ctrl+O</code>)</span></div>
+          <div class="row"><code>/mention</code><span class="desc">대화에 특정 파일 첨부</span></div>
+          <div class="row"><code>/init</code><span class="desc">현재 디렉터리에 AGENTS.md 생성</span></div>
+        </div>
+      </div>
+
+      <!-- Panel E -->
+      <div class="panel e">
+        <div class="panel-head">
+          <span class="badge">E</span>
+          <span class="panel-title">도구·확장 슬래시<span class="en">Tools</span></span>
+        </div>
+        <div class="rows">
+          <div class="row"><code>/mcp</code><span class="desc">MCP 도구 목록 — <code>verbose</code>로 상세</span></div>
+          <div class="row"><code>/apps</code><span class="desc">앱(커넥터) 탐색·프롬프트 삽입</span></div>
+          <div class="row"><code>/plugins</code><span class="desc">플러그인 탐색·설치·활성 토글</span></div>
+        </div>
+      </div>
+
+      <!-- Panel F -->
+      <div class="panel f">
+        <div class="panel-head">
+          <span class="badge">F</span>
+          <span class="panel-title">UI·진단·종료 슬래시<span class="en">UI &amp; exit</span></span>
+        </div>
+        <div class="rows">
+          <div class="row"><code>/statusline</code><span class="desc">푸터 상태줄 항목 구성</span></div>
+          <div class="row"><code>/title</code><span class="desc">터미널 창·탭 제목 항목 구성</span></div>
+          <div class="row"><code>/keymap</code><span class="desc">TUI 단축키 리매핑</span></div>
+          <div class="row"><code>/theme</code><span class="desc">테마 미리보기·저장</span></div>
+          <div class="row"><code>/ps</code><span class="desc">백그라운드 터미널 보기<span class="minitag exp">EXP</span></span></div>
+          <div class="row"><code>/stop</code><span class="desc">백그라운드 터미널 중지 — 별칭 <code>/clean</code></span></div>
+          <div class="row"><code>/feedback</code><span class="desc">로그·진단을 메인테이너에 전송</span></div>
+          <div class="row"><code>/logout</code><span class="desc">로컬 자격증명 정리</span></div>
+          <div class="row"><code>/quit · /exit</code><span class="desc">CLI 세션 종료</span></div>
+        </div>
+      </div>
+
+      <!-- Panel G -->
+      <div class="panel g wide">
+        <div class="panel-head">
+          <span class="badge">G</span>
+          <span class="panel-title">codex 서브커맨드<span class="en">codex subcommands</span></span>
+        </div>
+        <div class="rows two">
+          <div class="row"><code>codex</code><span class="desc">대화형 TUI 세션 시작</span></div>
+          <div class="row"><code>codex mcp</code><span class="desc">MCP 서버 목록·추가·제거·인증</span></div>
+          <div class="row"><code>codex exec</code><span class="desc">비대화형 실행 — 별칭 <code>e</code>, stdout/JSONL</span></div>
+          <div class="row"><code>codex mcp-server</code><span class="desc">Codex를 MCP 서버로 실행 (stdio)</span></div>
+          <div class="row"><code>codex resume</code><span class="desc">세션 이어가기 — <code>--last</code>·<code>--all</code></span></div>
+          <div class="row"><code>codex remote-control</code><span class="desc">헤드리스 원격 제어 app-server (v0.130)</span></div>
+          <div class="row"><code>codex fork</code><span class="desc">저장 세션을 새 스레드로 분기</span></div>
+          <div class="row"><code>codex app · app-server</code><span class="desc">데스크톱 앱 / 로컬 app-server 실행</span></div>
+          <div class="row"><code>codex review</code><span class="desc">작업 트리 리뷰 (비대화형)</span></div>
+          <div class="row"><code>codex features</code><span class="desc">기능 플래그 list·enable·disable</span></div>
+          <div class="row"><code>codex cloud</code><span class="desc">Cloud 작업 탐색·실행 — 별칭 <code>cloud-tasks</code></span></div>
+          <div class="row"><code>codex execpolicy</code><span class="desc">execpolicy 규칙 평가 (allow/prompt/block)</span></div>
+          <div class="row"><code>codex apply</code><span class="desc">Cloud 작업 diff 로컬 적용 — 별칭 <code>a</code></span></div>
+          <div class="row"><code>codex completion</code><span class="desc">셸 자동완성 스크립트 생성</span></div>
+          <div class="row"><code>codex login · logout</code><span class="desc">인증 / 저장된 자격증명 제거</span></div>
+          <div class="row"><code>codex update</code><span class="desc">CLI를 최신 버전으로 업데이트</span></div>
+        </div>
+      </div>
+
+      <!-- Panel H -->
+      <div class="panel h wide">
+        <div class="panel-head">
+          <span class="badge">H</span>
+          <span class="panel-title">CLI 글로벌 플래그<span class="en">Global flags &mdash; 서브커맨드 뒤에 배치</span></span>
+        </div>
+        <div class="rows two">
+          <div class="row"><code>-s, --sandbox</code><span class="desc"><code>read-only</code>·<code>workspace-write</code>·<code>danger-full-access</code></span></div>
+          <div class="row"><code>--cd</code><span class="desc">에이전트 작업 디렉터리 지정</span></div>
+          <div class="row"><code>-a, --ask-for-approval</code><span class="desc"><code>untrusted</code>·<code>on-request</code>·<code>never</code> (<code>on-failure</code><span class="minitag dep">DEP</span>)</span></div>
+          <div class="row"><code>-c key=value</code><span class="desc">config 값 1회 오버라이드</span></div>
+          <div class="row"><code>-p, --profile</code><span class="desc">config.toml의 권한·설정 프로파일 로드</span></div>
+          <div class="row"><code>--add-write-dir</code><span class="desc">쓰기 가능 디렉터리 추가 (반복 가능)</span></div>
+          <div class="row"><code>--search</code><span class="desc">라이브 웹 검색 활성화 (기본 cached)</span></div>
+          <div class="row"><code>--remote</code><span class="desc">원격 app-server WebSocket 연결</span></div>
+          <div class="row"><code>--json</code><span class="desc">줄 단위 JSON 이벤트 출력 (<code>codex exec</code>)</span></div>
+          <div class="row"><code>--output-last-message</code><span class="desc">최종 응답을 파일로 저장 (<code>codex exec</code>)</span></div>
+          <div class="row"><code>--full-auto</code><span class="desc">편의 플래그<span class="minitag dep">DEP</span> — 명시적 <code>-s</code>·<code>-a</code> 권장</span></div>
+          <div class="row"><code>--yolo</code><span class="desc">샌드박스·승인 모두 우회 — 정식명 <code>--dangerously-bypass-approvals-and-sandbox</code>, 격리 환경만</span></div>
+        </div>
+      </div>
+
+    </div><!-- /panels -->
+
+    <!-- ============ VERSION-DEPENDENT STRIP ============ -->
+    <div class="labelstrip">
+      <h4>버전 의존 · 공식 슬래시 문서 미수록</h4>
+      <div class="sub">3자 자료·체인지로그 기반으로 존재가 보고됐으나, 현재 공식 슬래시 명령어 문서에는 등재돼 있지 않다. 사용 전 <code style="font-family:var(--mono);font-size:10px">codex --version</code>과 공식 docs로 확인할 것.</div>
+      <div class="lrow"><code>/vim</code><span class="desc">TUI 컴포저 모달 Vim 편집 — 3자 자료(치트시트) 기반, 공식 docs 미확인</span></div>
+      <div class="lrow"><code>/hooks</code><span class="desc">TUI 훅 브라우저 (활성 훅 조회·토글) — 3자 자료상 v0.129 추가 보고, 공식 슬래시 문서 미수록</span></div>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="arc">
+        <b>전체판</b>
+        <div>공개 슬래시 명령어 + <code>codex</code> 서브커맨드 전수, <span class="flow"><code>experimental</code></span> 라벨 분리.
+        명령어를 "언제·왜·어떻게" 쓰는지는 플레이북 5편 — 환경 세팅 · 작업 완주 · 자동화 · 멀티스레드 · 권한 심화 — 에서 다룬다.</div>
+      </div>
+      <div class="stamp">
+        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="caveat">
+          Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
+          <code>codex --version</code>과 공식 docs로 확인할 것.
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /body -->
+</div><!-- /sheet -->
+
+<!-- ============ Command-detail drawer (interaction layer) ============ -->
+<div class="cmd-detail-backdrop" aria-hidden="true"></div>
+<aside class="cmd-detail-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cmd-detail-title" tabindex="-1">
+  <header class="cmd-detail-head">
+    <code class="cmd-detail-badge" id="cmd-detail-title"></code>
+    <button class="cmd-detail-close" type="button" aria-label="닫기">✕</button>
+  </header>
+  <div class="cmd-detail-body"></div>
+</aside>
+
+<script>
+(function() {
+  // SSOT: update todo/ssot/file-4.md (옵션 A — 한국어 공식 docs 본문을 자연스럽게 옮김)
+  const COMMAND_DETAILS = {
+    "/model": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#set-the-active-model-with-model",
+      sourceLabel: "developers.openai.com · /model",
+      summary: "활성 모델(가능한 경우 추론 노력 수준 포함)을 선택한다. 작업을 실행하기 전에 범용 모델과 더 깊은 추론 옵션 사이를 전환해, 세션을 재시작하지 않고도 사용 중인 모델을 바꿀 수 있다. <code>/model</code>을 입력하고 Enter를 누른 뒤 팝업에서 원하는 모델을 고른다.",
+      example: "/model",
+      caution: "",
+      version: "v0.49"
+    },
+    "/fast": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#toggle-fast-mode-with-fast",
+      sourceLabel: "developers.openai.com · /fast",
+      summary: "모델 카탈로그가 Fast 서비스 티어를 노출할 때 이를 켜고 끄거나 상태를 확인한다. 현재 모델의 Fast 티어가 켜져 있는지 빠르게 보고 활성·비활성 사이를 전환해, 응답 속도와 비용 동작을 즉시 바꿀 수 있다. <code>/fast on</code>, <code>/fast off</code>, <code>/fast status</code>처럼 인자로 동작을 지정한다.",
+      example: "/fast on",
+      caution: "Fast 티어 명령은 카탈로그 기반이라 현재 모델이 Fast 티어를 광고하지 않으면 <code>/fast</code> 자체가 노출되지 않는다.",
+      version: "v0.49"
+    },
+    "/personality": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#set-a-communication-style-with-personality",
+      sourceLabel: "developers.openai.com · /personality",
+      summary: "응답에 사용할 커뮤니케이션 스타일을 고른다. 시스템 지침을 새로 쓰지 않고도 Codex가 말하는 방식을 바꿀 수 있어, 같은 작업이라도 응답의 어조와 톤을 빠르게 조정할 수 있다. 지원되는 스타일에는 <code>friendly</code>, <code>pragmatic</code>, <code>none</code>이 포함된다.",
+      example: "/personality",
+      caution: "현재 모델이 personality 지침을 지원할 때만 사용할 수 있다.",
+      version: "v0.49"
+    },
+    "/plan": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#switch-to-plan-mode-with-plan",
+      sourceLabel: "developers.openai.com · /plan",
+      summary: "플랜 모드로 전환하면서 선택적으로 프롬프트를 함께 보낸다. 실행 전략을 먼저 제안받기 위해 인라인 프롬프트 텍스트를 함께 전달하거나, 텍스트·이미지 첨부를 붙여서 보낼 수 있다.",
+      example: "/plan Propose a migration plan for this service",
+      caution: "작업이 실행 중일 때는 사용할 수 없다.",
+      version: "v0.49"
+    },
+    "/goal": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#set-or-view-a-task-goal-with-goal",
+      sourceLabel: "developers.openai.com · /goal (experimental)",
+      summary: "작업 목표를 설정·일시정지·재개·확인·해제한다. 장기 작업 동안 Codex가 추적할 영속적 목표(최대 4,000자)를 등록해 두면, 이후 턴에서 목표에 정렬해 진행 상황을 점검한다. <code>/goal &lt;objective&gt;</code>로 설정하고, 인자 없는 <code>/goal</code>로 확인하며, <code>/goal pause</code>·<code>/goal resume</code>·<code>/goal clear</code>로 제어한다.",
+      example: "/goal Ship the migration script and add coverage tests",
+      caution: "experimental — <code>features.goals</code>가 활성화돼 있어야 사용할 수 있다. 목표 본문은 비어 있지 않아야 하고 4,000자 이내여야 한다.",
+      version: "v0.49"
+    },
+    "/status": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#inspect-the-session-with-status",
+      sourceLabel: "developers.openai.com · /status",
+      summary: "세션 설정과 토큰 사용량을 표시한다. 활성 모델, 승인 정책, 쓰기 가능 루트, 남아 있는 컨텍스트 용량을 한 번에 확인해 현재 세션이 어떤 상태로 동작 중인지 점검할 수 있다.",
+      example: "/status",
+      caution: "",
+      version: "v0.49"
+    },
+    "/permissions": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#update-permissions-with-permissions",
+      sourceLabel: "developers.openai.com · /permissions",
+      summary: "Codex가 사전 확인 없이 수행할 수 있는 작업 범위를 정한다. 세션을 끊지 않고도 <code>Auto</code>나 <code>Read Only</code> 같은 프리셋 사이를 오가며 승인 요구 수준을 조정해, 작업 도중 권한을 조여야 할 때 즉시 반영할 수 있다.",
+      example: "/permissions",
+      caution: "",
+      version: "v0.49"
+    },
+    "/experimental": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#toggle-experimental-features-with-experimental",
+      sourceLabel: "developers.openai.com · /experimental",
+      summary: "실험적 기능을 켜거나 끈다. 서브에이전트나 Apps 같은 선택 기능을 CLI에서 바로 토글할 수 있어, 설정 파일을 손대지 않고도 옵트인 동작을 빠르게 시험해 볼 수 있다.",
+      example: "/experimental",
+      caution: "일부 항목은 변경 후 Codex 재시작이 필요할 수 있다.",
+      version: "v0.49"
+    },
+    "/debug-config": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#inspect-config-layers-with-debug-config",
+      sourceLabel: "developers.openai.com · /debug-config",
+      summary: "설정 레이어와 요구 사항 진단 결과를 출력한다. 우선순위와 정책 출처(네트워크 제약, 서버 설정 등)를 함께 살펴 어떤 레이어가 현재 값을 결정했는지 추적할 수 있다.",
+      example: "/debug-config",
+      caution: "",
+      version: "v0.49"
+    },
+    "/sandbox-add-read-dir": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#grant-sandbox-read-access-with-sandbox-add-read-dir",
+      sourceLabel: "developers.openai.com · /sandbox-add-read-dir (Windows)",
+      summary: "샌드박스에 추가 디렉토리 읽기 권한을 부여한다(Windows 전용). 현재 읽기 가능 루트 밖의 절대 디렉토리 경로가 필요한 명령을 풀어줄 때 사용하며, Windows에서 CLI를 네이티브로 실행 중일 때만 이 명령이 노출된다.",
+      example: "/sandbox-add-read-dir C:\\absolute\\directory\\path",
+      caution: "WIN — Windows에서 CLI를 네이티브로 실행할 때만 사용할 수 있다. 절대 디렉토리 경로를 지정해야 한다.",
+      version: "v0.49"
+    },
+    "/new": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#start-a-new-conversation-with-new",
+      sourceLabel: "developers.openai.com · /new",
+      summary: "같은 CLI 세션 안에서 새 대화를 시작한다. CLI를 종료하거나 터미널 화면을 지우지 않고도 채팅 컨텍스트만 리셋해, 직전 대화의 흐름을 끊고 새 작업으로 넘어갈 수 있다.",
+      example: "/new",
+      caution: "",
+      version: "v0.49"
+    },
+    "/clear": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#clear-the-terminal-and-start-a-new-chat-with-clear",
+      sourceLabel: "developers.openai.com · /clear",
+      summary: "터미널을 비우고 새 대화를 시작한다. 화면 UI와 대화 컨텍스트를 함께 리셋해 완전히 새로운 상태로 작업을 시작할 수 있도록 해 준다.",
+      example: "/clear",
+      caution: "Ctrl+L과 달리 <code>/clear</code>는 단순히 스크롤백만 지우는 게 아니라 새 대화를 함께 시작한다.",
+      version: "v0.49"
+    },
+    "/compact": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#keep-transcripts-lean-with-compact",
+      sourceLabel: "developers.openai.com · /compact",
+      summary: "보이는 대화를 요약해 토큰을 확보한다. 대화가 길어진 뒤 이전 턴들을 간결한 요약으로 압축해 컨텍스트를 유지하면서도 가용 토큰을 늘려 준다.",
+      example: "/compact",
+      caution: "",
+      version: "v0.49"
+    },
+    "/resume": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#resume-a-saved-conversation-with-resume",
+      sourceLabel: "developers.openai.com · /resume",
+      summary: "세션 목록에서 저장된 대화를 이어 간다. 이전 CLI 세션에서 작업하던 흐름을 트랜스크립트와 함께 다시 불러와 끊긴 지점에서 이어 작업할 수 있도록 해 준다.",
+      example: "/resume",
+      caution: "",
+      version: "v0.49"
+    },
+    "/fork": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#fork-the-current-conversation-with-fork",
+      sourceLabel: "developers.openai.com · /fork",
+      summary: "현재 대화를 새 스레드로 분기한다. 원본 트랜스크립트를 그대로 유지하면서 동일한 대화를 새 ID로 복제해, 같은 기점에서 다른 방향을 탐색하거나 실험적인 시도를 분리할 수 있도록 해 준다.",
+      example: "/fork",
+      caution: "",
+      version: "v0.49"
+    },
+    "/side": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#start-a-side-conversation-with-side",
+      sourceLabel: "developers.openai.com · /side",
+      summary: "일시적인 사이드 대화를 시작한다. 메인 스레드의 트랜스크립트를 흩뜨리지 않고도 집중적인 후속 질문을 던질 수 있어, 본 작업의 맥락을 잃지 않은 채 짧은 점검을 할 때 유용하다. 인라인 텍스트를 함께 보낼 수도 있다.",
+      example: "/side Check whether this plan has an obvious risk",
+      caution: "",
+      version: "v0.49"
+    },
+    "/agent": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#switch-agent-threads-with-agent",
+      sourceLabel: "developers.openai.com · /agent",
+      summary: "활성 에이전트 스레드를 전환한다. 새로 띄운 서브에이전트 스레드를 점검하거나 거기서 작업을 이어 가고 싶을 때, 메인 세션을 재시작하지 않고도 곧바로 다른 스레드로 옮겨갈 수 있다.",
+      example: "/agent",
+      caution: "",
+      version: "v0.49"
+    },
+    "/review": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#ask-for-a-working-tree-review-with-review",
+      sourceLabel: "developers.openai.com · /review",
+      summary: "Codex에게 작업 트리 검토를 요청한다. Codex가 작업을 완료한 뒤 또는 로컬 변경에 또 다른 검토자가 필요할 때 실행하면, 현재 세션 모델로 작업 트리를 살펴 동작 변경과 누락된 테스트를 짚어준다.",
+      example: "/review",
+      caution: "config.toml에 <code>review_model</code>이 지정되어 있으면 그 모델을 쓰고, 없으면 현재 세션 모델을 사용한다.",
+      version: "v0.49"
+    },
+    "/diff": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#review-changes-with-diff",
+      sourceLabel: "developers.openai.com · /diff",
+      summary: "Git이 아직 추적하지 않는 파일까지 포함해 Git diff를 보여준다. 커밋하거나 테스트를 돌리기 전에 Codex가 만든 편집 결과를 검토할 수 있도록 스테이지된 변경·미스테이지 수정·미추적 파일을 CLI 안에서 한 번에 점검한다.",
+      example: "/diff",
+      caution: "",
+      version: "v0.49"
+    },
+    "/copy": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#copy-the-latest-response-with-copy",
+      sourceLabel: "developers.openai.com · /copy",
+      summary: "가장 최근 완료된 Codex 출력을 클립보드로 복사한다. 수동으로 선택할 필요 없이 마지막으로 끝난 응답이나 계획 텍스트를 바로 가져올 수 있다. 키보드 단축키 Ctrl+O와 동일하다.",
+      example: "/copy",
+      caution: "턴이 아직 진행 중이면 마지막으로 완료된 출력을 사용하며, 첫 완료 출력 이전과 롤백 직후에는 쓸 수 없다.",
+      version: "v0.49"
+    },
+    "/mention": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#highlight-files-with-mention",
+      sourceLabel: "developers.openai.com · /mention",
+      summary: "대화에 파일을 첨부한다. Codex가 다음 턴에 점검할 특정 파일이나 폴더로 시선을 모으도록 <code>/mention &lt;path&gt;</code> 형태로 경로를 지정한다.",
+      example: "/mention src/lib/api.ts",
+      caution: "경로 입력 후 팝업에서 일치하는 결과를 선택해야 첨부가 마무리된다.",
+      version: "v0.49"
+    },
+    "/init": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#generate-agentsmd-with-init",
+      sourceLabel: "developers.openai.com · /init",
+      summary: "현재 디렉토리에 <code>AGENTS.md</code> 스캐폴드를 생성한다. 작업 중인 저장소나 하위 디렉토리에 대한 영속 지침을 기록해 두면 이후 세션에서 Codex가 이를 참조한다.",
+      example: "/init",
+      caution: "생성된 파일을 저장소 컨벤션에 맞게 수정한 뒤 커밋하라.",
+      version: "v0.49"
+    },
+    "/mcp": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#list-mcp-tools-with-mcp",
+      sourceLabel: "developers.openai.com · /mcp",
+      summary: "구성된 Model Context Protocol(MCP) 도구를 나열한다. 현재 세션에서 Codex가 호출할 수 있는 외부 도구가 무엇인지 확인할 때 사용한다. <code>/mcp verbose</code>로 서버 진단 정보까지 자세히 볼 수 있다.",
+      example: "/mcp",
+      caution: "verbose 모드는 서버 진단 정보를 함께 출력한다.",
+      version: "v0.49"
+    },
+    "/apps": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#browse-apps-with-apps",
+      sourceLabel: "developers.openai.com · /apps",
+      summary: "앱(커넥터) 목록을 살펴보고 프롬프트에 삽입한다. Codex가 사용할 앱을 <code>$app-slug</code> 형식으로 붙인 뒤 작업을 지시한다.",
+      example: "/apps",
+      caution: "선택한 앱은 컴포저에 <code>$app-slug</code> 형태로 삽입된다.",
+      version: "v0.49"
+    },
+    "/plugins": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#browse-plugins-with-plugins",
+      sourceLabel: "developers.openai.com · /plugins",
+      summary: "설치된 플러그인과 발견 가능한 플러그인을 살펴본다. 플러그인 도구를 점검하거나, 추천 플러그인을 설치하거나, 플러그인 활성 여부를 관리할 수 있다.",
+      example: "/plugins",
+      caution: "설치된 플러그인에서 Space를 누르면 활성 상태를 토글하며, 화면은 설치됨·발견 가능·설치 상태의 세 탭으로 나뉜다.",
+      version: "v0.49"
+    },
+    "/statusline": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#configure-footer-items-with-statusline",
+      sourceLabel: "developers.openai.com · /statusline",
+      summary: "TUI 상태줄 필드를 대화형으로 구성한다. 푸터에 표시할 항목(모델·컨텍스트·사용 한도·git 브랜치·토큰 카운터·세션 ID 등)을 골라 순서까지 정한다.",
+      example: "/statusline",
+      caution: "변경 내용은 config.toml의 <code>tui.status_line</code>에 저장된다.",
+      version: "v0.49"
+    },
+    "/title": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#configure-terminal-title-items-with-title",
+      sourceLabel: "developers.openai.com · /title",
+      summary: "터미널 창 또는 탭 제목 필드를 대화형으로 구성한다. 프로젝트·상태·스레드·브랜치·모델·작업 진행 등 제목 항목을 골라 순서를 조정한다.",
+      example: "/title",
+      caution: "변경 내용은 config.toml의 <code>tui.terminal_title</code>에 저장된다.",
+      version: "v0.49"
+    },
+    "/keymap": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#remap-tui-shortcuts-with-keymap",
+      sourceLabel: "developers.openai.com · /keymap",
+      summary: "TUI 키보드 단축키를 재지정한다. 자주 쓰는 동작의 키 바인딩을 점검하고 <code>config.toml</code>에 사용자 설정으로 영속화한다. 키 이름은 <code>ctrl-a</code>·<code>shift-enter</code>·<code>page-down</code> 같은 형식을 따른다.",
+      example: "/keymap",
+      caution: "컨텍스트별 바인딩이 전역 설정을 덮어쓰며, 빈 바인딩 리스트는 해당 동작을 해제한다. 변경 내용은 config.toml에 저장된다.",
+      version: "v0.49"
+    },
+    "/theme": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#choose-a-syntax-theme-with-theme",
+      sourceLabel: "developers.openai.com · /theme",
+      summary: "구문 강조 테마를 선택한다. 터미널 구문 강조 테마를 미리 보고 영속 설정으로 저장한다.",
+      example: "/theme",
+      caution: "변경 내용은 config.toml의 <code>tui.theme</code>에 저장되며, 확정 전에 미리보기로 확인할 수 있다.",
+      version: "v0.49"
+    },
+    "/ps": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#check-background-terminals-with-ps",
+      sourceLabel: "developers.openai.com · /ps (experimental)",
+      summary: "실험적 백그라운드 터미널과 최근 출력을 보여준다. 메인 트랜스크립트를 떠나지 않고도 장시간 실행되는 명령의 상태를 한눈에 확인할 수 있도록, 각 터미널의 명령과 최근 비어 있지 않은 출력 줄 최대 3개를 함께 출력한다.",
+      example: "/ps",
+      caution: "<code>unified_exec</code>가 활성화되어 있을 때만 표시되며, 그렇지 않으면 비어 있을 수 있다.",
+      version: "v0.49"
+    },
+    "/stop": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#stop-background-terminals-with-stop",
+      sourceLabel: "developers.openai.com · /stop · /clean",
+      summary: "모든 백그라운드 터미널을 중지한다. 현재 세션에서 시작한 백그라운드 터미널 작업을 일괄 취소하며, 별칭 <code>/clean</code>으로도 호출할 수 있다.",
+      example: "/stop",
+      caution: "확인 프롬프트가 뜨면 응답한 뒤 중지가 진행된다.",
+      version: "v0.49"
+    },
+    "/feedback": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#send-feedback-with-feedback",
+      sourceLabel: "developers.openai.com · /feedback",
+      summary: "로그를 Codex 관리자에게 보낸다. 이슈를 보고하거나 진단 정보를 지원팀과 공유할 때 사용한다.",
+      example: "/feedback",
+      caution: "제출 전에 요청된 진단 정보를 모으는 과정을 거치며, 문제 해결에 도움이 된다.",
+      version: "v0.49"
+    },
+    "/logout": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#sign-out-with-logout",
+      sourceLabel: "developers.openai.com · /logout",
+      summary: "Codex에서 로그아웃한다. 공유 머신을 사용 중일 때 로컬 자격 증명을 지운다.",
+      example: "/logout",
+      caution: "현재 사용자 세션의 로컬 자격 증명이 제거된다.",
+      version: "v0.49"
+    },
+    "/quit · /exit": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#exit-the-cli-with-quit-or-exit",
+      sourceLabel: "developers.openai.com · /quit · /exit",
+      summary: "CLI를 종료한다. <code>/quit</code>과 <code>/exit</code>은 동작이 동일하며, 어느 쪽을 입력해도 즉시 세션을 닫는다.",
+      example: "/quit",
+      caution: "종료 전에 중요한 작업은 저장하거나 커밋해 두는 편이 좋다.",
+      version: "v0.49"
+    },
+    "codex": {
+      source: "https://developers.openai.com/codex/cli/reference",
+      sourceLabel: "Codex CLI reference · codex",
+      summary: "터미널 UI를 실행합니다. 위에 정리된 글로벌 플래그를 모두 받으며, 선택적으로 프롬프트나 이미지 첨부를 함께 전달할 수 있습니다. 서브커맨드를 지정하지 않으면 옵션이 그대로 대화형 CLI로 전달됩니다.",
+      example: "codex [PROMPT] [--image PATH] [OPTIONS]",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex mcp": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-mcp",
+      sourceLabel: "Codex CLI reference · codex mcp",
+      summary: "<code>~/.codex/config.toml</code>에 저장된 Model Context Protocol 서버 항목을 관리합니다. <code>add</code>로 stdio 또는 HTTP 전송 방식의 서버를 등록하고, <code>list</code>로 목록을 조회하며, <code>login</code>/<code>logout</code>으로 HTTP 서버의 OAuth 자격증명을 관리하고, <code>remove</code>로 항목을 제거합니다.",
+      example: "codex mcp add <name> -- <command...>\ncodex mcp list [--json]\ncodex mcp login <name> --scopes scope1,scope2\ncodex mcp remove <name>",
+      caution: "OAuth는 HTTP 서버에서만 사용할 수 있고 stdio 서버에서는 지원되지 않습니다.",
+      version: "v0.49"
+    },
+    "codex exec": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-exec",
+      sourceLabel: "Codex CLI reference · codex exec (alias e)",
+      summary: "Codex를 비대화형으로 실행합니다. 별칭은 <code>codex e</code>. 결과를 stdout 또는 JSONL로 스트리밍하며, 이전 세션 이어가기도 선택적으로 지원합니다. 프롬프트는 인자 또는 stdin(<code>-</code>)으로 전달하고, 마지막 메시지는 <code>--output-last-message</code>로 파일에 저장할 수 있습니다.",
+      example: "codex exec [PROMPT | -] [--json] [--output-last-message PATH] [OPTIONS]\ncodex exec resume [SESSION_ID] [--last] [--all] [PROMPT]",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex mcp-server": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-mcp-server",
+      sourceLabel: "Codex CLI reference · codex mcp-server",
+      summary: "Codex 자체를 stdio 기반 MCP 서버로 실행합니다. 다른 에이전트가 Codex를 호출해서 사용할 때 유용합니다. 글로벌 설정 오버라이드를 그대로 상속하며, 다운스트림 클라이언트가 연결을 닫으면 종료됩니다.",
+      example: "codex mcp-server [OPTIONS]",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex resume": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-resume",
+      sourceLabel: "Codex CLI reference · codex resume",
+      summary: "이전 대화형 세션을 ID로 이어가거나 가장 최근 대화를 다시 엽니다. 기본은 선택기를 띄우며, <code>--last</code>로 선택기를 건너뛰고 최근 세션으로 바로 진입할 수 있습니다. 루트 <code>codex</code> 명령과 동일한 글로벌 플래그를 받습니다.",
+      example: "codex resume [SESSION_ID] [--last] [--all]",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex remote-control": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-remote-control",
+      sourceLabel: "Codex CLI reference · codex remote-control",
+      summary: "원격 제어가 활성화된 상태로 app-server 데몬이 실행되고 있는지 확인하고, 필요하면 시작합니다. 관리형 원격 제어 클라이언트와 SSH 원격 워크플로우가 이 명령을 사용하며, 로컬 프로토콜 클라이언트를 구축할 때 쓰는 <code>codex app-server --listen</code>을 대체하지는 않습니다.",
+      example: "codex remote-control",
+      caution: "실험 단계 기능. 로컬 프로토콜 클라이언트 구축 용도가 아닌 관리형 원격 제어·SSH 원격 워크플로우 전용.",
+      version: "v0.49"
+    },
+    "codex fork": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-fork",
+      sourceLabel: "Codex CLI reference · codex fork",
+      summary: "이전 대화형 세션을 새 스레드로 분기합니다. 원본 트랜스크립트는 그대로 보존되며, 기본은 세션 선택기를 띄웁니다. <code>--last</code>로 선택기를 건너뛰고 가장 최근 세션을 분기할 수 있고, <code>--all</code>은 현재 디렉토리 밖의 세션도 함께 보여줍니다.",
+      example: "codex fork [SESSION_ID] [--last] [--all]",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex app · app-server": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-app",
+      sourceLabel: "Codex CLI reference · codex app · codex app-server",
+      summary: "<code>codex app</code>은 macOS 또는 Windows에서 Codex 데스크톱 앱을 실행합니다. macOS에서는 워크스페이스 경로를 함께 열 수 있고, Windows에서는 경로를 출력합니다. 앱이 설치돼 있지 않으면 설치 프로그램을 시작합니다. <code>codex app-server</code>는 stdio, WebSocket, Unix 소켓을 통해 로컬 개발·디버깅용 Codex 앱 서버를 실행합니다.",
+      example: "codex app [PATH] [--download-url URL]\ncodex app-server --listen [stdio:// | ws://IP:PORT | unix:// | unix://PATH | off] [--ws-auth MODE] [OPTIONS]",
+      caution: "<code>codex app-server</code>는 실험 단계 기능입니다. <code>wss://</code> 클라이언트는 TLS 종단을 따로 두는 것이 권장되며, 인증 모드 <code>capability-token</code> · <code>signed-bearer-token</code>은 각각 <code>--ws-token-file</code> / <code>--ws-shared-secret-file</code> 등이 필요합니다.",
+      version: "v0.49"
+    },
+    "codex review": {
+      source: "https://developers.openai.com/codex/cli/features#running-local-code-review",
+      sourceLabel: "developers.openai.com · codex review (서브커맨드 reference 미수록 — features 페이지 기준)",
+      summary: "대화형 CLI에서 <code>/review</code>를 입력하면 Codex의 검토 프리셋이 열립니다. CLI가 별도의 검토기를 띄워 작업 트리 diff를 살펴 동작 변경과 누락된 테스트를 우선순위로 정리하며, 결과는 작업 트리를 수정하지 않고 트랜스크립트의 한 턴으로 남습니다. 베이스 브랜치 대비 검토, 미커밋 변경 검토, 특정 커밋 검토, 사용자 지정 지시 등을 선택할 수 있습니다.",
+      example: "/review",
+      caution: "developers.openai.com의 CLI reference에는 별도 서브커맨드로 수록돼 있지 않습니다 — 슬래시 명령 <code>/review</code>를 통해 동일 기능에 접근합니다. config.toml의 <code>review_model</code>이 지정돼 있으면 그 모델, 없으면 현재 세션 모델이 사용됩니다.",
+      version: "v0.49"
+    },
+    "codex features": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-features",
+      sourceLabel: "Codex CLI reference · codex features",
+      summary: "<code>~/.codex/config.toml</code> 또는 선택된 프로파일 파일에 저장된 기능 플래그를 관리합니다. <code>list</code>로 사용 가능한 기능을 확인하고, <code>enable</code>/<code>disable</code>로 개별 기능을 켜고 끕니다. 변경 사항은 이후 세션부터 적용되며, <code>--profile</code> 레이어링을 그대로 따릅니다.",
+      example: "codex features list\ncodex features enable <feature>\ncodex features disable <feature>",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex cloud": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-cloud",
+      sourceLabel: "Codex CLI reference · codex cloud (alias cloud-tasks)",
+      summary: "터미널에서 Codex Cloud 작업을 둘러보거나 TUI를 띄우지 않고 바로 실행합니다. 별칭은 <code>codex cloud-tasks</code>. 기본은 대화형 선택기를 띄우며, <code>codex cloud exec</code>로 작업을 곧장 제출할 수 있고, <code>codex cloud list</code>는 작업 ID·URL·상태·환경 정보를 JSON으로 출력합니다.",
+      example: "codex cloud [QUERY] --env ENV_ID [--attempts 1-4]\ncodex cloud list [--env ENV_ID] [--limit 1-20] [--cursor STRING] [--json]",
+      caution: "실험 단계 기능. <code>--env</code>로 환경 ID를 지정해야 합니다.",
+      version: "v0.49"
+    },
+    "codex execpolicy": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-execpolicy",
+      sourceLabel: "Codex CLI reference · codex execpolicy",
+      summary: "execpolicy 규칙 파일을 평가해 특정 명령이 허용·확인 요청·차단 중 어느 결과가 나오는지 검사합니다. <code>--rules</code> 옵션으로 하나 이상의 규칙 파일을 지정하고, 결과로는 가장 엄격한 결정과 매칭된 규칙들이 JSON으로 출력되며 <code>--pretty</code>로 보기 좋게 포맷할 수 있습니다.",
+      example: "codex execpolicy check --rules PATH [--rules PATH...] [--pretty] COMMAND...",
+      caution: "실험 단계(preview) 기능. 규칙 파일 경로를 반드시 전달해야 합니다.",
+      version: "v0.49"
+    },
+    "codex apply": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-apply",
+      sourceLabel: "Codex CLI reference · codex apply (alias a)",
+      summary: "Codex Cloud 작업이 만든 최신 diff를 로컬 작업 트리에 적용합니다. 별칭은 <code>codex a</code>. 내부적으로 <code>git apply</code>를 사용하므로, 충돌 등으로 적용이 실패하면 0이 아닌 종료 코드로 끝납니다.",
+      example: "codex apply TASK_ID",
+      caution: "충돌 발생 시 <code>git apply</code> 실패로 비정상 종료(non-zero exit) — 적용 전 작업 트리 상태 확인 필요.",
+      version: "v0.49"
+    },
+    "codex completion": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-completion",
+      sourceLabel: "Codex CLI reference · codex completion",
+      summary: "Bash, Zsh, Fish, PowerShell, Elvish용 셸 자동완성 스크립트를 생성합니다. 출력 결과를 셸의 적절한 위치로 리다이렉트해 설치합니다.",
+      example: "codex completion [bash | zsh | fish | power-shell | elvish]\ncodex completion zsh > \"${fpath[1]}/_codex\"",
+      caution: "",
+      version: "v0.49"
+    },
+    "codex login · logout": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-login",
+      sourceLabel: "Codex CLI reference · codex login · codex logout",
+      summary: "<code>codex login</code>은 ChatGPT OAuth, 디바이스 인증, API 키, 또는 stdin으로 전달된 액세스 토큰으로 Codex에 인증합니다. <code>codex login status</code>는 로그인 상태를 확인해 로그인된 경우 종료 코드 0을 반환하므로 자동화에서 유용합니다. <code>codex logout</code>은 저장된 인증 자격증명(API 키와 ChatGPT 인증 모두)을 제거합니다.",
+      example: "codex login\ncodex login --device-auth\ncodex login --with-api-key\ncodex login status\ncodex logout",
+      caution: "<code>--with-api-key</code> · <code>--with-access-token</code>은 표준 입력으로만 값을 받습니다. <code>codex logout</code>은 별도 플래그가 없습니다.",
+      version: "v0.49"
+    },
+    "codex update": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-update",
+      sourceLabel: "Codex CLI reference · codex update",
+      summary: "설치된 릴리스가 자체 업데이트를 지원하는 경우, Codex CLI의 새 버전을 확인하고 적용합니다.",
+      example: "codex update",
+      caution: "디버그 빌드에서는 자체 업데이트가 동작하지 않으며, 대신 릴리스 빌드를 설치하라는 메시지가 출력됩니다.",
+      version: "v0.49"
+    },
+    "-s, --sandbox": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --sandbox",
+      summary: "모델이 생성한 셸 명령에 적용할 샌드박스 정책을 선택한다(Select the sandbox policy for model-generated shell commands). 허용 값은 <code>read-only</code>, <code>workspace-write</code>, <code>danger-full-access</code>이며 명령 실행 단계에서 적용되는 샌드박스 강도를 제어한다.",
+      example: "codex -s workspace-write \"리팩터링 진행\"",
+      caution: "",
+      version: "v0.49"
+    },
+    "--cd": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --cd (-C)",
+      summary: "에이전트가 요청 처리를 시작하기 전에 사용할 작업 디렉토리를 지정한다(Set the working directory for the agent before it starts processing your request). 단축 형태는 <code>-C</code>이며 초기 작업 디렉토리 컨텍스트를 확정한다.",
+      example: "codex --cd ./packages/api \"테스트 실행\"",
+      caution: "",
+      version: "v0.49"
+    },
+    "-a, --ask-for-approval": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --ask-for-approval",
+      summary: "명령 실행 전 Codex가 사용자 승인을 받기 위해 멈추는 시점을 제어한다(Control when Codex pauses for human approval before running a command). 허용 값은 <code>untrusted</code>, <code>on-request</code>, <code>never</code>이며 대화형 세션에서는 <code>on-request</code>, 비대화형 세션에서는 <code>never</code>가 권장된다.",
+      example: "codex -a on-request \"버그 수정\"",
+      caution: "<code>on-failure</code> 값은 더 이상 권장되지 않으며(deprecated), 대화형 세션은 <code>on-request</code>, 비대화형 세션은 <code>never</code>를 사용한다.",
+      version: "v0.49"
+    },
+    "-c key=value": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · -c/--config key=value",
+      summary: "설정 값을 일회성으로 덮어쓴다(Override configuration values). 값은 가능하면 JSON으로 파싱되고 그렇지 않으면 리터럴 문자열로 처리되며, 이 호출에서는 커맨드라인 설정이 우선한다.",
+      example: "codex -c model=\"gpt-5.1-codex\" \"코드 리뷰\"",
+      caution: "",
+      version: "v0.49"
+    },
+    "-p, --profile": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --profile",
+      summary: "기본 사용자 설정 위에 <code>$CODEX_HOME/profile-name.config.toml</code>을 겹쳐 적용한다(Layer $CODEX_HOME/profile-name.config.toml on top of the base user config). 프로파일 기반 설정 합성을 활성화한다.",
+      example: "codex -p review \"PR #42 분석\"",
+      caution: "",
+      version: "v0.49"
+    },
+    "--add-write-dir": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --add-dir (워크시트 라벨 --add-write-dir = 현 docs --add-dir)",
+      summary: "메인 워크스페이스와 함께 추가 디렉토리에도 쓰기 권한을 부여한다(Grant additional directories write access alongside the main workspace). 여러 경로를 허용하려면 플래그를 반복 사용한다.",
+      example: "codex --add-dir ../shared --add-dir ../libs \"통합 작업\"",
+      caution: "현 공식 docs에서는 <code>--add-dir</code>로 표기되며 워크시트의 <code>--add-write-dir</code>는 이 플래그와 동일하다.",
+      version: "v0.49"
+    },
+    "--search": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --search",
+      summary: "실시간 웹 검색을 활성화한다(Enable live web search). 기본값 <code>web_search = \"cached\"</code> 대신 <code>\"live\"</code>를 설정하여 캐시 검색에서 라이브 검색 모드로 전환한다.",
+      example: "codex --search \"최신 React 19 RC 변경점 정리\"",
+      caution: "",
+      version: "v0.49"
+    },
+    "--remote": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --remote",
+      summary: "대화형 TUI를 원격 app-server WebSocket 엔드포인트에 연결한다(Connect the interactive TUI to a remote app-server WebSocket endpoint). <code>codex</code>, <code>codex resume</code>, <code>codex fork</code>에서만 지원되며 다른 서브커맨드는 원격 모드를 거부한다.",
+      example: "codex --remote wss://codex.example.com:8443",
+      caution: "<code>codex</code>, <code>codex resume</code>, <code>codex fork</code>에서만 동작하며 다른 서브커맨드와 함께 쓰면 거부된다.",
+      version: "v0.49"
+    },
+    "--json": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-exec",
+      sourceLabel: "Codex CLI reference · codex exec --json",
+      summary: "서식화된 텍스트 대신 줄바꿈으로 구분된 JSON 이벤트를 출력한다(Print newline-delimited JSON events instead of formatted text). 기계 판독 가능한 이벤트 스트림을 내보낸다.",
+      example: "codex exec --json \"테스트 추가\" > events.ndjson",
+      caution: "<code>codex exec</code> 서브커맨드에서만 사용 가능. <code>--experimental-json</code>이라는 별칭도 존재한다.",
+      version: "v0.49"
+    },
+    "--output-last-message": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-exec",
+      sourceLabel: "Codex CLI reference · codex exec --output-last-message (-o)",
+      summary: "어시스턴트의 마지막 메시지를 파일에 기록한다(Write the assistant's final message to a file). 후속 스크립팅을 위해 최종 응답을 파일로 캡처하는 데 유용하다.",
+      example: "codex exec -o result.md \"릴리스 노트 작성\"",
+      caution: "<code>codex exec</code> 서브커맨드에서만 사용 가능. 단축 형태는 <code>-o</code>.",
+      version: "v0.49"
+    },
+    "--full-auto": {
+      source: "https://developers.openai.com/codex/cli/reference#codex-exec",
+      sourceLabel: "Codex CLI reference · --full-auto (deprecated)",
+      summary: "더 이상 권장되지 않는 호환용 플래그로(Deprecated compatibility flag), 새 코드에서는 <code>--sandbox workspace-write</code>를 직접 지정하는 방식이 권장된다.",
+      example: "codex exec --full-auto \"스크립트 실행\"",
+      caution: "deprecated. 명시적인 <code>-s workspace-write</code> + <code>-a</code> 조합으로 대체한다.",
+      version: "v0.49"
+    },
+    "--yolo": {
+      source: "https://developers.openai.com/codex/cli/reference#global-flags",
+      sourceLabel: "Codex CLI reference · --yolo · --dangerously-bypass-approvals-and-sandbox",
+      summary: "모든 명령을 승인이나 샌드박싱 없이 실행한다(Run every command without approvals or sandboxing). 외부적으로 격리된(hardened) 환경에서만 사용해야 한다.",
+      example: "codex --yolo \"컨테이너 내부에서 전체 빌드\"",
+      caution: "모든 안전 메커니즘이 비활성화되므로 격리되지 않은 호스트에서는 사용 금지. 정식 이름은 <code>--dangerously-bypass-approvals-and-sandbox</code>이며 <code>--yolo</code>는 별칭이다.",
+      version: "v0.49"
+    },
+    "/vim": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#toggle-vim-mode-with-vim",
+      sourceLabel: "developers.openai.com · /vim",
+      summary: "컴포저(composer)의 Vim 모드를 토글한다(Toggle Vim mode for the composer). Vim의 normal/insert 동작과 기본 컴포저 편집 모드 사이를 전환할 때 사용하며, <code>/vim</code>을 입력하면 현재 세션의 컴포저 Vim 모드가 켜지거나 꺼진다. 새 세션에서도 Vim 모드를 기본값으로 쓰려면 <code>config.toml</code>에 <code>tui.vim_mode_default = true</code>를 설정한다.",
+      example: "/vim",
+      caution: "",
+      version: "v0.134.0"
+    },
+    "/hooks": {
+      source: "https://developers.openai.com/codex/cli/slash-commands#review-hooks-with-hooks",
+      sourceLabel: "developers.openai.com · /hooks",
+      summary: "라이프사이클 훅을 검토한다(Review lifecycle hooks). 구성된 훅을 점검하고 새로 추가되거나 변경된 훅을 신뢰하거나 관리되지 않는(non-managed) 훅을 실행 전에 비활성화할 때 사용한다. <code>/hooks</code>를 입력하면 훅 브라우저가 열리며, 점검할 훅 이벤트를 선택해 매칭되는 핸들러를 확인하고 관리되지 않는 훅을 신뢰·비활성화·재활성화할 수 있다.",
+      example: "/hooks",
+      caution: "관리되는(managed) 훅은 \"managed\"로 표시되며 사용자 훅 브라우저에서 비활성화할 수 없다.",
+      version: "v0.134.0"
+    }
+  };
+
+  const drawer = document.querySelector(".cmd-detail-drawer");
+  const backdrop = document.querySelector(".cmd-detail-backdrop");
+  const badge = drawer.querySelector(".cmd-detail-badge");
+  const body = drawer.querySelector(".cmd-detail-body");
+  const closeBtn = drawer.querySelector(".cmd-detail-close");
+  let lastFocus = null;
+
+  function render(key, detail) {
+    badge.textContent = key;
+    body.innerHTML =
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">출처</div>' +
+        '<div class="cmd-detail-source">' + (detail.source ? '<a href="' + detail.source + '" target="_blank" rel="noopener noreferrer">' + detail.sourceLabel + ' ↗</a>' : detail.sourceLabel) + '</div>' +
+      '</div>' +
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">설명</div>' +
+        '<div class="cmd-detail-summary">' + detail.summary + '</div>' +
+      '</div>' +
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">사용 예시</div>' +
+        '<pre class="cmd-detail-example">' + detail.example + '</pre>' +
+      '</div>' +
+      (detail.caution ? '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">주의</div>' +
+        '<div class="cmd-detail-caution">' + detail.caution + '</div>' +
+      '</div>' : '') +
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">버전</div>' +
+        '<div class="cmd-detail-version">' + detail.version + '</div>' +
+      '</div>';
+  }
+
+  function openDrawer() {
+    lastFocus = document.activeElement;
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    backdrop.setAttribute("aria-hidden", "false");
+    setTimeout(function() { closeBtn.focus(); }, 50);
+  }
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    backdrop.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    backdrop.setAttribute("aria-hidden", "true");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.querySelectorAll(".row, .lrow").forEach(function(cell) {
+    const codeEl = cell.querySelector("code");
+    if (!codeEl) return;
+    const key = codeEl.textContent.trim();
+    const detail = COMMAND_DETAILS[key];
+    if (!detail) return;
+    cell.classList.add("cmd-detail-trigger");
+    cell.setAttribute("role", "button");
+    cell.setAttribute("tabindex", "0");
+    cell.addEventListener("click", function() {
+      render(key, detail);
+      openDrawer();
+    });
+    cell.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        render(key, detail);
+        openDrawer();
+      }
+    });
+  });
+
+  closeBtn.addEventListener("click", closeDrawer);
+  backdrop.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer();
+  });
+})();
+</script>
+</body>
+</html>

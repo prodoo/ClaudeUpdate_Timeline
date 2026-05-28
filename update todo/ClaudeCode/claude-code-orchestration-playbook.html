@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 오케스트레이션 노하우</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2433;
+    --navy2:#283448;
+    --ink:#222831;
+    --gray:#5f6b7a;
+    --soft-gray:#8b95a3;
+    --line:#e7e9ee;
+    --bg:#ffffff;
+    --soft:#f4f5f8;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    --c1:#2bb3a3; --c1bg:#e4f5f3;   /* teal   - 정의 */
+    --c2:#3f6fd1; --c2bg:#e7eefb;   /* blue   - 층위 */
+    --c3:#5b6ee0; --c3bg:#e9ebfc;   /* indigo - 병렬 */
+    --c4:#e09a2d; --c4bg:#fbf0db;   /* amber  - 격리 */
+    --c5:#2f9e6e; --c5bg:#e3f4ec;   /* green  - 지휘 */
+    --c6c:#e0594d; --c6bg:#fbe7e4;  /* red    - 통제 */
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,sans-serif;
+    background:#dfe3ea;color:var(--ink);
+    padding:30px 16px;-webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1180px;margin:0 auto;background:var(--bg);
+    border-radius:6px;overflow:hidden;
+    box-shadow:0 8px 44px rgba(20,28,45,.17);
+  }
+
+  /* hero */
+  .hero{
+    background:var(--navy);color:#fff;padding:34px 38px 40px;
+    display:flex;justify-content:space-between;gap:36px;align-items:flex-start;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:6px;}
+  .eyebrow{font-size:12px;letter-spacing:.3em;color:#8e9ab2;font-weight:600;margin-bottom:14px;}
+  .hero h1{font-size:42px;font-weight:800;line-height:1.16;letter-spacing:-.02em;}
+  .hero h1 .acc{color:#5fd0c3;}
+  .summary-box{
+    background:var(--navy2);border:1px solid #3a4860;border-radius:10px;
+    padding:20px 22px;width:392px;flex-shrink:0;
+  }
+  .summary-box .thesis{
+    font-size:13.5px;line-height:1.7;color:#cdd5e2;font-weight:500;margin-bottom:15px;
+  }
+  .mini{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;align-items:baseline;}
+  .mini code{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;}
+  .mini span{font-family:var(--mono);font-size:11px;color:#8e9ab2;text-align:left;}
+
+  /* body */
+  .body{padding:24px 26px 30px;}
+  .sumrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .sumcard{
+    background:var(--bg);border:1px solid var(--line);
+    border-top:3px solid var(--cc);border-radius:8px;padding:15px 17px 16px;
+  }
+  .sumcard .step{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    color:var(--cc);letter-spacing:.04em;margin-bottom:6px;
+  }
+  .sumcard h3{font-size:15px;font-weight:800;margin-bottom:7px;}
+  .sumcard p{font-size:12px;line-height:1.62;color:var(--gray);}
+  .sumcard p b{color:#3a4452;font-weight:700;font-family:var(--mono);font-size:11.5px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px 22px;display:flex;flex-direction:column;
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;}
+  .cmd-badge{
+    font-family:var(--mono);font-size:15.5px;font-weight:700;
+    padding:6px 13px;border-radius:8px;background:var(--cbg);color:var(--cc);
+  }
+  .tag{
+    font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;
+    border:1px solid var(--cc);color:var(--cc);background:var(--bg);white-space:nowrap;
+  }
+  .card h2{font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.32;margin-bottom:9px;}
+  .card .lead{font-size:12.5px;line-height:1.68;color:var(--gray);margin-bottom:16px;}
+  .card .lead b{color:#3a4452;font-weight:700;}
+  .card .lead code{font-family:var(--mono);font-size:11.5px;font-weight:700;color:#3a4452;}
+
+  .rows{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+  .kv{
+    display:grid;grid-template-columns:78px 1fr;gap:14px;
+    padding:9px 0;border-top:1px solid var(--line);align-items:start;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .k{font-size:11.5px;font-weight:700;color:var(--soft-gray);}
+  .kv .v{font-size:12px;line-height:1.6;color:#3f4956;}
+  .kv .v b{color:#1f2731;font-weight:700;}
+  .kv .v code{
+    font-family:var(--mono);font-size:11px;font-weight:700;color:#2f3742;
+    background:var(--soft);padding:1px 4px;border-radius:3px;
+  }
+
+  .example{margin-top:auto;background:var(--navy);border-radius:8px;padding:13px 15px;}
+  .example .ex-lbl{font-size:9.5px;font-weight:700;letter-spacing:.14em;color:#7785a0;margin-bottom:7px;}
+  .example .ex-body{
+    font-family:var(--mono);font-size:11.5px;line-height:1.62;color:#e8ecf3;font-weight:500;
+  }
+  .example .ex-body .c{color:#5fd0c3;font-weight:700;}
+  .example .ex-body .m{color:#8e9ab2;}
+  .example .ex-body .key{
+    color:#fff;font-weight:700;border:1px solid #44516a;border-radius:4px;
+    padding:0 5px;margin:0 1px;
+  }
+
+  footer{
+    padding:16px 32px 24px;font-size:11px;color:#9aa3b2;
+    display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);
+  }
+  footer b{color:#7b8696;}
+
+  @media (max-width:880px){
+    .hero{flex-direction:column;gap:22px;}
+    .hero h1{font-size:33px;}
+    .summary-box{width:100%;}
+    .sumrow{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">CLAUDE CODE ORCHESTRATION PLAYBOOK</div>
+      <h1>한 사람이 <span class="acc">에이전트 팀</span>을<br>지휘하는 법</h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        전문 작업자를 정의하고, 보고형과 협업형을 구분하고, 여러 갈래로 병렬 탐색하고,
+        worktree로 충돌을 막고, 에이전트 뷰로 한눈에 지휘하고, /goal과 예산으로 자율성을 통제합니다.
+      </div>
+      <div class="mini">
+        <code>/agents</code><span>define specialists</span>
+        <code>vs Agent Teams</code><span>pick the layer</span>
+        <code>parallel subagents</code><span>fan-out explore</span>
+        <code>--worktree</code><span>write isolation</span>
+        <code>claude agents</code><span>command center</span>
+        <code>/goal</code><span>autonomy &amp; cost</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ============ SUMMARY CARDS ============ -->
+    <div class="sumrow">
+      <div class="sumcard" style="--cc:var(--c1);">
+        <div class="step">STEP 1 — 2 · 작업자 설계</div>
+        <h3>일 시킬 대상을 만든다</h3>
+        <p><b>/agents</b>로 격리된 전문 작업자를 정의하고, 서브에이전트와 <b>Agent Teams</b>가 어떻게 다른지 먼저 안다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c3);">
+        <div class="step">STEP 3 — 4 · 안전한 병렬화</div>
+        <h3>충돌 없이 동시에 굴린다</h3>
+        <p>여러 서브에이전트로 코드베이스를 동시에 훑되, <b>worktree</b> 격리로 파일 충돌을 막는다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c5);">
+        <div class="step">STEP 5 — 6 · 지휘와 통제</div>
+        <h3>한눈에 보고 고삐를 쥔다</h3>
+        <p><b>claude agents</b> 대시보드로 모든 세션을 지휘하고, <b>/goal</b>·예산으로 자율 실행을 통제한다.</p>
+      </div>
+    </div>
+
+    <!-- ============ DETAIL CARDS ============ -->
+    <div class="grid">
+
+      <!-- 1. /agents -->
+      <div class="card" style="--cc:var(--c1);--cbg:var(--c1bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/agents</span>
+          <span class="tag">Specialist workers</span>
+        </div>
+        <h2>전문 작업자를 정의해 본류 컨텍스트를 지킨다</h2>
+        <p class="lead">
+          서브에이전트는 한 세션 안에서 스폰되는 격리된 작업자다. 자체 컨텍스트 윈도우·프롬프트·도구 권한을 갖고
+          하나의 좁은 작업만 수행한 뒤 결과를 반환한다. 탐색·구현을 본류 대화 밖으로 빼내 메인 세션을 가볍게 유지한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">정의 위치</div><div class="v"><code>.claude/agents/&lt;name&gt;.md</code>(프로젝트) / <code>~/.claude/agents/</code>(유저); frontmatter에 <code>name</code>·<code>description</code>·<code>tools</code>·<code>model</code></div></div>
+          <div class="kv"><div class="k">핵심 요령</div><div class="v">description을 <b>"이럴 때 써라 / 이런 형태로 반환한다"</b>로 명확히 — Claude가 위임 판단에 그대로 사용</div></div>
+          <div class="kv"><div class="k">기본 제공</div><div class="v">빌트인 <code>Explore</code>(읽기 전용 탐색)·<code>Plan</code>(플랜 모드 리서치)·<code>general-purpose</code></div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m"># .claude/agents/reviewer.md — </span><span class="c">tools: Read, Grep</span> <span class="m">(Edit·Write 제외한 읽기 전용 리뷰어)</span></div>
+        </div>
+      </div>
+
+      <!-- 2. vs Agent Teams -->
+      <div class="card" style="--cc:var(--c2);--cbg:var(--c2bg);">
+        <div class="card-top">
+          <span class="cmd-badge">subagent vs team</span>
+          <span class="tag">Pick the layer</span>
+        </div>
+        <h2>보고형이냐, 협업형이냐를 먼저 구분한다</h2>
+        <p class="lead">
+          둘 다 병렬화지만 층위가 다르다. <b>서브에이전트</b>는 한 세션 안의 작업자로 결과를 본류에 보고만 하고
+          서로 메시지를 못 한다. <b>Agent Teams</b>는 여러 세션을 팀 리드가 조율하고 팀원끼리 직접 소통한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">서브에이전트</div><div class="v">수직 병렬 — 한 세션 내부 작업자. 빠르고 좁은 위임, 결과만 회수</div></div>
+          <div class="kv"><div class="k">Agent Teams</div><div class="v">수평 협업 — 실험적(<code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>). 팀원이 공유 태스크 리스트로 조율·소통</div></div>
+          <div class="kv"><div class="k">판단 기준</div><div class="v">작업자끼리 <b>소통이 필요한가?</b> 아니면 서브에이전트, 맞으면 Agent Teams. 둘은 조합 가능</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body">"인증 시스템 리뷰 <span class="c">팀</span> 구성 — 보안 / 성능 / 테스트 커버리지 팀원 3명, 태스크 리스트로 공유·조율해"</div>
+        </div>
+      </div>
+
+      <!-- 3. parallel fan-out -->
+      <div class="card" style="--cc:var(--c3);--cbg:var(--c3bg);">
+        <div class="card-top">
+          <span class="cmd-badge">parallel subagents</span>
+          <span class="tag">Fan-out explore</span>
+        </div>
+        <h2>한 번에 여러 갈래로 코드베이스를 훑는다</h2>
+        <p class="lead">
+          한 세션이 서브에이전트 여러 개를 동시에 스폰하면 각자 독립 컨텍스트로 병렬 실행되고,
+          모두 끝나면 본류 세션이 결과를 모아 재개한다. 탐색·heavy-context 작업에 특히 강하다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">코드베이스를 여러 관점으로 동시 탐색, 본류를 오염시킬 무거운 컨텍스트 작업</div></div>
+          <div class="kv"><div class="k">트레이드오프</div><div class="v">토큰 비용 ↑ vs 벽시계 시간 ↓ — <b>토큰이 빠듯하면 순차, 시간이 빠듯하면 병렬</b></div></div>
+          <div class="kv"><div class="k">간단 대안</div><div class="v">조율이 필요 없는 독립 변경은 <code>/batch</code> — worktree 격리를 자동 처리</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body">"<span class="c">동시에</span> 찾아줘 — ① Database.connect 호출처 ② 커넥션 풀 설정 ③ 에러 처리. 셋 다 끝나면 돌아와"</div>
+        </div>
+      </div>
+
+      <!-- 4. worktree isolation -->
+      <div class="card" style="--cc:var(--c4);--cbg:var(--c4bg);">
+        <div class="card-top">
+          <span class="cmd-badge">--worktree</span>
+          <span class="tag">Write isolation</span>
+        </div>
+        <h2>에이전트들이 서로의 파일을 밟지 않게 한다</h2>
+        <p class="lead">
+          여러 에이전트가 같은 repo를 건드릴 때 충돌을 막는 장치. 백그라운드 세션은 처음 파일을 쓰는 순간
+          <code>.claude/worktrees/</code> 아래 격리된 워크트리로 자동 이동한다 — 읽기는 공유, 쓰기는 분리.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">진입 방법</div><div class="v"><code>-w / --worktree</code> 플래그, 서브에이전트·포크는 <code>isolation: worktree</code></div></div>
+          <div class="kv"><div class="k">분기 기준</div><div class="v"><code>worktree.baseRef</code> 설정 (<code>fresh</code>=원격 기본 브랜치 / <code>head</code>=로컬 HEAD)</div></div>
+          <div class="kv"><div class="k">주의</div><div class="v">병렬 작업의 진짜 병목은 <b>머지 충돌</b> — 브랜치·워크트리 규율 없이는 처리량 이득이 사라진다</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">claude -w</span> "결제 모듈 리팩터링" <span class="m">— 격리된 워크트리·브랜치에서 작업</span></div>
+        </div>
+      </div>
+
+      <!-- 5. claude agents (Agent View) -->
+      <div class="card" style="--cc:var(--c5);--cbg:var(--c5bg);">
+        <div class="card-top">
+          <span class="cmd-badge">claude agents</span>
+          <span class="tag">Command center</span>
+        </div>
+        <h2>모든 세션을 한 화면에서 지휘한다</h2>
+        <p class="lead">
+          모든 백그라운드 세션을 하나의 CLI 대시보드에 모아 실행·대기·완료 상태를 보여준다.
+          tmux 패널을 일일이 들여다보던 수동 오케스트레이션을 단일 화면으로 대체한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">요구 사항</div><div class="v"><b>v2.1.139+</b>, Research Preview(2026.05.11). Free 플랜 제외 — Pro/Max/Team/Enterprise/API</div></div>
+          <div class="kv"><div class="k">핵심 가치</div><div class="v">어느 에이전트가 <b>내 입력을 기다리는지</b> 즉시 파악, 컨텍스트 잃지 않고 답장·attach</div></div>
+          <div class="kv"><div class="k">지속성</div><div class="v">슈퍼바이저 프로세스가 상태를 디스크에 저장(<code>roster.json</code>) — 재부팅해도 세션 복원</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">claude agents</span> <span class="m">→ 입력창에 작업 프롬프트 →</span> <span class="key">Enter</span> <span class="m">로 새 세션 디스패치</span></div>
+        </div>
+      </div>
+
+      <!-- 6. /goal + cost -->
+      <div class="card" style="--cc:var(--c6c);--cbg:var(--c6bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/goal</span>
+          <span class="tag">Autonomy &amp; cost</span>
+        </div>
+        <h2>자율 실행에 완료 조건과 예산을 건다</h2>
+        <p class="lead">
+          <code>/goal</code>은 완료 조건을 걸면 충족될 때까지 여러 턴에 걸쳐 자율 작업하고,
+          경과 시간·턴·토큰을 오버레이로 보여준다. 자율성이 커질수록 비용 통제가 짝을 이뤄야 한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">비용 현실</div><div class="v">세션·팀원마다 쿼터를 <b>독립 소모</b> — 팀원 3명 ≈ 3~4배 토큰, 병렬 세션 5개 ≈ 한도 5배</div></div>
+          <div class="kv"><div class="k">통제</div><div class="v">단순 작업은 Sonnet·깊은 추론만 Opus / <code>--max-turns</code>·<code>--max-budget-usd</code>로 상한</div></div>
+          <div class="kv"><div class="k">주의</div><div class="v">Pro의 5시간 롤링 한도 — 큰 에이전트 팀을 띄우기 전 플랜 한도부터 확인</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/goal</span> 결제 테스트가 통과할 때까지 진행하고, 통과하면 멈춰</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>Claude Code Orchestration Playbook · 정의 → 층위 → 병렬 → 격리 → 지휘 → 통제</span>
+    <span>2026년 5월 14일 기준 · v2.1.141 · Agent View·Agent Teams는 실험/프리뷰 단계 — <b>/help</b>와 공식 docs로 확인 권장</span>
+  </footer>
+
+</div>
+<script>
+window.COMMAND_DETAILS = {
+  "/agents": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /agents",
+    summary: "<a href=\"https://code.claude.com/docs/ko/sub-agents\" target=\"_blank\" rel=\"noopener noreferrer\"><b>agent</b></a> 구성을 관리합니다.",
+    example: "# subagent 관리자 열기\n> /agents",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "--worktree": {
+    source: "https://code.claude.com/docs/ko/worktrees",
+    sourceLabel: "code.claude.com · worktrees · --worktree",
+    summary: "<code>--worktree</code> 또는 <code>-w</code>를 전달하여 <b>격리된 worktree</b>를 생성하고 Claude를 시작합니다. 기본적으로 worktree는 저장소 루트의 <code>.claude/worktrees/&lt;value&gt;/</code> 아래에 생성되며, <code>worktree-&lt;value&gt;</code>라는 새 브랜치에 생성됩니다. 이름을 생략하면 Claude가 <code>bright-running-fox</code>와 같은 이름을 생성합니다. <code>#&lt;number&gt;</code> 또는 GitHub pull request URL을 전달하여 <code>origin</code>에서 해당 PR을 가져오고 worktree를 분기합니다. Worktree는 저장소의 기본 브랜치인 <code>origin/HEAD</code>에서 분기되므로 원격과 일치하는 깨끗한 트리에서 시작합니다.",
+    example: "# 격리된 worktree 생성 + 자동 이름\n$ claude --worktree feature-auth\n$ claude --worktree           # bright-running-fox 같은 자동 이름\n\n# GitHub PR #1234에서 분기\n$ claude --worktree \"#1234\"\n\n# tmux 세션 함께 생성\n$ claude -w feature-auth --tmux",
+    caution: "처음으로 디렉터리에서 <code>--worktree</code>를 사용하기 전에 해당 디렉터리에서 <code>claude</code>를 한 번 실행하여 작업 공간 신뢰 대화를 수락합니다. <code>.claude/worktrees/</code>를 <code>.gitignore</code>에 추가하여 worktree 내용이 메인 체크아웃에서 추적되지 않은 파일로 나타나지 않도록 합니다.",
+    version: "v2.1.141"
+  },
+  "claude agents": {
+    source: "https://code.claude.com/docs/ko/cli-reference",
+    sourceLabel: "code.claude.com · CLI 참조 · claude agents",
+    summary: "<b>에이전트 보기</b>를 열어 병렬 백그라운드 세션을 모니터링하고 디스패치합니다. <code>--cwd &lt;path&gt;</code>를 사용하여 해당 디렉토리 아래에서 시작된 세션만 표시하거나, <code>--json</code>을 사용하여 스크립팅을 위해 라이브 세션을 JSON 배열로 인쇄합니다. <code>--permission-mode</code>, <code>--model</code>, 또는 <code>--effort</code>를 전달하여 디스패치된 세션의 기본값을 설정합니다. 최상위 <code>claude</code> 명령어처럼 <code>--settings</code>, <code>--add-dir</code>, <code>--plugin-dir</code>, 및 <code>--mcp-config</code>를 허용합니다. 에이전트 보기를 열려면 대화형 터미널이 필요합니다.",
+    example: "claude agents --json",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/goal": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /goal",
+    summary: "<a href=\"https://code.claude.com/docs/ko/goal\" target=\"_blank\" rel=\"noopener noreferrer\"><b>goal</b></a>을 설정합니다. Claude는 조건이 충족될 때까지 여러 턴에 걸쳐 계속 작업합니다. 인수 없이 현재 또는 가장 최근에 달성한 goal을 표시합니다. <code>clear</code>, <code>stop</code>, <code>off</code>, <code>reset</code>, <code>none</code> 또는 <code>cancel</code>은 활성 goal을 조기에 제거합니다.",
+    example: "# goal 설정\n> /goal all tests pass\n\n# 현재 또는 가장 최근에 달성한 goal 표시\n> /goal\n\n# 활성 goal 조기에 제거\n> /goal clear",
+    caution: "",
+    version: "v2.1.141"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 핵심 명령어 총정리</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2433;
+    --ink:#222831;
+    --gray:#5f6b7a;
+    --line:#e7e9ee;
+    --bg:#ffffff;
+    --panel:#ffffff;
+    --soft:#f4f5f8;
+    --teal:#2bb3a3;
+    --blue:#3f6fd1;
+    --red:#ee6c4d;
+    --amber:#f0a830;
+    --purple:#7b61c9;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,sans-serif;
+    background:#dfe3ea;
+    color:var(--ink);
+    padding:28px 18px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 8px 40px rgba(20,28,45,.16);
+  }
+
+  /* ---------- header ---------- */
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:26px 34px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+  }
+  .eyebrow{
+    text-align:center;
+    font-size:12px;
+    letter-spacing:.32em;
+    color:#9aa6bd;
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  header h1{
+    font-size:34px;
+    font-weight:800;
+    letter-spacing:-.01em;
+    line-height:1.1;
+  }
+  .head-left{flex:1;}
+  .head-sub{
+    text-align:right;
+    font-size:12.5px;
+    line-height:1.65;
+    color:#aab4c8;
+    font-weight:500;
+    max-width:320px;
+  }
+
+  /* ---------- layout ---------- */
+  .body{padding:26px 28px 30px;}
+  .row{
+    display:grid;
+    gap:18px;
+    margin-bottom:18px;
+  }
+  .row.two{grid-template-columns:1fr 1fr;}
+  .row:last-child{margin-bottom:0;}
+
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:18px 20px 8px;
+  }
+  .panel.accent-red{border-left:4px solid var(--red);}
+  .panel.accent-purple{border-left:4px solid var(--purple);}
+
+  .panel-head{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    margin-bottom:6px;
+    padding-bottom:12px;
+  }
+  .badge{
+    width:30px;height:30px;
+    border-radius:7px;
+    color:#fff;
+    font-weight:800;
+    font-size:14px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .b-teal{background:var(--teal);}
+  .b-blue{background:var(--blue);}
+  .b-red{background:var(--red);}
+  .b-amber{background:var(--amber);}
+  .b-purple{background:var(--purple);}
+  .panel-head h2{
+    font-size:17px;
+    font-weight:800;
+    letter-spacing:-.01em;
+  }
+
+  /* ---------- command rows ---------- */
+  .cmds{display:flex;flex-direction:column;}
+  .cmds.cols{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    column-gap:34px;
+  }
+  .cmd{
+    display:grid;
+    grid-template-columns:148px 1fr;
+    gap:14px;
+    padding:11px 2px;
+    border-top:1px solid var(--line);
+    align-items:start;
+  }
+  .cmds.cols .cmd:nth-child(1),
+  .cmds.cols .cmd:nth-child(2){border-top:none;}
+  .cmds:not(.cols) .cmd:first-child{border-top:none;}
+  .cmd code{
+    font-family:var(--mono);
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+    line-height:1.5;
+    word-break:break-word;
+  }
+  .cmd .desc{
+    font-size:12.5px;
+    color:var(--gray);
+    line-height:1.62;
+  }
+  .cmd .desc b{color:#3a4452;font-weight:700;}
+
+  /* ---------- CI sub cards ---------- */
+  .subcards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    padding:6px 0 12px;
+  }
+  .subcard{
+    background:var(--soft);
+    border-radius:7px;
+    padding:14px 15px;
+  }
+  .subcard h3{
+    font-size:13.5px;
+    font-weight:800;
+    margin-bottom:7px;
+    color:var(--ink);
+  }
+  .subcard p{
+    font-size:12px;
+    line-height:1.66;
+    color:var(--gray);
+  }
+  .subcard code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    background:#e6e9f0;
+    padding:1px 5px;
+    border-radius:4px;
+    color:#3a4452;
+  }
+
+  footer{
+    padding:14px 30px 22px;
+    font-size:11px;
+    color:#9aa3b2;
+    display:flex;
+    justify-content:space-between;
+    border-top:1px solid var(--line);
+  }
+
+  @media (max-width:780px){
+    header{flex-direction:column;align-items:flex-start;gap:10px;}
+    .head-sub{text-align:left;}
+    .row.two{grid-template-columns:1fr;}
+    .cmds.cols{grid-template-columns:1fr;}
+    .cmds.cols .cmd:nth-child(2){border-top:1px solid var(--line);}
+    .subcards{grid-template-columns:1fr;}
+    .cmd{grid-template-columns:120px 1fr;}
+  }
+</style>
+<style>
+  /* ============ Command-detail drawer (interaction layer)
+     기존 디자인 토큰·클래스에 손대지 않는 추가 레이어.
+     모든 신규 클래스는 cmd-detail-* prefix.
+     라이트 톤 디폴트 — 매뉴얼 본문(white + dark ink)과 결을 맞춤.
+  ============ */
+  .cmd.cmd-detail-trigger { cursor: pointer; border-radius: 4px;
+    transition: background .15s; }
+  .cmd.cmd-detail-trigger:hover { background: rgba(43,179,163,.06); }
+  .cmd.cmd-detail-trigger code::after { content: " ↗"; color: var(--teal);
+    font-weight: 700; opacity: 0; transition: opacity .15s; font-size: .85em; }
+  .cmd.cmd-detail-trigger:hover code::after { opacity: 1; }
+
+  .cmd-detail-backdrop { position: fixed; inset: 0; background: rgba(20,28,42,.42);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease-out; z-index: 998; }
+
+  .cmd-detail-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 480px;
+    max-width: 100vw; background: var(--bg); color: var(--ink);
+    border-left: 1px solid var(--line);
+    box-shadow: -20px 0 60px rgba(20,28,42,.14), -2px 0 8px rgba(20,28,42,.06);
+    transform: translateX(100%); transition: transform .22s ease-out;
+    z-index: 999; display: flex; flex-direction: column;
+    font-family: 'Pretendard',-apple-system,sans-serif; }
+  .cmd-detail-drawer.open { transform: translateX(0); }
+  .cmd-detail-drawer[aria-hidden="true"] { visibility: hidden; }
+  .cmd-detail-drawer[aria-hidden="false"],
+  .cmd-detail-drawer.open { visibility: visible; }
+
+  .cmd-detail-head { display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 22px 24px 16px; border-bottom: 1px solid var(--line);
+    background: var(--bg); position: sticky; top: 0; z-index: 1; }
+  .cmd-detail-badge { font-family: var(--mono); font-size: 16px; font-weight: 700;
+    color: var(--teal); background: rgba(43,179,163,.1);
+    border: 1px solid rgba(43,179,163,.32);
+    padding: 6px 13px; border-radius: 8px; max-width: 320px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cmd-detail-close { width: 44px; height: 44px; border-radius: 8px;
+    border: 1px solid var(--line); color: var(--gray);
+    background: var(--bg); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: inherit; padding: 0; flex-shrink: 0; }
+  .cmd-detail-close:hover { background: var(--soft); color: var(--ink); }
+  .cmd-detail-close:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+  .cmd-detail-body { padding: 18px 24px 28px; overflow-y: auto; flex: 1; }
+  .cmd-detail-section { margin-bottom: 22px; }
+  .cmd-detail-section:last-child { margin-bottom: 0; }
+  .cmd-detail-label { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: #8b95a3; font-weight: 700; margin-bottom: 8px; }
+  .cmd-detail-source a { font-family: var(--mono); font-size: 12.5px; color: var(--teal);
+    text-decoration: none; word-break: break-all; line-height: 1.6;
+    display: inline-flex; align-items: center; gap: 4px; }
+  .cmd-detail-source a:hover { text-decoration: underline; }
+  .cmd-detail-summary { font-size: 13px; line-height: 1.7; color: #3f4956; }
+  .cmd-detail-summary b { color: var(--ink); font-weight: 700; }
+  .cmd-detail-summary code { font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+    color: #1a8470; background: rgba(43,179,163,.08);
+    padding: 1px 5px; border-radius: 3px; }
+  .cmd-detail-example { font-family: var(--mono); font-size: 11.5px; line-height: 1.66;
+    background: var(--soft); color: var(--ink);
+    padding: 14px 16px; border-radius: 7px;
+    border: 1px solid var(--line); white-space: pre-wrap; word-break: break-word;
+    margin: 0; }
+  .cmd-detail-caution { font-size: 12.5px; line-height: 1.7; color: #6b4f0e;
+    background: rgba(240,168,48,.08); border-left: 3px solid var(--amber);
+    padding: 11px 14px; border-radius: 4px; }
+  .cmd-detail-caution code { font-family: var(--mono); font-size: 11px; font-weight: 700;
+    color: #6b4f0e; background: rgba(240,168,48,.18);
+    padding: 1px 5px; border-radius: 3px; }
+  .cmd-detail-version { font-family: var(--mono); font-size: 11.5px; color: var(--gray); }
+
+  @media (max-width: 780px) {
+    .cmd-detail-drawer { width: 100%; max-width: none; }
+    .cmd-detail-head { padding: 18px 20px 14px; }
+    .cmd-detail-body { padding: 16px 20px 24px; }
+    .cmd-detail-backdrop.open { opacity: 1; pointer-events: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cmd-detail-drawer, .cmd-detail-backdrop,
+    .cmd.cmd-detail-trigger, .cmd.cmd-detail-trigger code::after { transition: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header>
+    <div class="head-left">
+      <div class="eyebrow" style="text-align:left;margin-left:1px;">CLAUDE CODE CHEAT SHEET</div>
+      <h1>Claude Code 핵심 명령어 총정리</h1>
+    </div>
+    <div class="head-sub">
+      세션 관리, 권한 설정, 작업 제어, 프롬프트 단축키, GitHub 연동을 기능별로<br>
+      빠르게 확인하는 요약본 · 2026.05.14 기준
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- A : full width -->
+    <div class="row">
+      <section class="panel">
+        <div class="panel-head">
+          <div class="badge b-teal">A</div>
+          <h2>실행 및 세션 관리 명령어</h2>
+        </div>
+        <div class="cmds cols">
+          <div class="cmd">
+            <code>claude</code>
+            <div class="desc">터미널에서 Claude Code를 실행하는 기본 명령어</div>
+          </div>
+          <div class="cmd">
+            <code>/clear</code>
+            <div class="desc">현재 세션 대화 내역을 삭제해 컨텍스트를 비움 (파일 수정 결과는 유지)</div>
+          </div>
+          <div class="cmd">
+            <code>claude -c</code>
+            <div class="desc">직전에 진행하던 대화를 컨텍스트 그대로 이어서 재개</div>
+          </div>
+          <div class="cmd">
+            <code>/compact</code>
+            <div class="desc">긴 대화를 핵심 맥락만 남겨 압축; <b>/compact 인증 결정만 유지</b>처럼 보존 지시 권장</div>
+          </div>
+          <div class="cmd">
+            <code>claude -r "이름"</code>
+            <div class="desc">이름·제목으로 지정한 과거 세션을 복구해서 다시 시작</div>
+          </div>
+          <div class="cmd">
+            <code>/context</code>
+            <div class="desc">컨텍스트 윈도우 사용량을 스킬·항목별로 확인 (압축 시점 판단용)</div>
+          </div>
+          <div class="cmd">
+            <code>/resume</code>
+            <div class="desc">과거 세션 목록을 열어 재개; <b>Ctrl+A</b>로 전체 프로젝트 표시</div>
+          </div>
+          <div class="cmd">
+            <code>Ctrl+C</code>
+            <div class="desc">생성 중단; 프롬프트가 비어 있을 때 두 번 누르면 세션 종료</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- B + C -->
+    <div class="row two">
+      <section class="panel">
+        <div class="panel-head">
+          <div class="badge b-blue">B</div>
+          <h2>상태 및 권한 설정 명령어</h2>
+        </div>
+        <div class="cmds">
+          <div class="cmd">
+            <code>/permissions</code>
+            <div class="desc">파일 접근·실행 권한 모드 및 최근 거부 내역 관리</div>
+          </div>
+          <div class="cmd">
+            <code>/status</code>
+            <div class="desc">현재 모델, 권한 모드, 연결된 MCP 서버 등 세션 상태 확인</div>
+          </div>
+          <div class="cmd">
+            <code>/doctor</code>
+            <div class="desc">환경 진단 실행; <b>f</b> 키를 누르면 발견된 문제를 자동 수정</div>
+          </div>
+          <div class="cmd">
+            <code>/model</code>
+            <div class="desc">사용 모델 전환 (opus / sonnet / haiku / opusplan)</div>
+          </div>
+          <div class="cmd">
+            <code>/effort</code>
+            <div class="desc">추론 강도 조절 (low~max); <b>xhigh</b>는 Opus 4.7+ 전용, 인자 없이 실행 시 슬라이더</div>
+          </div>
+          <div class="cmd">
+            <code>/init</code>
+            <div class="desc">프로젝트 지침 파일 <b>CLAUDE.md</b> 생성 — 가장 중요한 설정 명령어</div>
+          </div>
+          <div class="cmd">
+            <code>/memory</code>
+            <div class="desc">CLAUDE.md 등 메모리 파일 열기·편집</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel accent-red">
+        <div class="panel-head">
+          <div class="badge b-red">C</div>
+          <h2>작업 제어 및 모드 전환 명령어</h2>
+        </div>
+        <div class="cmds">
+          <div class="cmd">
+            <code>/plan</code>
+            <div class="desc">바로 코딩하지 않고 계획부터 수립하는 플랜 모드로 전환</div>
+          </div>
+          <div class="cmd">
+            <code>Shift+Tab</code>
+            <div class="desc">권한 모드 순환: default → acceptEdits → auto → plan</div>
+          </div>
+          <div class="cmd">
+            <code>/review</code>
+            <div class="desc">현재 브랜치의 코드 변경 사항을 리뷰</div>
+          </div>
+          <div class="cmd">
+            <code>/security-review</code>
+            <div class="desc">변경된 코드 대상 보안 취약점 중심 리뷰; 병합·릴리스 전 권장</div>
+          </div>
+          <div class="cmd">
+            <code>/goal</code>
+            <div class="desc">완료 조건을 설정하면 충족될 때까지 여러 턴에 걸쳐 작업 지속</div>
+          </div>
+          <div class="cmd">
+            <code>/fast</code>
+            <div class="desc">패스트 모드 토글; 빠른 반복 작업에 유용</div>
+          </div>
+          <div class="cmd">
+            <code>!</code>
+            <div class="desc">채팅창 내 Bash 모드로 전환해 <b>!ls</b> 같은 셸 명령어 즉시 실행</div>
+          </div>
+          <div class="cmd">
+            <code>/agents</code>
+            <div class="desc">서브에이전트 생성·관리; <b>claude agents</b>로 에이전트 뷰 확인</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- D + CI -->
+    <div class="row two">
+      <section class="panel accent-amber" style="border-left:4px solid var(--amber);">
+        <div class="panel-head">
+          <div class="badge b-amber">D</div>
+          <h2>프롬프트 및 UI 단축키</h2>
+        </div>
+        <div class="cmds">
+          <div class="cmd">
+            <code>Esc Esc</code>
+            <div class="desc">리와인드 메뉴 열기 — 코드·대화를 이전 체크포인트로 되돌림 (/rewind)</div>
+          </div>
+          <div class="cmd">
+            <code>Ctrl+R</code>
+            <div class="desc">프롬프트 히스토리 역방향 검색; <b>Ctrl+S</b>로 검색 범위 전환</div>
+          </div>
+          <div class="cmd">
+            <code>&#8593; / &#8595;</code>
+            <div class="desc">이전에 작성했던 프롬프트 히스토리 탐색</div>
+          </div>
+          <div class="cmd">
+            <code>Ctrl+G</code>
+            <div class="desc">외부 텍스트 에디터를 열어 긴 프롬프트를 편하게 작성</div>
+          </div>
+          <div class="cmd">
+            <code>\ + Enter</code>
+            <div class="desc">전송 없이 줄바꿈해 멀티라인 입력 (Shift+Enter / Ctrl+J 도 동일)</div>
+          </div>
+          <div class="cmd">
+            <code>Ctrl+T</code>
+            <div class="desc">작업(Task) 목록 보기 토글; 최대 5개까지 표시</div>
+          </div>
+          <div class="cmd">
+            <code>Ctrl+O</code>
+            <div class="desc">일반 / 상세(verbose) 트랜스크립트 뷰 전환</div>
+          </div>
+          <div class="cmd">
+            <code>@파일명</code>
+            <div class="desc">파일·디렉터리·URL을 컨텍스트로 멘션 (붙여넣기보다 토큰 처리에 유리)</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel accent-purple">
+        <div class="panel-head">
+          <div class="badge b-purple">CI</div>
+          <h2>Claude Code 클라우드 및 GitHub 연동</h2>
+        </div>
+        <div class="subcards">
+          <div class="subcard">
+            <h3>자동 GitHub 코드 리뷰</h3>
+            <p><code>/install-github-app</code>으로 GitHub App을 연동하면 PR이 열릴 때마다 GitHub Actions 기반으로 Claude가 코드 검토와 코멘트를 자동 수행함.</p>
+          </div>
+          <div class="subcard">
+            <h3>클라우드 및 원격 제어</h3>
+            <p><code>/remote-control</code>(별칭 <code>/rc</code>)로 클라우드 세션 연결, <code>/schedule</code>로 예약 작업 실행, <code>/teleport</code>로 기기 간 세션 전환.</p>
+          </div>
+        </div>
+        <div class="cmds" style="padding-top:2px;">
+          <div class="cmd">
+            <code>/mcp</code>
+            <div class="desc">MCP 서버 관리; 연결 후 <b>/mcp__[서버]__[프롬프트]</b> 형식 명령 자동 생성</div>
+          </div>
+          <div class="cmd">
+            <code>/ultrareview</code>
+            <div class="desc">병렬 멀티 에이전트 기반 클라우드 종합 코드 리뷰 (PR 번호 지정 가능)</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Claude Code Command Reference</span>
+    <span>2026년 5월 14일 기준 · 버전 업데이트에 따라 일부 명령어는 변경될 수 있음</span>
+  </footer>
+
+</div>
+
+<!-- ============ Command-detail drawer (interaction layer) ============ -->
+<div class="cmd-detail-backdrop" aria-hidden="true"></div>
+<aside class="cmd-detail-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cmd-detail-title" tabindex="-1">
+  <header class="cmd-detail-head">
+    <code class="cmd-detail-badge" id="cmd-detail-title"></code>
+    <button class="cmd-detail-close" type="button" aria-label="닫기">✕</button>
+  </header>
+  <div class="cmd-detail-body"></div>
+</aside>
+
+<script>
+(function() {
+  // SSOT: update todo/ssot/file-1.md (옵션 A — 한국어 공식 docs 본문 그대로 인용)
+  const COMMAND_DETAILS = {
+    "claude": {
+      source: "https://code.claude.com/docs/ko/cli-reference#cli-commands",
+      sourceLabel: "code.claude.com · CLI 참조 · claude",
+      summary: "대화형 세션 시작.",
+      example: "$ claude\n\n# 초기 프롬프트로 대화형 세션 시작\n$ claude \"explain this project\"\n\n# SDK를 통해 쿼리하고 종료\n$ claude -p \"explain this function\"\n\n# 파이프된 콘텐츠 처리\n$ cat logs.txt | claude -p \"explain\"",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/clear": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /clear",
+      summary: "<b>빈 컨텍스트</b>로 새 대화를 시작합니다. 이전 대화는 <code>/resume</code>에서 사용 가능하게 유지됩니다. 이름을 전달하여 <code>/resume</code> 선택기에서 이전 대화에 레이블을 지정합니다. 같은 대화를 계속하면서 컨텍스트를 확보하려면 <code>/compact</code>를 대신 사용하세요. 별칭: <code>/reset</code>, <code>/new</code>.",
+      example: "> /clear\n\n# 이전 대화에 레이블 지정\n> /clear auth-refactor",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "claude -c": {
+      source: "https://code.claude.com/docs/ko/cli-reference#cli-commands",
+      sourceLabel: "code.claude.com · CLI 참조 · claude -c",
+      summary: "현재 디렉토리에서 가장 최근 대화 계속. 플래그 형태 <code>--continue</code>, <code>-c</code>는 현재 디렉토리에서 가장 최근 대화를 로드합니다. <code>/add-dir</code>으로 이 디렉토리를 추가한 세션을 포함합니다.",
+      example: "$ claude -c\n\n# SDK를 통해 계속\n$ claude -c -p \"Check for type errors\"",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/compact": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /compact",
+      summary: "지금까지의 대화를 요약하여 <b>컨텍스트를 확보</b>합니다. 선택적으로 요약에 대한 포커스 지침을 전달합니다. compaction이 규칙·skills·메모리 파일을 처리하는 방법은 docs를 참조하세요.",
+      example: "# 요약 실행\n> /compact\n\n# 포커스 지침 전달\n> /compact 인증 결정과 스키마 변경만 유지",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "claude -r \"이름\"": {
+      source: "https://code.claude.com/docs/ko/cli-reference#cli-commands",
+      sourceLabel: "code.claude.com · CLI 참조 · claude -r",
+      summary: "ID 또는 이름으로 세션 재개. 플래그 형태 <code>--resume</code>, <code>-r</code>은 ID 또는 이름으로 특정 세션을 재개하거나 세션을 선택할 수 있는 대화형 선택기를 표시합니다. <code>/add-dir</code>으로 이 디렉토리를 추가한 세션을 포함합니다. v2.1.144부터 백그라운드 세션은 선택기에 <code>bg</code>로 표시됩니다.",
+      example: "$ claude -r \"auth-refactor\" \"Finish this PR\"\n\n# 대화형 선택기로 재개\n$ claude --resume auth-refactor",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/context": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /context",
+      summary: "현재 컨텍스트 사용량을 <b>색상 그리드</b>로 시각화합니다. 컨텍스트 집약적 도구·메모리 부풀림·용량 경고에 대한 최적화 제안을 표시합니다. fullscreen mode에서는 항목별 분석이 그리드를 표시하기 위해 축소됩니다. <code>all</code>을 전달하여 확장합니다.",
+      example: "> /context\n\n# 항목별 분석을 펼쳐서 보기\n> /context all",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/resume": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /resume",
+      summary: "ID 또는 이름으로 대화를 재개하거나 세션 선택기를 엽니다. v2.1.144부터 <b>background sessions</b>이 선택기에 <code>bg</code>로 표시됩니다. 별칭: <code>/continue</code>.",
+      example: "> /resume\n\n# ID 또는 이름으로 재개\n> /resume auth-refactor",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "Ctrl+C": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#general-controls",
+      sourceLabel: "code.claude.com · 대화형 모드 · Ctrl+C",
+      summary: "<b>중단 또는 입력 지우기</b>. 실행 중인 작업을 중단합니다. 실행 중인 작업이 없으면 첫 번째 누르기는 프롬프트 입력을 지우고 두 번째 누르기는 Claude Code를 종료합니다.",
+      example: "# 실행 중인 작업 중단\nCtrl+C\n\n# 입력 지우기 (작업 없을 때)\nCtrl+C\n\n# Claude Code 종료 (두 번째 누르기)\nCtrl+C Ctrl+C",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/permissions": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /permissions",
+      summary: "도구 권한에 대한 <b>허용·요청·거부 규칙</b>을 관리합니다. 범위별로 규칙을 보고, 규칙을 추가 또는 제거하고, 작업 디렉토리를 관리하며, 최근 자동 모드 거부를 검토할 수 있는 대화형 대화 상자를 엽니다. 별칭: <code>/allowed-tools</code>.",
+      example: "> /permissions",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/status": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /status",
+      summary: "버전·모델·계정 및 연결성을 표시하는 <b>Settings 인터페이스(Status 탭)</b>를 엽니다. Claude가 응답하는 동안 현재 응답이 완료될 때까지 기다리지 않고 작동합니다.",
+      example: "> /status",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/doctor": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /doctor",
+      summary: "Claude Code 설치 및 설정을 진단하고 확인합니다. 결과는 상태 아이콘과 함께 표시됩니다. <code>f</code>를 눌러 Claude가 보고된 문제를 수정하도록 합니다.",
+      example: "> /doctor\n\n# 보고된 문제를 Claude가 수정하도록 함\nf",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/model": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /model",
+      summary: "현재 세션의 <b>AI 모델</b>을 설정합니다. 이를 지원하는 모델의 경우 왼쪽/오른쪽 화살표를 사용하여 effort level을 조정합니다. 인수 없이 선택기를 엽니다. 행에서 <code>d</code>를 눌러 해당 모델을 새 세션의 기본값으로도 저장합니다. 대화에 이전 출력이 있을 때 선택기가 확인을 요청합니다. 다음 응답이 캐시된 컨텍스트 없이 전체 기록을 다시 읽기 때문입니다. 확인되면 현재 응답이 완료될 때까지 기다리지 않고 변경 사항이 적용됩니다.",
+      example: "# 선택기 열기\n> /model\n\n# 특정 모델 설정\n> /model sonnet",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/effort": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /effort",
+      summary: "모델 <b>effort level</b>을 설정합니다. <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> 또는 <code>max</code>를 허용합니다. 사용 가능한 수준은 모델에 따라 다르며 <code>max</code>는 세션 전용입니다. <code>auto</code>는 모델 기본값으로 재설정합니다. 인수 없이 대화형 슬라이더를 엽니다. 왼쪽 및 오른쪽 화살표를 사용하여 수준을 선택하고 <code>Enter</code>를 눌러 적용합니다. 현재 응답이 완료될 때까지 기다리지 않고 즉시 적용됩니다.",
+      example: "# 대화형 슬라이더 열기\n> /effort\n\n# 특정 수준 설정\n> /effort high\n\n# 모델 기본값으로 재설정\n> /effort auto",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/init": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /init",
+      summary: "<b>CLAUDE.md</b> 가이드로 프로젝트를 초기화합니다. skills · hooks · 개인 메모리 파일을 안내하는 대화형 흐름도 진행하려면 <code>CLAUDE_CODE_NEW_INIT=1</code>을 설정하세요.",
+      example: "> /init\n\n# skills · hooks · 개인 메모리 파일을 안내하는 대화형 흐름\n$ CLAUDE_CODE_NEW_INIT=1 claude\n> /init",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/memory": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /memory",
+      summary: "<code>CLAUDE.md</code> 메모리 파일을 편집하고, <b>auto-memory</b>를 활성화 또는 비활성화하며, 자동 메모리 항목을 봅니다.",
+      example: "> /memory",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/plan": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /plan",
+      summary: "프롬프트에서 직접 <b>plan mode</b>로 들어갑니다. 선택적 설명을 전달하여 plan mode로 들어가고 즉시 해당 작업으로 시작합니다. 예를 들어 <code>/plan fix the auth bug</code>.",
+      example: "> /plan\n\n# plan mode로 진입하면서 작업 지시 함께 전달\n> /plan fix the auth bug",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "Shift+Tab": {
+      source: "https://code.claude.com/docs/ko/interactive-mode",
+      sourceLabel: "code.claude.com · 대화형 모드 · Shift+Tab",
+      summary: "<b>권한 모드 순환</b>. <code>default</code>, <code>acceptEdits</code>, <code>plan</code> 및 <code>auto</code> 또는 <code>bypassPermissions</code>와 같이 활성화한 모든 모드를 순환합니다. 일부 구성에서는 <code>Alt+M</code>으로도 동작합니다. <a href=\"https://code.claude.com/docs/ko/permission-modes\" target=\"_blank\" rel=\"noopener noreferrer\">권한 모드</a>를 참조하세요.",
+      example: "# 입력 중 Shift+Tab을 눌러 권한 모드 순환\nShift+Tab\n# default → acceptEdits → plan → auto/bypassPermissions\n\n# 일부 구성에서는 Alt+M으로도 동일하게 동작\nAlt+M",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/review": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /review",
+      summary: "현재 세션에서 <b>로컬로 pull request를 검토</b>합니다. 더 깊은 클라우드 기반 검토는 <code>/code-review ultra</code>를 참조하세요.",
+      example: "# 현재 브랜치의 PR을 로컬에서 검토\n> /review\n\n# 특정 PR 지정\n> /review 446",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/security-review": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /security-review",
+      summary: "현재 브랜치의 <b>보류 중인 변경 사항을 보안 취약점에 대해 분석</b>합니다. git diff를 검토하고 주입·인증 문제 및 데이터 노출과 같은 위험을 식별합니다.",
+      example: "# 현재 브랜치의 diff를 보안 관점에서 분석\n> /security-review",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/goal": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /goal",
+      summary: "<a href=\"https://code.claude.com/docs/ko/goal\" target=\"_blank\" rel=\"noopener noreferrer\"><b>goal</b></a>을 설정합니다. Claude는 조건이 충족될 때까지 여러 턴에 걸쳐 계속 작업합니다. 인수 없이 현재 또는 가장 최근에 달성한 goal을 표시합니다. <code>clear</code>, <code>stop</code>, <code>off</code>, <code>reset</code>, <code>none</code> 또는 <code>cancel</code>은 활성 goal을 조기에 제거합니다.",
+      example: "# goal 설정\n> /goal all tests pass\n\n# 현재 또는 가장 최근에 달성한 goal 표시\n> /goal\n\n# 활성 goal 조기에 제거\n> /goal clear",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/fast": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /fast",
+      summary: "<a href=\"https://code.claude.com/docs/ko/fast-mode\" target=\"_blank\" rel=\"noopener noreferrer\"><b>fast mode</b></a>를 켜거나 끕니다.",
+      example: "# 토글\n> /fast\n\n# 명시적으로 켜기/끄기\n> /fast on\n> /fast off",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "!": {
+      source: "https://code.claude.com/docs/ko/interactive-mode",
+      sourceLabel: "code.claude.com · 대화형 모드 · Shell mode (!)",
+      summary: "입력 앞에 <code>!</code>를 붙여 Claude를 거치지 않고 <b>bash 명령을 직접 실행</b>합니다. Shell 모드는 명령 및 출력을 대화 컨텍스트에 추가하고, 실시간 진행 상황 및 출력을 표시하며, 장시간 실행 명령에 대해 동일한 <code>Ctrl+B</code> 백그라운드 실행을 지원합니다. Claude가 명령을 해석하거나 승인할 필요가 없습니다. 기록 기반 자동 완성을 지원합니다: 부분 명령을 입력하고 <code>Tab</code>을 눌러 현재 프로젝트의 이전 <code>!</code> 명령에서 완성합니다. 빈 프롬프트에서 <code>Escape</code>, <code>Backspace</code> 또는 <code>Ctrl+U</code>로 종료합니다. 빈 프롬프트에 <code>!</code>로 시작하는 텍스트를 붙여넣으면 입력된 <code>!</code> 동작과 일치하여 shell 모드에 자동으로 진입합니다.",
+      example: "! npm test\n! git status\n! ls -la",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/agents": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /agents",
+      summary: "<a href=\"https://code.claude.com/docs/ko/sub-agents\" target=\"_blank\" rel=\"noopener noreferrer\"><b>agent</b></a> 구성을 관리합니다.",
+      example: "# subagent 관리자 열기\n> /agents",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "Esc Esc": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EC%9D%BC%EB%B0%98-%EC%A0%9C%EC%96%B4",
+      sourceLabel: "code.claude.com · 대화형 모드 · Esc + Esc",
+      summary: "입력 초안 지우기 또는 되돌리기. 프롬프트 입력에 텍스트가 포함되어 있으면 이중 <code>Esc</code>는 이를 지우고 초안을 기록에 저장하여 <code>Up</code>으로 회수할 수 있습니다. 입력이 비어 있으면 이중 <code>Esc</code>는 되돌리기 메뉴를 열어 이전 지점에서 코드 및 대화를 복원하거나 요약합니다.",
+      example: "# 입력 초안에 텍스트가 있을 때\n&gt; 작성 중이던 프롬프트…  Esc Esc → 입력 지움, 초안은 Up으로 회수\n\n# 입력이 비어 있을 때\n&gt; [빈 프롬프트]  Esc Esc → 되돌리기 메뉴 열림",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "Ctrl+R": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#ctrl-r%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%9C-%EC%97%AD%EB%B0%A9%ED%96%A5-%EA%B2%80%EC%83%89",
+      sourceLabel: "code.claude.com · 대화형 모드 · Ctrl+R 역방향 검색",
+      summary: "<code>Ctrl+R</code>을 눌러 명령 기록을 대화형으로 검색하세요: 1) <b>검색 시작</b> — <code>Ctrl+R</code>을 눌러 역방향 기록 검색 활성화. 2) <b>쿼리 입력</b> — 이전 명령에서 검색할 텍스트를 입력하세요. 검색어는 일치하는 결과에서 강조됩니다. 3) <b>일치 탐색</b> — <code>Ctrl+R</code>을 다시 눌러 더 오래된 일치를 순환하세요. 4) <b>범위 변경</b> — 검색은 기본적으로 모든 프로젝트의 프롬프트로 범위가 지정됩니다. <code>Ctrl+S</code>를 눌러 이 세션·이 프로젝트·모든 프로젝트 간에 범위를 순환하세요. 5) <b>일치 수락</b> — <code>Tab</code> 또는 <code>Esc</code>를 눌러 현재 일치를 수락하고 편집 계속, <code>Enter</code>를 눌러 명령을 수락하고 즉시 실행. 6) <b>검색 취소</b> — <code>Ctrl+C</code>를 눌러 취소하고 원래 입력 복원, 빈 검색에서 <code>Backspace</code>를 눌러 취소.",
+      example: "# 역방향 검색 시작\nCtrl+R → 검색 쿼리 입력 → Ctrl+R로 더 오래된 일치 순환\n\n# 범위 순환 (이 세션 ↔ 이 프로젝트 ↔ 모든 프로젝트)\nCtrl+R → 쿼리 → Ctrl+S\n\n# 일치 수락\nTab 또는 Esc → 편집 계속 / Enter → 즉시 실행",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "↑ / ↓": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EC%9D%BC%EB%B0%98-%EC%A0%9C%EC%96%B4",
+      sourceLabel: "code.claude.com · 대화형 모드 · Up/Down 화살표",
+      summary: "<code>Up/Down 화살표</code> 또는 <code>Ctrl+P</code>/<code>Ctrl+N</code> — <b>커서 이동 또는 명령 기록 탐색</b>. 여러 줄 입력에서 먼저 프롬프트 내에서 커서를 이동합니다. 커서가 이미 위쪽 또는 아래쪽 가장자리에 있으면 다시 누르면 명령 기록을 탐색합니다.",
+      example: "# 명령 기록 탐색 (커서가 가장자리에 있을 때)\n↑ → 이전 프롬프트 / ↓ → 다음 프롬프트\n\n# 여러 줄 입력에서 커서 이동\n↑ → 위 줄로 이동 / ↓ → 아래 줄로 이동",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "Ctrl+G": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EC%9D%BC%EB%B0%98-%EC%A0%9C%EC%96%B4",
+      sourceLabel: "code.claude.com · 대화형 모드 · Ctrl+G",
+      summary: "<code>Ctrl+G</code> 또는 <code>Ctrl+X Ctrl+E</code> — <b>기본 텍스트 편집기에서 열기</b>. 기본 텍스트 편집기에서 프롬프트 또는 사용자 정의 응답을 편집합니다. <code>Ctrl+X Ctrl+E</code>는 readline 기본 바인딩입니다. <code>/config</code>에서 외부 편집기에서 마지막 응답 표시를 켜면 Claude의 이전 응답을 <code>#</code>-주석 처리된 컨텍스트로 프롬프트 위에 앞에 붙입니다. 저장할 때 주석 블록이 제거됩니다.",
+      example: "# 기본 텍스트 편집기에서 프롬프트 편집\nCtrl+G → 편집기 열림 → 저장 후 종료\n\n# readline 기본 바인딩\nCtrl+X Ctrl+E → 동일한 편집기 열기",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "\\ + Enter": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EC%97%AC%EB%9F%AC-%EC%A4%84-%EC%9E%85%EB%A0%A5",
+      sourceLabel: "code.claude.com · 대화형 모드 · 여러 줄 입력",
+      summary: "<b>빠른 이스케이프</b> 방식의 여러 줄 입력. <code>\\</code> + <code>Enter</code>는 모든 터미널에서 작동합니다. 다른 방법: <code>Option+Enter</code>(macOS에서 Option을 Meta로 활성화한 후), <code>Shift+Enter</code>(iTerm2·WezTerm·Ghostty·Kitty·Warp·Apple Terminal·Windows Terminal에서 기본 작동), <code>Ctrl+J</code>(구성 없이 모든 터미널에서 작동), 그리고 코드 블록·로그의 경우 직접 붙여넣기 모드. VS Code·Cursor·Windsurf·Alacritty·Zed의 경우 <code>/terminal-setup</code>을 실행하여 바인딩을 설치하세요.",
+      example: "# 빠른 이스케이프로 여러 줄 입력 (모든 터미널)\n&gt; 첫 번째 줄\\\n두 번째 줄\n세 번째 줄\n\n# VS Code · Cursor · Windsurf · Alacritty · Zed\n&gt; /terminal-setup  # Shift+Enter 바인딩 설치",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "Ctrl+T": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EC%9D%BC%EB%B0%98-%EC%A0%9C%EC%96%B4",
+      sourceLabel: "code.claude.com · 대화형 모드 · Ctrl+T",
+      summary: "<b>작업 목록 토글</b>. 터미널 상태 영역에서 작업 목록 표시 또는 숨기기. 복잡한 다단계 작업을 수행할 때 Claude는 진행 상황을 추적하기 위해 작업 목록을 만듭니다. 작업은 터미널의 상태 영역에 표시되며 보류 중·진행 중 또는 완료된 항목을 나타내는 표시기가 있습니다. <code>Ctrl+T</code>를 눌러 작업 목록 보기를 토글하세요. 디스플레이는 한 번에 최대 5개의 작업을 표시합니다. 모든 작업을 보거나 지우려면 Claude에 직접 요청하세요: \"show me all tasks\" 또는 \"clear all tasks\". 작업은 컨텍스트 압축 전체에서 지속되어 Claude가 더 큰 프로젝트에서 조직화된 상태를 유지하도록 도와줍니다. 세션 간에 작업 목록을 공유하려면 <code>CLAUDE_CODE_TASK_LIST_ID</code>를 <code>~/.claude/tasks/</code>의 명명된 디렉토리로 사용하도록 설정하세요: <code>CLAUDE_CODE_TASK_LIST_ID=my-project claude</code>.",
+      example: "# 작업 목록 보기 토글\nCtrl+T → 상태 영역에 작업 목록 표시/숨김 (최대 5개)\n\n# 세션 간 작업 목록 공유\n$ CLAUDE_CODE_TASK_LIST_ID=my-project claude",
+      caution: "<code>/theme</code> 선택기 메뉴 내에서는 <code>Ctrl+T</code>가 <b>코드 블록의 구문 강조 토글</b>로 동작합니다(Claude의 응답에서 코드가 구문 색상을 사용하는지 여부를 제어).",
+      version: "v2.1.141"
+    },
+    "Ctrl+O": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EC%9D%BC%EB%B0%98-%EC%A0%9C%EC%96%B4",
+      sourceLabel: "code.claude.com · 대화형 모드 · Ctrl+O",
+      summary: "<b>트랜스크립트 뷰어 토글</b>. 자세한 도구 사용 및 실행을 표시합니다. MCP 호출도 확장하며, 기본적으로 \"Slack 3회 호출됨\"과 같은 단일 줄로 축소됩니다. 트랜스크립트 뷰어가 열려 있을 때(<code>Ctrl+O</code>로 토글), 전체 화면 렌더링에서 <code>?</code>를 눌러 뷰어 내에서 전체 단축키 참조 패널을 표시합니다.",
+      example: "# 트랜스크립트 뷰어 토글\nCtrl+O → 자세한 도구 사용 / MCP 호출 확장 표시\n\n# 뷰어 내 추가 동작 (전체 화면 렌더링)\n?           → 단축키 참조 패널\nCtrl+E      → 모든 콘텐츠 표시 토글\nq · Esc     → 트랜스크립트 보기 종료",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "@파일명": {
+      source: "https://code.claude.com/docs/ko/interactive-mode#%EB%B9%A0%EB%A5%B8-%EB%AA%85%EB%A0%B9",
+      sourceLabel: "code.claude.com · 대화형 모드 · 빠른 명령 · @",
+      summary: "<code>@</code> — <b>파일 경로 언급</b>. 파일 경로 자동 완성 트리거.",
+      example: "# 파일 경로 자동 완성 트리거\n&gt; @src/auth/      # 경로 후보 표시\n&gt; @src/auth/login.ts 이 함수의 흐름을 설명해줘",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/mcp": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /mcp",
+      summary: "<b>MCP 서버 연결</b> 및 <b>OAuth 인증</b>을 관리합니다.",
+      example: "# MCP 서버 연결·인증 관리\n&gt; /mcp",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/ultrareview": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /ultrareview",
+      summary: "<b>ultrareview</b>를 사용하여 클라우드 샌드박스에서 깊은 <b>다중 agent 코드 검토</b>를 실행합니다. 선호되는 호출은 이제 <code>/code-review ultra</code>이며, <code>/ultrareview</code>는 별칭으로 유지됩니다. Pro 및 Max에서 3회 무료 실행을 포함한 후 usage credits가 필요합니다.",
+      example: "# 클라우드 다중 agent 검토 실행 (선호되는 호출)\n&gt; /code-review ultra\n\n# 별칭으로 호출\n&gt; /ultrareview\n\n# 특정 PR 지정\n&gt; /ultrareview 446",
+      caution: "",
+      version: "v2.1.141"
+    }
+  };
+
+  const drawer = document.querySelector(".cmd-detail-drawer");
+  const backdrop = document.querySelector(".cmd-detail-backdrop");
+  const badge = drawer.querySelector(".cmd-detail-badge");
+  const body = drawer.querySelector(".cmd-detail-body");
+  const closeBtn = drawer.querySelector(".cmd-detail-close");
+  let lastFocus = null;
+
+  function render(key, detail) {
+    badge.textContent = key;
+    body.innerHTML =
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">출처</div>' +
+        '<div class="cmd-detail-source">' + (detail.source ? '<a href="' + detail.source + '" target="_blank" rel="noopener noreferrer">' + detail.sourceLabel + ' ↗</a>' : detail.sourceLabel) + '</div>' +
+      '</div>' +
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">설명</div>' +
+        '<div class="cmd-detail-summary">' + detail.summary + '</div>' +
+      '</div>' +
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">사용 예시</div>' +
+        '<pre class="cmd-detail-example">' + detail.example + '</pre>' +
+      '</div>' +
+      (detail.caution ? '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">주의</div>' +
+        '<div class="cmd-detail-caution">' + detail.caution + '</div>' +
+      '</div>' : '') +
+      '<div class="cmd-detail-section">' +
+        '<div class="cmd-detail-label">버전</div>' +
+        '<div class="cmd-detail-version">' + detail.version + '</div>' +
+      '</div>';
+  }
+
+  function openDrawer() {
+    lastFocus = document.activeElement;
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+    drawer.setAttribute("aria-hidden", "false");
+    backdrop.setAttribute("aria-hidden", "false");
+    setTimeout(function() { closeBtn.focus(); }, 50);
+  }
+  function closeDrawer() {
+    drawer.classList.remove("open");
+    backdrop.classList.remove("open");
+    drawer.setAttribute("aria-hidden", "true");
+    backdrop.setAttribute("aria-hidden", "true");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  document.querySelectorAll(".cmd").forEach(function(cell) {
+    const codeEl = cell.querySelector("code");
+    if (!codeEl) return;
+    const key = codeEl.textContent.trim();
+    const detail = COMMAND_DETAILS[key];
+    if (!detail) return;
+    cell.classList.add("cmd-detail-trigger");
+    cell.setAttribute("role", "button");
+    cell.setAttribute("tabindex", "0");
+    cell.addEventListener("click", function() {
+      render(key, detail);
+      openDrawer();
+    });
+    cell.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        render(key, detail);
+        openDrawer();
+      }
+    });
+  });
+
+  closeBtn.addEventListener("click", closeDrawer);
+  backdrop.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape" && drawer.classList.contains("open")) closeDrawer();
+  });
+})();
+</script>
+
+</body>
+</html>

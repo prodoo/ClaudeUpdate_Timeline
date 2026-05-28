@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 플레이북 04 — 컨텍스트·멀티스레드</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 중립 */
+    --navy:#1c2433; --navy2:#283448; --ink:#222831;
+    --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --page:#dfe3ea;
+    /* 6단계 액센트 */
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    padding:40px 20px;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  /* ---------- SHEET ---------- */
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    box-shadow:0 18px 48px rgba(20,28,42,.20);
+    overflow:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy);
+    padding:34px 38px 40px;
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:4px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c1);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:41px;
+    font-weight:800;
+    line-height:1.28;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .sub{
+    display:block;
+    font-size:21px;
+    font-weight:600;
+    color:var(--soft-gray);
+    margin-top:10px;
+    letter-spacing:0;
+  }
+
+  .summary-box{
+    width:392px;
+    flex-shrink:0;
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .thesis{
+    font-size:13.5px;
+    color:#cdd5e0;
+    line-height:1.7;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid #3a4860;
+  }
+  .mini{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+  }
+  .mini div{display:flex;flex-direction:column;gap:2px;}
+  .mini code{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+  }
+  .mini span{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    letter-spacing:.02em;
+  }
+
+  /* ---------- BODY ---------- */
+  .body{padding:24px 26px 30px;}
+
+  /* ---------- SUMMARY ROW ---------- */
+  .sumrow{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .sumcard{
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-top:3px solid var(--cAccent);
+    border-radius:8px;
+    padding:16px 18px 17px;
+  }
+  .sumcard.s1{--cAccent:var(--c1);}
+  .sumcard.s2{--cAccent:var(--c3);}
+  .sumcard.s3{--cAccent:var(--c5);}
+  .sumcard .step{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--cAccent);
+    margin-bottom:7px;
+  }
+  .sumcard h3{
+    font-size:15.5px;
+    font-weight:800;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .sumcard p{
+    font-size:12.5px;
+    color:var(--gray);
+    line-height:1.65;
+  }
+
+  /* ---------- DETAIL GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card.k1{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .card.k2{--cN:var(--c2);--cNbg:var(--c2bg);}
+  .card.k3{--cN:var(--c3);--cNbg:var(--c3bg);}
+  .card.k4{--cN:var(--c4);--cNbg:var(--c4bg);}
+  .card.k5{--cN:var(--c5);--cNbg:var(--c5bg);}
+  .card.k6{--cN:var(--c6c);--cNbg:var(--c6bg);}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:13px;
+  }
+  .cmd-badge{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:15px;
+    color:var(--cN);
+    background:var(--cNbg);
+    padding:5px 11px;
+    border-radius:6px;
+    letter-spacing:-.01em;
+  }
+  .cmd-badge.long{font-size:13.5px;}
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    color:var(--cN);
+    border:1px solid var(--cN);
+    padding:3px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .card h2{
+    font-size:19px;
+    font-weight:800;
+    margin-bottom:9px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .lead{
+    font-size:13px;
+    color:var(--gray);
+    line-height:1.72;
+    margin-bottom:15px;
+  }
+  .lead b{color:var(--ink);font-weight:700;}
+  .lead code{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1.5px 5px;
+    border-radius:4px;
+  }
+
+  .rows{margin-bottom:15px;}
+  .kv{
+    display:grid;
+    grid-template-columns:78px 1fr;
+    gap:10px;
+    padding:7px 0;
+    border-top:1px solid var(--line);
+    font-size:12px;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .lbl{
+    font-weight:700;
+    color:var(--cN);
+    font-size:11.5px;
+  }
+  .kv .val{color:var(--gray);line-height:1.6;}
+  .kv .val code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1px 4px;
+    border-radius:3px;
+  }
+
+  .example{
+    background:var(--navy);
+    border-radius:8px;
+    padding:13px 15px 14px;
+    margin-top:auto;
+  }
+  .ex-lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--soft-gray);
+    margin-bottom:8px;
+  }
+  .ex-body{
+    font-family:var(--mono);
+    font-size:11.5px;
+    line-height:1.85;
+    color:#dfe5ee;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .ex-body .p{color:var(--c1);font-weight:700;}      /* 프롬프트 기호 */
+  .ex-body .c{color:#5fd6c8;font-weight:700;}        /* teal 강조 */
+  .ex-body .m{color:#7e8a9a;}                        /* 회색 주석 */
+  .ex-body .y{color:#f0c46a;font-weight:700;}        /* 노랑 강조 */
+  .ex-body .key{
+    display:inline-block;
+    background:#3a4860;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:1px 7px;
+    border-radius:4px;
+    margin:0 1px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .arc{
+    font-size:11.5px;
+    color:var(--gray);
+    line-height:1.7;
+    max-width:62%;
+  }
+  .arc b{color:var(--ink);font-weight:700;display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;}
+  .arc .flow code{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--c3);
+    font-weight:700;
+  }
+  .stamp{text-align:right;flex-shrink:0;}
+  .stamp .ver{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+  .stamp .caveat{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    line-height:1.65;
+    max-width:300px;
+  }
+  .stamp .caveat code{font-family:var(--mono);font-size:10px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    body{padding:20px 12px;}
+    .hero{flex-direction:column;gap:22px;padding:26px 22px 30px;}
+    .hero h1{font-size:30px;}
+    .hero h1 .sub{font-size:17px;}
+    .summary-box{width:100%;}
+    .body{padding:20px 16px 24px;}
+    .sumrow{grid-template-columns:1fr;gap:12px;}
+    .grid{grid-template-columns:1fr;gap:14px;}
+    footer{flex-direction:column;gap:16px;}
+    .arc{max-width:100%;}
+    .stamp{text-align:left;}
+    .stamp .caveat{max-width:100%;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Codex CLI Playbook · 04</div>
+      <h1>
+        컨텍스트·멀티스레드
+        <span class="sub">대화 흐름 관리</span>
+      </h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        한 터미널에서 여러 갈래의 작업을 흩어지지 않게 다룬다 — 새 대화, 분기, 곁가지,
+        <b style="color:#fff">서브에이전트</b>, 세션 복원, 상태 표시까지 대화 흐름을 손에 쥐는 6단계.
+      </div>
+      <div class="mini">
+        <div><code>/new · /clear</code><span>Fresh start</span></div>
+        <div><code>/fork</code><span>Branch the thread</span></div>
+        <div><code>/side</code><span>Quick detour</span></div>
+        <div><code>/agent</code><span>Switch agents</span></div>
+        <div><code>/resume</code><span>Reload a session</span></div>
+        <div><code>/title · /statusline</code><span>Track at a glance</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div class="body">
+
+    <!-- 요약 카드 3장 -->
+    <div class="sumrow">
+      <div class="sumcard s1">
+        <div class="step">STEP 1—2</div>
+        <h3>새로 열고 가지치기</h3>
+        <p><code style="font-family:var(--mono);font-size:11px">/new</code>·<code style="font-family:var(--mono);font-size:11px">/clear</code>로 깨끗한 대화를 시작하고, <code style="font-family:var(--mono);font-size:11px">/fork</code>로 현재 대화를 분기해 다른 접근을 병행한다.</p>
+      </div>
+      <div class="sumcard s2">
+        <div class="step">STEP 3—4</div>
+        <h3>곁가지와 에이전트</h3>
+        <p><code style="font-family:var(--mono);font-size:11px">/side</code>로 본 작업을 떠나지 않고 곁가지 질문을 던지고, <code style="font-family:var(--mono);font-size:11px">/agent</code>로 서브에이전트 스레드를 넘나든다.</p>
+      </div>
+      <div class="sumcard s3">
+        <div class="step">STEP 5—6</div>
+        <h3>복원하고 표시하기</h3>
+        <p><code style="font-family:var(--mono);font-size:11px">/resume</code>로 저장된 세션을 되살리고, <code style="font-family:var(--mono);font-size:11px">/title</code>·<code style="font-family:var(--mono);font-size:11px">/statusline</code>으로 지금 상태를 한눈에 본다.</p>
+      </div>
+    </div>
+
+    <!-- 상세 카드 6장 -->
+    <div class="grid">
+
+      <!-- Card 1 -->
+      <div class="card k1">
+        <div class="card-top">
+          <span class="cmd-badge long">/new · /clear</span>
+          <span class="tag">Fresh start</span>
+        </div>
+        <h2>새 대화 시작하기</h2>
+        <p class="lead">
+          둘 다 같은 CLI 세션 안에서 새 대화를 시작하지만 화면 처리가 다르다. <code>/clear</code>는
+          <b>터미널 화면까지 비우고</b> 새 대화를 연다. <code>/new</code>는 화면은 그대로 둔 채 대화 맥락만
+          새로 시작한다. <code>Ctrl+L</code>은 화면만 지우고 대화는 유지하므로 헷갈리지 말 것.
+          작업 실행 중에는 둘 다 비활성화된다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">차이</span><span class="val"><code>/clear</code> 화면+대화 리셋 / <code>/new</code> 대화만(화면 유지) / <code>Ctrl+L</code> 화면만</span></div>
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">같은 저장소에서 다른 작업으로 갈아탈 때</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">작업이 도는 중에는 <code>/clear</code>·<code>/new</code> 둘 다 사용 불가</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /clear   <span class="m"># 화면+대화 새로</span>
+<span class="p">&gt;</span> /new     <span class="c"># 대화만 새로, 화면 유지</span>
+<span class="key">Ctrl+L</span> 화면만, 대화 유지</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card k2">
+        <div class="card-top">
+          <span class="cmd-badge">/fork</span>
+          <span class="tag">Branch the thread</span>
+        </div>
+        <h2>대화 분기하기</h2>
+        <p class="lead">
+          <code>/fork</code>는 현재 대화를 <b>새 ID의 스레드로 복제</b>한다 — 원본 transcript는 손대지 않으므로,
+          한 갈래는 그대로 두고 다른 접근을 병렬로 시험할 수 있다. 최신 턴뿐 아니라 이전 메시지 지점에서도
+          분기할 수 있다. 저장된(현재가 아닌) 세션을 분기하려면 셸에서 <code>codex fork</code>.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">지금까지의 맥락은 살리고 다른 길을 따로 파보고 싶을 때</span></div>
+          <div class="kv"><span class="lbl">동작</span><span class="val">현재 대화 → 새 ID 스레드로 복제, 원본 유지. 과거 메시지 지점 분기 가능</span></div>
+          <div class="kv"><span class="lbl">vs codex fork</span><span class="val">셸 <code>codex fork</code>는 저장된 세션 피커를 열어 분기</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /fork
+  ▸ <span class="c">새 스레드 ID로 복제</span>     <span class="m"># 원본은 그대로</span>
+<span class="p">$</span> codex fork  저장 세션 분기</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card k3">
+        <div class="card-top">
+          <span class="cmd-badge">/side</span>
+          <span class="tag">Quick detour</span>
+        </div>
+        <h2>곁가지 질문하기</h2>
+        <p class="lead">
+          <code>/side</code>는 본 작업에서 화면을 떠나지 않고 <b>휘발성 곁가지 대화</b>를 연다 — transcript가
+          부모 스레드와 분리돼, 집중된 후속 질문 하나를 던지고 돌아올 수 있다. 인라인 텍스트
+          (<code>/side 이 계획에 빤한 리스크 있나?</code>)도 가능. side 모드에서는 부모 스레드 상태가 계속 보인다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">본 흐름을 흩뜨리지 않고 짧게 확인하고 싶을 때</span></div>
+          <div class="kv"><span class="lbl">동작</span><span class="val">부모와 분리된 휘발성 대화, side 중에도 부모 상태 표시</span></div>
+          <div class="kv"><span class="lbl">제약</span><span class="val">다른 side 대화 안에서·review 모드에서는 사용 불가</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /side 이 접근에 빤한 함정 있나?
+  ▸ <span class="c">부모와 분리된 곁가지</span>
+  ▸ 부모 상태는 계속 표시       <span class="m"># 돌아오면 그대로</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card k4">
+        <div class="card-top">
+          <span class="cmd-badge">/agent</span>
+          <span class="tag">Switch agents</span>
+        </div>
+        <h2>서브에이전트 넘나들기</h2>
+        <p class="lead">
+          병렬로 서브에이전트를 돌릴 때 <code>/agent</code>로 활성 스레드를 바꿔, 특정 에이전트가 한 작업을
+          들여다보거나 이어받는다. 본 에이전트는 핵심 문제에 집중시키고, <b>탐색·테스트·트리아지</b>처럼
+          경계가 분명한 일은 서브에이전트에 떼어 주는 게 권장 패턴이다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">병렬 에이전트를 돌리며 활성 스레드를 전환할 때</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">subagent 워크플로로 경계 있는 작업(탐색·테스트·트리아지) 분리</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">본 에이전트는 핵심 문제에 집중 — 같은 문제면 한 스레드 유지가 나음</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /agent
+  ▸ 스레드 피커에서 선택       <span class="m"># 활성 스레드 전환</span>
+  ▸ <span class="c">서브에이전트 작업 확인·이어받기</span></div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card k5">
+        <div class="card-top">
+          <span class="cmd-badge">/resume</span>
+          <span class="tag">Reload a session</span>
+        </div>
+        <h2>저장된 세션 복원</h2>
+        <p class="lead">
+          <code>/resume</code>는 저장된 세션 목록에서 골라 그 대화의 transcript를 다시 불러온다 — 원래
+          히스토리는 그대로 둔 채 이어 간다. 세션은 <code>~/.codex/sessions</code>에 보관된다.
+          셸에서 바로 고르려면 <code>codex resume</code>. (작업 사이클 관점의 <code>/resume</code>은 ②편 참고.)
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val">세션 중 <code>/resume</code> → 저장 세션 피커 / 셸 <code>codex resume</code></span></div>
+          <div class="kv"><span class="lbl">동작</span><span class="val">선택한 대화 transcript 복원, 원본 히스토리 유지</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">세션 저장 위치 <code>~/.codex/sessions</code>. 분기는 <code>/fork</code>·<code>codex fork</code></span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /resume
+  ▸ 저장 세션 피커            <span class="m"># transcript 복원</span>
+<span class="p">$</span> codex resume <span class="c">셸에서 바로 선택</span></div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card k6">
+        <div class="card-top">
+          <span class="cmd-badge long">/title · /statusline</span>
+          <span class="tag">Track at a glance</span>
+        </div>
+        <h2>한눈에 상태 보기</h2>
+        <p class="lead">
+          <code>/statusline</code>은 TUI 푸터에 띄울 항목을 고르고 순서를 잡는다 — 모델·컨텍스트 통계·rate
+          limit·git 브랜치·토큰·세션 ID·디렉터리·버전 등. <code>/title</code>은 터미널 창·탭 제목 항목을 고른다 —
+          프로젝트·상태·스레드·브랜치·모델·작업 진행률 등. 둘 다 즉시 반영되고 <code>config.toml</code>에 저장된다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val"><code>/statusline</code> / <code>/title</code> → 피커에서 토글·재정렬 후 확정</span></div>
+          <div class="kv"><span class="lbl">표시 항목</span><span class="val">푸터 = 모델·컨텍스트·토큰·브랜치 등 / 제목 = 프로젝트·상태·스레드 등</span></div>
+          <div class="kv"><span class="lbl">저장 위치</span><span class="val"><code>tui.status_line</code> / <code>tui.terminal_title</code> (<code>config.toml</code>)</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /statusline  <span class="m"># 푸터 항목 선택</span>
+<span class="p">&gt;</span> /title       <span class="c"># 창·탭 제목 항목 선택</span>
+  <span class="m"># config.toml에 자동 저장</span></div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="arc">
+        <b>6단계 아크</b>
+        <div class="flow">
+          <code>새 대화</code> → <code>분기</code> → <code>곁가지</code> → <code>서브에이전트</code> → <code>세션 복원</code> → <code>상태 표시</code>
+        </div>
+        <div style="margin-top:6px">여러 갈래가 동시에 도는 작업도 흐름이 보이면 흩어지지 않는다 — 다음은 권한·보안을 깊게 파는 ⑤편.</div>
+      </div>
+      <div class="stamp">
+        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="caveat">
+          Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /body -->
+</div><!-- /sheet -->
+<script>
+window.COMMAND_DETAILS = {
+  "/fork": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#fork-the-current-conversation-with-fork",
+    sourceLabel: "developers.openai.com · /fork",
+    summary: "현재 대화를 새 스레드로 포크합니다. 현재 대화 기록을 잃지 않고 새로운 접근 방식을 탐색하기 위해 활성 세션을 분기할 때 사용합니다. 터미널에서 <code>codex fork</code>를 실행하면 저장된 세션을 대상으로 선택기를 열 수 있습니다.",
+    example: "/fork\ncodex fork",
+    caution: "",
+    version: "rust-v0.134.0"
+  },
+  "/side": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#start-a-side-conversation-with-side",
+    sourceLabel: "developers.openai.com · /side",
+    summary: "일시적인 사이드 대화를 시작한다. 메인 스레드의 트랜스크립트를 흩뜨리지 않고도 집중적인 후속 질문을 던질 수 있어, 본 작업의 맥락을 잃지 않은 채 짧은 점검을 할 때 유용하다. 인라인 텍스트를 함께 보낼 수도 있다.",
+    example: "/side Check whether this plan has an obvious risk",
+    caution: "",
+    version: "v0.49"
+  },
+  "/agent": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#switch-agent-threads-with-agent",
+    sourceLabel: "developers.openai.com · /agent",
+    summary: "활성 에이전트 스레드를 전환한다. 새로 띄운 서브에이전트 스레드를 점검하거나 거기서 작업을 이어 가고 싶을 때, 메인 세션을 재시작하지 않고도 곧바로 다른 스레드로 옮겨갈 수 있다.",
+    example: "/agent",
+    caution: "",
+    version: "v0.49"
+  },
+  "/resume": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#resume-a-saved-conversation-with-resume",
+    sourceLabel: "developers.openai.com · /resume",
+    summary: "세션 목록에서 저장된 대화를 다시 불러옵니다. 이전 CLI 세션에서 진행하던 작업을 처음부터 다시 시작하지 않고 이어서 진행할 때 사용합니다. <code>/resume</code>을 입력하고 Enter를 누른 뒤 선택기에서 세션을 선택합니다.",
+    example: "/resume",
+    caution: "",
+    version: "rust-v0.134.0"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+/* ============ Command-detail drawer (interaction layer)
+   플레이북 12편 공유 인터랙션 레이어.
+   기존 디자인 토큰·클래스에 손대지 않는 추가 레이어.
+   모든 신규 클래스는 cmd-detail-* prefix.
+   라이트 톤 — 플레이북 본문(white + dark ink + teal accent)과 결을 맞춤.
+============ */
+
+.cmd-badge.cmd-detail-trigger {
+  cursor: pointer;
+  transition: filter .15s, box-shadow .15s;
+  position: relative;
+}
+.cmd-badge.cmd-detail-trigger:hover {
+  filter: brightness(0.96);
+  box-shadow: 0 0 0 2px rgba(43,179,163,.18);
+}
+.cmd-badge.cmd-detail-trigger::after {
+  content: " ↗";
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity .15s;
+  font-size: .8em;
+  margin-left: 2px;
+}
+.cmd-badge.cmd-detail-trigger:hover::after { opacity: 1; }
+.cmd-badge.cmd-detail-trigger:focus-visible {
+  outline: 2px solid #2bb3a3;
+  outline-offset: 2px;
+}
+
+.cmd-detail-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(20,28,42,.42);
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s ease-out;
+  z-index: 998;
+}
+.cmd-detail-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.cmd-detail-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 480px; max-width: 100vw;
+  background: #ffffff; color: #222831;
+  border-left: 1px solid #e7e9ee;
+  box-shadow: -20px 0 60px rgba(20,28,42,.14), -2px 0 8px rgba(20,28,42,.06);
+  transform: translateX(100%);
+  transition: transform .22s ease-out;
+  z-index: 999;
+  display: flex; flex-direction: column;
+  font-family: 'Pretendard',-apple-system,sans-serif;
+}
+.cmd-detail-drawer.open { transform: translateX(0); }
+.cmd-detail-drawer[aria-hidden="true"] { visibility: hidden; }
+.cmd-detail-drawer[aria-hidden="false"],
+.cmd-detail-drawer.open { visibility: visible; }
+
+.cmd-detail-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 22px 24px 16px;
+  border-bottom: 1px solid #e7e9ee;
+  background: #ffffff;
+  position: sticky; top: 0; z-index: 1;
+}
+.cmd-detail-badge {
+  font-family: 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size: 16px; font-weight: 700;
+  color: #2bb3a3; background: rgba(43,179,163,.1);
+  border: 1px solid rgba(43,179,163,.32);
+  padding: 6px 13px; border-radius: 8px;
+  max-width: 320px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cmd-detail-close {
+  width: 44px; height: 44px; border-radius: 8px;
+  border: 1px solid #e7e9ee; color: #5f6b7a;
+  background: #ffffff; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit; padding: 0; flex-shrink: 0;
+}
+.cmd-detail-close:hover { background: #f4f5f8; color: #222831; }
+.cmd-detail-close:focus-visible {
+  outline: 2px solid #2bb3a3; outline-offset: 2px;
+}
+
+.cmd-detail-body { padding: 18px 24px 28px; overflow-y: auto; flex: 1; }
+.cmd-detail-section { margin-bottom: 22px; }
+.cmd-detail-section:last-child { margin-bottom: 0; }
+.cmd-detail-label {
+  font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: #8b95a3;
+  font-weight: 700; margin-bottom: 8px;
+}
+.cmd-detail-source a {
+  font-family: 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size: 12.5px; color: #2bb3a3;
+  text-decoration: none; word-break: break-all;
+  line-height: 1.6;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.cmd-detail-source a:hover { text-decoration: underline; }
+.cmd-detail-summary {
+  font-size: 13px; line-height: 1.7; color: #3f4956;
+}
+.cmd-detail-summary b { color: #222831; font-weight: 700; }
+.cmd-detail-summary code {
+  font-family: 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size: 11.5px; font-weight: 700;
+  color: #1a8470; background: rgba(43,179,163,.08);
+  padding: 1px 5px; border-radius: 3px;
+}
+.cmd-detail-summary a {
+  color: #2bb3a3; text-decoration: none; font-weight: 600;
+}
+.cmd-detail-summary a:hover { text-decoration: underline; }
+.cmd-detail-example {
+  font-family: 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size: 11.5px; line-height: 1.66;
+  background: #f4f5f8; color: #222831;
+  padding: 14px 16px; border-radius: 7px;
+  border: 1px solid #e7e9ee;
+  white-space: pre-wrap; word-break: break-word;
+  margin: 0;
+}
+.cmd-detail-caution {
+  font-size: 12.5px; line-height: 1.7; color: #6b4f0e;
+  background: rgba(240,168,48,.08);
+  border-left: 3px solid #e09a2d;
+  padding: 11px 14px; border-radius: 4px;
+}
+.cmd-detail-caution code {
+  font-family: 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size: 11px; font-weight: 700;
+  color: #6b4f0e; background: rgba(240,168,48,.18);
+  padding: 1px 5px; border-radius: 3px;
+}
+.cmd-detail-version {
+  font-family: 'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size: 11.5px; color: #5f6b7a;
+}
+
+@media (max-width: 780px) {
+  .cmd-detail-drawer { width: 100%; max-width: none; }
+  .cmd-detail-head { padding: 18px 20px 14px; }
+  .cmd-detail-body { padding: 16px 20px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd-detail-drawer, .cmd-detail-backdrop,
+  .cmd-badge.cmd-detail-trigger,
+  .cmd-badge.cmd-detail-trigger::after { transition: none; }
+}

@@ -4,6 +4,11 @@
 # Internal planning/design docs (PRD, ADR, sources) — kept local, not in git
 docs/
 
+# Manual series internal worktrack (handoffs, SSOT worksheets) — site assets only committed
+update todo/HANDOFF_*.md
+update todo/ssot/
+update todo/**/*-new-session-prompt.md
+
 # OS metadata
 .DS_Store
 Thumbs.db

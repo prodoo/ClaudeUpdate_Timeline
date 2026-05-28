@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 헤드리스 & CI/CD 노하우</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2433; --navy2:#283448;
+    --ink:#222831; --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,sans-serif;
+    background:#dfe3ea;color:var(--ink);
+    padding:30px 16px;-webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1180px;margin:0 auto;background:var(--bg);
+    border-radius:6px;overflow:hidden;box-shadow:0 8px 44px rgba(20,28,45,.17);
+  }
+  .hero{
+    background:var(--navy);color:#fff;padding:34px 38px 40px;
+    display:flex;justify-content:space-between;gap:36px;align-items:flex-start;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:6px;}
+  .eyebrow{font-size:12px;letter-spacing:.3em;color:#8e9ab2;font-weight:600;margin-bottom:14px;}
+  .hero h1{font-size:41px;font-weight:800;line-height:1.16;letter-spacing:-.02em;}
+  .hero h1 .acc{color:#5fd0c3;}
+  .summary-box{
+    background:var(--navy2);border:1px solid #3a4860;border-radius:10px;
+    padding:20px 22px;width:392px;flex-shrink:0;
+  }
+  .summary-box .thesis{font-size:13.5px;line-height:1.7;color:#cdd5e2;font-weight:500;margin-bottom:15px;}
+  .mini{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;align-items:baseline;}
+  .mini code{font-family:var(--mono);font-size:12px;font-weight:700;color:#fff;}
+  .mini span{font-family:var(--mono);font-size:11px;color:#8e9ab2;text-align:left;}
+
+  .body{padding:24px 26px 30px;}
+  .sumrow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+  .sumcard{
+    background:var(--bg);border:1px solid var(--line);
+    border-top:3px solid var(--cc);border-radius:8px;padding:15px 17px 16px;
+  }
+  .sumcard .step{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    color:var(--cc);letter-spacing:.04em;margin-bottom:6px;
+  }
+  .sumcard h3{font-size:15px;font-weight:800;margin-bottom:7px;}
+  .sumcard p{font-size:12px;line-height:1.62;color:var(--gray);}
+  .sumcard p b{color:#3a4452;font-weight:700;font-family:var(--mono);font-size:11.5px;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px 22px;display:flex;flex-direction:column;
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;gap:10px;}
+  .cmd-badge{
+    font-family:var(--mono);font-size:14px;font-weight:700;
+    padding:6px 13px;border-radius:8px;background:var(--cbg);color:var(--cc);
+  }
+  .tag{
+    font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;
+    border:1px solid var(--cc);color:var(--cc);background:var(--bg);white-space:nowrap;
+  }
+  .card h2{font-size:19px;font-weight:800;letter-spacing:-.01em;line-height:1.32;margin-bottom:9px;}
+  .card .lead{font-size:12.5px;line-height:1.68;color:var(--gray);margin-bottom:16px;}
+  .card .lead b{color:#3a4452;font-weight:700;}
+  .card .lead code{font-family:var(--mono);font-size:11.5px;font-weight:700;color:#3a4452;}
+
+  .rows{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+  .kv{
+    display:grid;grid-template-columns:80px 1fr;gap:14px;
+    padding:9px 0;border-top:1px solid var(--line);align-items:start;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .k{font-size:11.5px;font-weight:700;color:var(--soft-gray);}
+  .kv .v{font-size:12px;line-height:1.6;color:#3f4956;}
+  .kv .v b{color:#1f2731;font-weight:700;}
+  .kv .v code{
+    font-family:var(--mono);font-size:11px;font-weight:700;color:#2f3742;
+    background:var(--soft);padding:1px 4px;border-radius:3px;
+  }
+
+  .example{margin-top:auto;background:var(--navy);border-radius:8px;padding:13px 15px;}
+  .example .ex-lbl{font-size:9.5px;font-weight:700;letter-spacing:.14em;color:#7785a0;margin-bottom:7px;}
+  .example .ex-body{font-family:var(--mono);font-size:11.5px;line-height:1.62;color:#e8ecf3;font-weight:500;word-break:break-all;}
+  .example .ex-body .c{color:#5fd0c3;font-weight:700;}
+  .example .ex-body .m{color:#8e9ab2;}
+  .example .ex-body .y{color:#e8c07a;}
+
+  footer{
+    padding:16px 32px 24px;font-size:11px;color:#9aa3b2;
+    display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);
+  }
+  footer b{color:#7b8696;}
+
+  @media (max-width:880px){
+    .hero{flex-direction:column;gap:22px;}
+    .hero h1{font-size:31px;}
+    .summary-box{width:100%;}
+    .sumrow{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">CLAUDE CODE HEADLESS &amp; CI/CD PLAYBOOK</div>
+      <h1><span class="acc">터미널 밖에서</span> 도는<br>Claude Code</h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        claude -p로 비대화형 실행하고, --bare로 재현성을 확보하고, 출력 포맷으로 결과를 파싱하고,
+        도구를 제한해 공격 표면을 좁히고, 상한으로 비용을 묶고, GitHub Actions로 저장소 이벤트에 엮습니다.
+      </div>
+      <div class="mini">
+        <code>claude -p</code><span>non-interactive</span>
+        <code>--bare</code><span>reproducible</span>
+        <code>--output-format</code><span>parse the result</span>
+        <code>--allowedTools</code><span>attack surface</span>
+        <code>--max-turns</code><span>cost control</span>
+        <code>claude-code-action</code><span>repo integration</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ============ SUMMARY CARDS ============ -->
+    <div class="sumrow">
+      <div class="sumcard" style="--cc:var(--c1);">
+        <div class="step">STEP 1 — 2 · 헤드리스 기본</div>
+        <h3>사람 없이, 똑같이 돌린다</h3>
+        <p><b>claude -p</b>로 비대화형 실행하고, <b>--bare</b>로 어느 머신에서나 같은 결과를 보장한다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c3);">
+        <div class="step">STEP 3 — 4 · 출력과 경계</div>
+        <h3>결과를 받고, 권한을 좁힌다</h3>
+        <p><b>출력 포맷</b>으로 결과를 파싱·연결하고, <b>--allowedTools</b>로 도구를 제한해 공격 표면을 줄인다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c5);">
+        <div class="step">STEP 5 — 6 · 통제와 통합</div>
+        <h3>비용을 묶고, 저장소에 엮는다</h3>
+        <p><b>--max-turns</b>로 비용을 미리 묶고, <b>GitHub Actions</b>로 PR·이슈 이벤트에 자동화를 엮는다.</p>
+      </div>
+    </div>
+
+    <!-- ============ DETAIL CARDS ============ -->
+    <div class="grid">
+
+      <!-- 1 -->
+      <div class="card" style="--cc:var(--c1);--cbg:var(--c1bg);">
+        <div class="card-top">
+          <span class="cmd-badge">claude -p</span>
+          <span class="tag">Headless basics</span>
+        </div>
+        <h2>터미널 없이 단발 프롬프트를 실행한다</h2>
+        <p class="lead">
+          <code>-p</code>(--print)를 붙이면 Claude Code가 대화형 인터페이스 없이 전체 에이전트 루프(사고·도구 호출·편집)를
+          돌리고 즉시 종료한다. stdin을 읽고 stdout으로 내보내는 — 평범한 CLI 도구가 된다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">기본형</div><div class="v"><code>claude -p "테스트 실행하고 실패한 것 고쳐"</code> — 한 명령으로 끝</div></div>
+          <div class="kv"><div class="k">파이프</div><div class="v"><code>cat build-error.txt | claude -p "근본 원인 설명" > out.txt</code></div></div>
+          <div class="kv"><div class="k">위치</div><div class="v">모든 CI/CD 통합의 토대 — GitHub Actions·GitLab CI·Jenkins·셸 스크립트</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m">cat error.log |</span> <span class="c">claude -p</span> "이 에러 진단해"</div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+      <div class="card" style="--cc:var(--c2);--cbg:var(--c2bg);">
+        <div class="card-top">
+          <span class="cmd-badge">--bare</span>
+          <span class="tag">Deterministic</span>
+        </div>
+        <h2>--bare로 어느 머신에서나 같은 결과를 낸다</h2>
+        <p class="lead">
+          기본 <code>claude -p</code>는 인터랙티브 세션과 똑같이 작업 디렉터리와 <code>~/.claude</code>의 설정을 모두 읽는다.
+          <code>--bare</code>는 hooks·skills·plugins·MCP·auto memory·CLAUDE.md 자동 탐색을 건너뛴다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">효과</div><div class="v">명시한 플래그만 적용 — 팀원의 훅이나 프로젝트 <code>.mcp.json</code>이 끼어들지 않음</div></div>
+          <div class="kv"><div class="k">권장</div><div class="v">CI·스크립트·SDK 호출의 권장 모드 — 향후 <code>-p</code>의 기본값이 될 예정</div></div>
+          <div class="kv"><div class="k">범위</div><div class="v">Bash·파일 읽기·편집 도구는 사용 가능, OAuth·키체인 읽기는 건너뜀</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">claude --bare -p</span> "이 파일 요약" <span class="y">--allowedTools</span> "Read"</div>
+        </div>
+      </div>
+
+      <!-- 3 -->
+      <div class="card" style="--cc:var(--c3);--cbg:var(--c3bg);">
+        <div class="card-top">
+          <span class="cmd-badge">--output-format</span>
+          <span class="tag">Parse the result</span>
+        </div>
+        <h2>출력 포맷으로 결과를 받아 멀티턴으로 잇는다</h2>
+        <p class="lead">
+          헤드리스는 세 가지 출력 포맷을 지원한다. 사람이 읽을 땐 text, 스크립트로 파싱할 땐 json,
+          실시간 처리엔 stream-json. json에서 받은 <code>session_id</code>로 여러 호출을 한 맥락으로 묶는다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">3종</div><div class="v"><code>text</code>(기본·raw) / <code>json</code>(result·session_id·cost 등 구조화) / <code>stream-json</code>(NDJSON, 이벤트별)</div></div>
+          <div class="kv"><div class="k">파싱</div><div class="v"><code>claude -p "..." --output-format json | jq -r '.result'</code></div></div>
+          <div class="kv"><div class="k">멀티턴</div><div class="v">json의 <code>session_id</code>를 <code>--resume</code>로 재사용 — 독립 호출보다 토큰 절약</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="y">SESSION</span>=$(claude -p "분석" <span class="c">--output-format json</span> | jq -r '.session_id')</div>
+        </div>
+      </div>
+
+      <!-- 4 -->
+      <div class="card" style="--cc:var(--c4);--cbg:var(--c4bg);">
+        <div class="card-top">
+          <span class="cmd-badge">--allowedTools</span>
+          <span class="tag">Attack surface</span>
+        </div>
+        <h2>도구를 제한해 공격 표면을 좁힌다</h2>
+        <p class="lead">
+          헤드리스에선 권한 프롬프트를 승인할 사람이 없다. <code>--allowedTools</code>로 Claude가 쓸 수 있는
+          도구를 명시적으로 제한해 공격 표면을 최소화한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">읽기 전용</div><div class="v"><code>--allowedTools "Read,Grep,Glob"</code> — 분석·리뷰용</div></div>
+          <div class="kv"><div class="k">쓰기 허용</div><div class="v"><code>Read,Write,Edit</code> — 수정 작업용</div></div>
+          <div class="kv"><div class="k">주의</div><div class="v"><code>--dangerously-skip-permissions</code>는 격리된 CI 컨테이너에서만. <code>--permission-mode plan</code>이라도 Claude는 저장소를 봄 — 평문 비밀이 있는 repo는 CI에 올리지 말 것</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">claude -p</span> "버그 찾아" <span class="y">--allowedTools</span> "Read,Grep,Glob"</div>
+        </div>
+      </div>
+
+      <!-- 5 -->
+      <div class="card" style="--cc:var(--c5);--cbg:var(--c5bg);">
+        <div class="card-top">
+          <span class="cmd-badge">--max-turns</span>
+          <span class="tag">No human brake</span>
+        </div>
+        <h2>사람이 없는 만큼 비용을 미리 묶는다</h2>
+        <p class="lead">
+          비용은 CI 통합의 조용한 킬러다. 새벽 3시에 40개 PR에 걸쳐 안 보이게 돌아간다 —
+          사람이 브레이크를 밟을 수 없다. 상한을 코드로 박아야 한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k"><code>--max-turns</code></div><div class="v">한 호출의 에이전트 반복 횟수 제한 — CI에선 항상 추가</div></div>
+          <div class="kv"><div class="k">모니터링</div><div class="v">json 출력의 <code>total_cost_usd</code>·모델별 분해로 호출당 비용 추적</div></div>
+          <div class="kv"><div class="k">정책 변경</div><div class="v">2026.6.15부터 구독 플랜의 <code>claude -p</code>·Agent SDK 사용량은 인터랙티브와 별도인 <b>월간 Agent SDK 크레딧</b>에서 차감</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body">리뷰는 <span class="c">--max-turns 5</span>, 단순 설명은 <span class="c">--max-turns 1</span></div>
+        </div>
+      </div>
+
+      <!-- 6 -->
+      <div class="card" style="--cc:var(--c6c);--cbg:var(--c6bg);">
+        <div class="card-top">
+          <span class="cmd-badge">claude-code-action</span>
+          <span class="tag">Repo integration</span>
+        </div>
+        <h2>GitHub Actions로 저장소 이벤트에 엮는다</h2>
+        <p class="lead">
+          공식 <code>anthropics/claude-code-action</code>을 쓰면 PR·이슈 코멘트에서 <code>@claude</code> 멘션으로
+          코드 구현·PR 생성을 시킬 수 있다. 커스텀이 필요하면 YAML에서 <code>claude -p</code>를 직접 호출한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">설정</div><div class="v"><code>ANTHROPIC_API_KEY</code>를 repo Secret으로, <code>/install-github-app</code>으로 GitHub App 연동</div></div>
+          <div class="kv"><div class="k">CLAUDE.md</div><div class="v">리뷰 기준·코드 규칙·<b>"main에 직접 푸시 금지"</b>를 한 번 적어두면 매 실행에 적용 — CI 설정 역할</div></div>
+          <div class="kv"><div class="k">트리거 구분</div><div class="v">repo 이벤트(PR·push)면 Actions, 시간 기반이면 <code>/schedule</code></div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body">PR 코멘트에 <span class="c">@claude</span> <span class="m">→ 코드 검토 후 코멘트·커밋</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>Claude Code Headless &amp; CI/CD Playbook · 기본 → 재현성 → 출력 → 경계 → 비용 → 통합</span>
+    <span>2026년 5월 14일 기준 · v2.1.141 · 플래그·과금 정책은 변경될 수 있어 <b>공식 headless docs</b> 확인 권장</span>
+  </footer>
+
+</div>
+<script>
+window.COMMAND_DETAILS = {
+  "claude -p": {
+    source: "https://code.claude.com/docs/ko/headless",
+    sourceLabel: "code.claude.com · 프로그래밍 방식 실행 · claude -p",
+    summary: "Claude Code를 <b>비대화형 모드</b>에서 실행하려면 프롬프트와 함께 <code>-p</code>(또는 <code>--print</code>)를 전달합니다. 모든 <a href=\"https://code.claude.com/docs/ko/cli-reference\" target=\"_blank\" rel=\"noopener noreferrer\">CLI 옵션</a>은 <code>-p</code>와 함께 작동합니다: <code>--continue</code>는 대화 계속하기용, <code>--allowedTools</code>는 도구 자동 승인용, <code>--output-format</code>은 구조화된 출력용. 비대화형 모드는 stdin을 읽으므로 다른 명령줄 도구처럼 데이터를 파이프하고 응답을 리디렉션할 수 있습니다. v2.1.128부터 파이프된 stdin은 10MB로 제한됩니다.",
+    example: "$ claude -p \"What does the auth module do?\"\n\n# 파이프된 콘텐츠 처리\n$ cat build-error.txt | claude -p 'concisely explain the root cause' > output.txt\n\n# 도구 자동 승인\n$ claude -p \"Run the test suite and fix any failures\" --allowedTools \"Bash,Read,Edit\"",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "--bare": {
+    source: "https://code.claude.com/docs/ko/headless#start-faster-with-bare-mode",
+    sourceLabel: "code.claude.com · 헤드리스 · --bare",
+    summary: "<b>최소 모드</b>: hooks·skills·plugins·MCP 서버·자동 메모리 및 CLAUDE.md의 자동 검색을 건너뜁니다. 스크립트된 호출이 더 빠르게 시작됩니다. Claude는 Bash·파일 읽기 및 파일 편집 도구에 액세스할 수 있습니다. <code>CLAUDE_CODE_SIMPLE</code>을 설정합니다. 베어 모드는 모든 머신에서 동일한 결과가 필요한 <b>CI 및 스크립트</b>에 유용합니다. 팀원의 <code>~/.claude</code>에 있는 hook이나 프로젝트의 <code>.mcp.json</code>에 있는 MCP 서버는 베어 모드가 이들을 읽지 않기 때문에 실행되지 않습니다. 명시적으로 전달하는 플래그만 적용됩니다.",
+    example: "# 일회성 요약 + Read 도구 사전 승인\n$ claude --bare -p \"Summarize this file\" --allowedTools \"Read\"\n\n# 시스템 프롬프트·설정·MCP 서버·에이전트·플러그인을 명시적으로 전달\n$ claude --bare -p \"query\" \\\n    --append-system-prompt \"Always use TypeScript\" \\\n    --settings ./settings.json \\\n    --mcp-config ./mcp.json",
+    caution: "베어 모드는 OAuth 및 키체인 읽기를 건너뜁니다. Anthropic 인증은 <code>ANTHROPIC_API_KEY</code> 또는 <code>--settings</code>에 전달된 JSON의 <code>apiKeyHelper</code>에서 가져와야 합니다.",
+    version: "v2.1.141"
+  },
+  "--output-format": {
+    source: "https://code.claude.com/docs/ko/headless#get-structured-output",
+    sourceLabel: "code.claude.com · 헤드리스 · --output-format",
+    summary: "응답이 반환되는 방식을 제어합니다: <code>text</code>(기본값, 일반 텍스트), <code>json</code>(결과·세션 ID 및 메타데이터가 포함된 구조화된 JSON), <code>stream-json</code>(실시간 스트리밍을 위한 줄 구분 JSON). 특정 스키마를 준수하는 출력을 얻으려면 <code>--output-format json</code>을 <code>--json-schema</code> 및 JSON Schema 정의와 함께 사용합니다. <code>--output-format json</code>을 사용하면 응답 페이로드에 <code>total_cost_usd</code>와 모델별 비용 분석이 포함되므로 스크립트 호출자는 호출당 지출을 추적할 수 있습니다.",
+    example: "# JSON 형식으로 요약 + jq로 결과 추출\n$ claude -p \"Summarize this project\" --output-format json | jq -r '.result'\n\n# 스트리밍 (verbose + include-partial-messages 필수)\n$ claude -p \"Explain recursion\" --output-format stream-json --verbose --include-partial-messages\n\n# JSON Schema로 구조화된 출력\n$ claude -p \"Extract function names from auth.py\" --output-format json \\\n    --json-schema '{\"type\":\"object\",\"properties\":{\"functions\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}'",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "--allowedTools": {
+    source: "https://code.claude.com/docs/ko/cli-reference",
+    sourceLabel: "code.claude.com · CLI 참조 · --allowedTools",
+    summary: "<b>권한 프롬프트 없이 실행되는 도구</b>입니다. 패턴 매칭에 대해 <a href=\"https://code.claude.com/docs/ko/settings#permission-rule-syntax\" target=\"_blank\" rel=\"noopener noreferrer\">권한 규칙 구문</a>을 참조하세요. 사용 가능한 도구를 제한하려면 <code>--tools</code>를 대신 사용하세요. <code>--allowed-tools</code> 별칭도 작동합니다. 전체 세션 기준선을 설정하려면 개별 도구를 나열하는 대신 <a href=\"https://code.claude.com/docs/ko/permission-modes\" target=\"_blank\" rel=\"noopener noreferrer\">권한 모드</a>를 전달합니다(<code>--permission-mode acceptEdits</code> 등).",
+    example: "# 테스트 스위트 실행 + Bash·Read·Edit 자동 승인\n$ claude -p \"Run the test suite and fix any failures\" --allowedTools \"Bash,Read,Edit\"\n\n# 패턴 매칭 (접두사 일치)\n$ claude -p \"Look at my staged changes and commit\" \\\n    --allowedTools \"Bash(git diff *),Bash(git log *),Bash(git status *),Bash(git commit *)\"",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "--max-turns": {
+    source: "https://code.claude.com/docs/ko/cli-reference",
+    sourceLabel: "code.claude.com · CLI 참조 · --max-turns",
+    summary: "<b>에이전트 턴의 수를 제한</b>합니다(인쇄 모드만 해당). 제한에 도달하면 오류로 종료됩니다. <b>기본적으로 제한 없음</b>.",
+    example: "$ claude -p --max-turns 3 \"query\"",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "claude-code-action": {
+    source: "https://code.claude.com/docs/ko/github-actions",
+    sourceLabel: "code.claude.com · GitHub Actions · claude-code-action",
+    summary: "Claude Code GitHub Actions는 GitHub 워크플로우에 <b>AI 기반 자동화</b>를 제공합니다. PR이나 이슈에서 간단한 <code>@claude</code> 멘션으로 Claude가 코드를 분석하고, 풀 리퀘스트를 생성하고, 기능을 구현하고, 버그를 수정할 수 있습니다. 모두 프로젝트의 표준을 따르면서 말입니다. 가장 쉬운 설정 방법은 터미널에서 <code>/install-github-app</code>을 실행하는 것입니다 — GitHub 앱 및 필수 시크릿 설정을 안내합니다. v1.0은 <code>prompt</code>(지침) + <code>claude_args</code>(CLI 인수 통과) + <code>plugins</code>(설치할 플러그인)의 통합 파라미터를 사용합니다.",
+    example: "name: Claude Code\non:\n  issue_comment:\n    types: [created]\n  pull_request_review_comment:\n    types: [created]\njobs:\n  claude:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: anthropics/claude-code-action@v1\n        with:\n          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}\n          claude_args: \"--max-turns 5 --model claude-sonnet-4-6\"",
+    caution: "베타 사용자는 워크플로우 파일을 업데이트해야 합니다: <code>@beta</code>→<code>@v1</code>, <code>mode</code> 제거, <code>direct_prompt</code>→<code>prompt</code>, <code>max_turns</code>·<code>model</code>·<code>custom_instructions</code> 등은 <code>claude_args</code>로 변환.",
+    version: "v2.1.141"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

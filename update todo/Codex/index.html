@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Codex CLI 매뉴얼 · ChatGPT 2025–26</title>
+<style>
+:root {
+  --bg: #F5EFE3;
+  --bg-soft: #EFE7D5;
+  --bg-panel: #FAF5EA;
+  --ink: #1F1B17;
+  --ink-soft: #5C544A;
+  --ink-dim: #8A7F70;
+  --line: #DDD0B7;
+  --line-soft: #E7DEC9;
+  --accent: #10A37F;
+  --accent-soft: #14B8A6;
+  --hover: #EFE5CD;
+  --shadow: 0 6px 18px rgba(60,40,20,.10), 0 1px 2px rgba(60,40,20,.08);
+}
+[data-theme="dark"] {
+  --bg: #1F1B17;
+  --bg-soft: #28231D;
+  --bg-panel: #2A2520;
+  --ink: #F2EAD9;
+  --ink-soft: #C8BCA5;
+  --ink-dim: #8A7F70;
+  --line: #3A332B;
+  --line-soft: #2F2922;
+  --accent: #2BB39A;
+  --accent-soft: #14B8A6;
+  --hover: #322B23;
+  --shadow: 0 6px 18px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.3);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+  font-family: -apple-system, "SF Pro Text", "Helvetica Neue", "Segoe UI", "Noto Sans KR", sans-serif;
+  font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+.serif { font-family: "Iowan Old Style", "Apple Garamond", Georgia, "Times New Roman", serif; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; padding: 0; }
+a { color: inherit; }
+
+.hdr { padding: clamp(24px, 3vw, 44px) clamp(24px, 4vw, 64px) 22px; border-bottom: 1px solid var(--line); }
+.hdr-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+.back { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-soft);
+  text-decoration: none; padding: 5px 14px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--bg-panel); letter-spacing: .04em; margin-bottom: 14px; }
+.back:hover { background: var(--hover); color: var(--ink); border-color: var(--accent-soft); }
+.hdr h1 { margin: 0 0 14px; font-weight: 400; font-size: clamp(34px, 4.2vw, 56px);
+  letter-spacing: -.02em; color: var(--ink); line-height: 1.05; }
+.hdr h1 em { font-style: italic; color: var(--accent); font-weight: 400; }
+.hdr p.lede { max-width: 720px; margin: 0; color: var(--ink-soft);
+  font-size: clamp(13px, 1.05vw, 16px); line-height: 1.7; }
+.dark-btn { border: 1px solid var(--line); border-radius: 22px; padding: 7px 14px; font-size: 12px;
+  color: var(--ink-soft); display: inline-flex; align-items: center; gap: 6px; align-self: center; }
+.dark-btn:hover { background: var(--hover); }
+
+.main { padding: clamp(28px, 3vw, 44px) clamp(24px, 4vw, 64px) clamp(44px, 4vw, 64px); }
+
+.section { margin-bottom: 44px; }
+.section:last-child { margin-bottom: 0; }
+.section-h { font-size: 11px; letter-spacing: .14em; color: var(--accent); text-transform: uppercase;
+  margin-bottom: 16px; display: flex; align-items: baseline; gap: 12px; }
+.section-h .cnt { color: var(--ink-dim); letter-spacing: .02em; text-transform: none; font-size: 11.5px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+
+.card { display: block; text-decoration: none; color: inherit;
+  background: var(--bg-panel); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 20px 20px;
+  transition: border-color .15s, box-shadow .15s, transform .15s; }
+.card:hover { border-color: var(--accent-soft); box-shadow: var(--shadow); transform: translateY(-1px); }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.card-tag { font-size: 10.5px; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
+.card-arr { font-size: 12px; color: var(--ink-dim); }
+.card h3 { margin: 0 0 8px; font-weight: 400; font-size: 17px; line-height: 1.3; color: var(--ink); }
+.card .desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+.card .arc { font-size: 11px; color: var(--ink-dim); margin: 10px 0 0;
+  letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.card .fn { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px;
+  color: var(--ink-dim); margin: 8px 0 0; word-break: break-all; }
+
+.foot { padding: 18px clamp(24px, 4vw, 64px) 30px; border-top: 1px solid var(--line);
+  color: var(--ink-dim); font-size: 11px; display: flex; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap; }
+
+@media (max-width: 720px) {
+  .hdr-row { flex-direction: column; gap: 14px; }
+  .dark-btn { align-self: flex-start; }
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="hdr-row">
+    <div>
+      <a href="../../codex.html" class="back">← ChatGPT 2025–26 타임라인</a>
+      <h1 class="serif">Codex CLI <em>매뉴얼</em></h1>
+      <p class="lede">OpenAI Codex CLI 사용 노하우를 단일 파일 HTML로 정리한 시리즈. 명령어 나열형 <b>레퍼런스 2편</b>과 "언제·주의·실전 예시"까지 깊게 파는 <b>플레이북 5편</b> — 시리즈 완결. 전부 한국어 · 정적 HTML · 의존성 없음.</p>
+    </div>
+    <button class="dark-btn" id="dark-btn"><span>☾</span><span>DARK</span></button>
+  </div>
+</header>
+
+<main class="main">
+
+  <section class="section">
+    <div class="section-h"><span>Reference 계열</span><span class="cnt">2편 · 명령어 나열형</span></div>
+    <div class="cards">
+      <a class="card" href="codex-cli-reference-essentials.html">
+        <div class="card-top"><span class="card-tag">Reference · Essentials</span><span class="card-arr">↗</span></div>
+        <h3>핵심판</h3>
+        <p class="desc">패널 A~E — 세션 조종 / 컨텍스트·스레드 / 검토·파일 / 핵심 서브커맨드 / 자주 쓰는 플래그.</p>
+        <p class="fn">codex-cli-reference-essentials.html</p>
+      </a>
+      <a class="card" href="codex-cli-reference-complete.html">
+        <div class="card-top"><span class="card-tag">Reference · Complete</span><span class="card-arr">↗</span></div>
+        <h3>전체판</h3>
+        <p class="desc">패널 A~H + 버전 의존 스트립 — 공개 명령어 전수, 서브커맨드(wide), CLI 글로벌 플래그(wide), 미수록 항목 별도 분리.</p>
+        <p class="fn">codex-cli-reference-complete.html</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-h"><span>Playbook 계열</span><span class="cnt">5편 · 시리즈 완결 · 6단계 서사 아크</span></div>
+    <div class="cards">
+      <a class="card" href="codex-cli-playbook-01-setup.html">
+        <div class="card-top"><span class="card-tag">Playbook 01 · Setup</span><span class="card-arr">↗</span></div>
+        <h3>환경 세팅</h3>
+        <p class="desc">codex(설치·인증) · /model · /fast · /permissions · /init · config.toml · /status · /debug-config.</p>
+        <p class="arc">설치 → 모델 → 권한 → 초기화 → 설정 → 점검</p>
+        <p class="fn">codex-cli-playbook-01-setup.html</p>
+      </a>
+      <a class="card" href="codex-cli-playbook-02-task-flow.html">
+        <div class="card-top"><span class="card-tag">Playbook 02 · Task Flow</span><span class="card-arr">↗</span></div>
+        <h3>한 작업 완주</h3>
+        <p class="desc">/plan · Enter·Tab(실행 중 끼어들기) · /diff · /review · /compact · /resume.</p>
+        <p class="arc">계획 → 끼어들기 → 차이 → 검토 → 압축 → 재개</p>
+        <p class="fn">codex-cli-playbook-02-task-flow.html</p>
+      </a>
+      <a class="card" href="codex-cli-playbook-03-automation.html">
+        <div class="card-top"><span class="card-tag">Playbook 03 · Automation</span><span class="card-arr">↗</span></div>
+        <h3>비대화형 자동화</h3>
+        <p class="desc">codex exec · --json · --output-last-message · --sandbox · -a never · codex mcp · Skills · Hooks · codex cloud · apply.</p>
+        <p class="arc">실행 → 출력 → 샌드박스 → 확장 → 클라우드 → 적용</p>
+        <p class="fn">codex-cli-playbook-03-automation.html</p>
+      </a>
+      <a class="card" href="codex-cli-playbook-04-context-threads.html">
+        <div class="card-top"><span class="card-tag">Playbook 04 · Context · Threads</span><span class="card-arr">↗</span></div>
+        <h3>컨텍스트 · 멀티스레드</h3>
+        <p class="desc">/new · /clear · /fork · /side · /agent · /resume · /title · /statusline.</p>
+        <p class="arc">시작 → 분기 → 사이드 → 에이전트 → 재개 → 메타</p>
+        <p class="fn">codex-cli-playbook-04-context-threads.html</p>
+      </a>
+      <a class="card" href="codex-cli-playbook-05-permissions.html">
+        <div class="card-top"><span class="card-tag">Playbook 05 · Permissions</span><span class="card-arr">↗</span></div>
+        <h3>권한 · 보안 심화</h3>
+        <p class="desc">--sandbox · -a/--ask-for-approval · permission profiles · /experimental (Smart Approvals) · /sandbox-add-read-dir · /debug-config.</p>
+        <p class="arc">샌드박스 → 승인 → 프로파일 → 실험 → 읽기허용 → 진단</p>
+        <p class="fn">codex-cli-playbook-05-permissions.html</p>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span>Codex CLI 매뉴얼 시리즈 (완결) · 허브 디자인은 타임라인 톤 임시 적용 · 개별 매뉴얼은 Pretendard/navy 톤 별도 유지</span>
+  <span>2026-05-14 기준 · Codex CLI v0.130.x 계열</span>
+</footer>
+
+<script>
+const btn = document.getElementById("dark-btn");
+if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark";
+btn.addEventListener("click", () => {
+  const cur = document.documentElement.dataset.theme;
+  if (cur === "dark") { delete document.documentElement.dataset.theme; localStorage.setItem("theme", "light"); }
+  else { document.documentElement.dataset.theme = "dark"; localStorage.setItem("theme", "dark"); }
+});
+</script>
+</body>
+</html>

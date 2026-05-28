@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 워크플로 노하우</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1c2433;
+    --navy2:#283448;
+    --ink:#222831;
+    --gray:#5f6b7a;
+    --soft-gray:#8b95a3;
+    --line:#e7e9ee;
+    --bg:#ffffff;
+    --soft:#f4f5f8;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+    --c1:#2bb3a3; --c1bg:#e4f5f3;   /* teal   - 설정 */
+    --c2:#3f6fd1; --c2bg:#e7eefb;   /* blue   - 계획 */
+    --c3:#5b6ee0; --c3bg:#e9ebfc;   /* indigo - 조율 */
+    --c4:#e09a2d; --c4bg:#fbf0db;   /* amber  - 검증 */
+    --c5:#2f9e6e; --c5bg:#e3f4ec;   /* green  - 정리 */
+    --c6c:#e0594d; --c6bg:#fbe7e4;  /* red    - 회복 */
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Pretendard',-apple-system,sans-serif;
+    background:#dfe3ea;
+    color:var(--ink);
+    padding:30px 16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .sheet{
+    max-width:1180px;margin:0 auto;background:var(--bg);
+    border-radius:6px;overflow:hidden;
+    box-shadow:0 8px 44px rgba(20,28,45,.17);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:var(--navy);color:#fff;
+    padding:34px 38px 40px;
+    display:flex;justify-content:space-between;gap:36px;
+    align-items:flex-start;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:6px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.3em;color:#8e9ab2;
+    font-weight:600;margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:42px;font-weight:800;line-height:1.16;
+    letter-spacing:-.02em;
+  }
+  .hero h1 .acc{color:#5fd0c3;}
+  .summary-box{
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:20px 22px;
+    width:392px;flex-shrink:0;
+  }
+  .summary-box .thesis{
+    font-size:13.5px;line-height:1.7;color:#cdd5e2;
+    font-weight:500;margin-bottom:15px;
+  }
+  .mini{
+    display:grid;grid-template-columns:auto 1fr;
+    gap:3px 14px;align-items:baseline;
+  }
+  .mini code{
+    font-family:var(--mono);font-size:12.5px;font-weight:700;
+    color:#fff;
+  }
+  .mini span{
+    font-family:var(--mono);font-size:11px;color:#8e9ab2;
+    text-align:left;
+  }
+
+  /* ---------- body ---------- */
+  .body{padding:24px 26px 30px;}
+
+  /* summary cards */
+  .sumrow{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:16px;margin-bottom:24px;
+  }
+  .sumcard{
+    background:var(--bg);border:1px solid var(--line);
+    border-top:3px solid var(--cc);
+    border-radius:8px;padding:15px 17px 16px;
+  }
+  .sumcard .step{
+    font-family:var(--mono);font-size:10.5px;font-weight:700;
+    color:var(--cc);letter-spacing:.04em;margin-bottom:6px;
+  }
+  .sumcard h3{font-size:15px;font-weight:800;margin-bottom:7px;}
+  .sumcard p{font-size:12px;line-height:1.62;color:var(--gray);}
+  .sumcard p b{color:#3a4452;font-weight:700;font-family:var(--mono);font-size:11.5px;}
+
+  /* detail cards */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .card{
+    background:var(--bg);border:1px solid var(--line);
+    border-radius:10px;padding:20px 22px 22px;
+    display:flex;flex-direction:column;
+  }
+  .card-top{
+    display:flex;justify-content:space-between;
+    align-items:center;margin-bottom:15px;
+  }
+  .cmd-badge{
+    font-family:var(--mono);font-size:17px;font-weight:700;
+    padding:6px 13px;border-radius:8px;
+    background:var(--cbg);color:var(--cc);
+  }
+  .tag{
+    font-size:11px;font-weight:700;
+    padding:4px 11px;border-radius:999px;
+    border:1px solid var(--cc);color:var(--cc);
+    background:var(--bg);white-space:nowrap;
+  }
+  .card h2{
+    font-size:19px;font-weight:800;letter-spacing:-.01em;
+    line-height:1.32;margin-bottom:9px;
+  }
+  .card .lead{
+    font-size:12.5px;line-height:1.68;color:var(--gray);
+    margin-bottom:16px;
+  }
+  .card .lead b{color:#3a4452;font-weight:700;}
+  .card .lead code{
+    font-family:var(--mono);font-size:11.5px;font-weight:700;
+    color:#3a4452;
+  }
+
+  .rows{display:flex;flex-direction:column;gap:0;margin-bottom:16px;}
+  .kv{
+    display:grid;grid-template-columns:74px 1fr;gap:14px;
+    padding:9px 0;border-top:1px solid var(--line);
+    align-items:start;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .k{
+    font-size:11.5px;font-weight:700;color:var(--soft-gray);
+  }
+  .kv .v{
+    font-size:12px;line-height:1.6;color:#3f4956;
+  }
+  .kv .v b{color:#1f2731;font-weight:700;}
+  .kv .v code{
+    font-family:var(--mono);font-size:11px;font-weight:700;
+    color:#2f3742;background:var(--soft);
+    padding:1px 4px;border-radius:3px;
+  }
+
+  .example{
+    margin-top:auto;
+    background:var(--navy);border-radius:8px;
+    padding:13px 15px;
+  }
+  .example .ex-lbl{
+    font-size:9.5px;font-weight:700;letter-spacing:.14em;
+    color:#7785a0;margin-bottom:7px;
+  }
+  .example .ex-body{
+    font-family:var(--mono);font-size:11.5px;line-height:1.62;
+    color:#e8ecf3;font-weight:500;
+  }
+  .example .ex-body .c{color:#5fd0c3;font-weight:700;}
+  .example .ex-body .m{color:#8e9ab2;}
+  .example .ex-body .key{
+    color:#fff;font-weight:700;
+    border:1px solid #44516a;border-radius:4px;
+    padding:0 5px;margin:0 1px;
+  }
+
+  footer{
+    padding:16px 32px 24px;font-size:11px;color:#9aa3b2;
+    display:flex;justify-content:space-between;gap:16px;
+    border-top:1px solid var(--line);
+  }
+  footer b{color:#7b8696;}
+
+  @media (max-width:880px){
+    .hero{flex-direction:column;gap:22px;}
+    .hero h1{font-size:34px;}
+    .summary-box{width:100%;}
+    .sumrow{grid-template-columns:1fr;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">CLAUDE CODE WORKFLOW PLAYBOOK</div>
+      <h1>한 사이클을 매끄럽게<br>도는 <span class="acc">Claude Code 노하우</span></h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        기억을 먼저 심고, 계획부터 세우고, 강도를 맞춰 실행하고,
+        머지 전 점검하고, 컨텍스트를 압축해 이어가고, 어긋나면 되돌립니다.
+      </div>
+      <div class="mini">
+        <code>CLAUDE.md</code><span>project memory</span>
+        <code>/plan</code><span>plan first</span>
+        <code>/effort</code><span>right effort</span>
+        <code>/review</code><span>quality gate</span>
+        <code>/compact</code><span>keep going</span>
+        <code>/rewind</code><span>safety net</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- ============ SUMMARY CARDS ============ -->
+    <div class="sumrow">
+      <div class="sumcard" style="--cc:var(--c1);">
+        <div class="step">STEP 1 — 2 · 시작 준비</div>
+        <h3>탄탄하게 출발하기</h3>
+        <p><b>CLAUDE.md</b>로 프로젝트 기억을 심고, <b>/plan</b>으로 계획을 검토한 뒤에 코드를 건드립니다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c3);">
+        <div class="step">STEP 3 — 4 · 실행과 검증</div>
+        <h3>정확하게 진행하기</h3>
+        <p><b>/effort</b>로 추론 강도를 작업에 맞추고, <b>/review</b>·<b>/security-review</b>로 머지 전 점검합니다.</p>
+      </div>
+      <div class="sumcard" style="--cc:var(--c5);">
+        <div class="step">STEP 5 — 6 · 지속과 회복</div>
+        <h3>끊김 없이 이어가기</h3>
+        <p><b>/compact</b>로 컨텍스트를 압축해 세션을 이어가고, <b>/rewind</b>로 잘못된 길을 되돌립니다.</p>
+      </div>
+    </div>
+
+    <!-- ============ DETAIL CARDS ============ -->
+    <div class="grid">
+
+      <!-- 1. CLAUDE.md -->
+      <div class="card" style="--cc:var(--c1);--cbg:var(--c1bg);">
+        <div class="card-top">
+          <span class="cmd-badge">CLAUDE.md</span>
+          <span class="tag">Project memory</span>
+        </div>
+        <h2>프로젝트 기억을 먼저 심는다</h2>
+        <p class="lead">
+          프로젝트 루트의 Markdown 파일로, 같은 저장소에서 세션을 시작할 때마다 Claude가 자동으로 읽는다.
+          빌드 명령·컨벤션·아키텍처·금지사항을 적어두면 매번 다시 설명할 필요가 없다. <code>/init</code>으로 생성한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">새 저장소를 시작할 때, 또는 주요 구조 변경 직후</div></div>
+          <div class="kv"><div class="k">담을 내용</div><div class="v">스택·버전, 실행/테스트/빌드 명령, 비자명한 컨벤션 1~2개, <b>"하지 말 것"</b></div></div>
+          <div class="kv"><div class="k">주의</div><div class="v">길수록 좋은 게 아님 — 간결하게. <code>/memory</code>로 편집하고 git에 커밋해 팀과 공유</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/init</span> <span class="m">→ 생성된 CLAUDE.md를 열어 스택·금지사항을 직접 보강</span></div>
+        </div>
+      </div>
+
+      <!-- 2. /plan -->
+      <div class="card" style="--cc:var(--c2);--cbg:var(--c2bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/plan</span>
+          <span class="tag">Plan first</span>
+        </div>
+        <h2>코드를 건드리기 전 계획부터</h2>
+        <p class="lead">
+          플랜 모드에서는 Claude가 읽고 분석만 하며 파일을 수정하지 않는다.
+          계획을 검토·승인한 뒤 일반 모드로 돌아와 구현을 지시한다. 낯선 코드일수록 효과가 크다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">낯선 코드베이스, 큰 리팩터링 전, 여러 파일에 걸친 변경</div></div>
+          <div class="kv"><div class="k">진입 방법</div><div class="v"><b>Shift+Tab</b>으로 권한 모드 순환 (default → acceptEdits → auto → plan) 또는 <code>/plan</code></div></div>
+          <div class="kv"><div class="k">연계</div><div class="v">계획 승인 후 일반 모드로 전환 → <b>"계획대로 구현해"</b></div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="key">Shift</span>+<span class="key">Tab</span> <span class="m">→ plan 모드 →</span> "src/auth 흐름을 보고 Google 로그인을 추가할 위치를 제안해"</div>
+        </div>
+      </div>
+
+      <!-- 3. /effort -->
+      <div class="card" style="--cc:var(--c3);--cbg:var(--c3bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/effort</span>
+          <span class="tag">Right effort</span>
+        </div>
+        <h2>작업 난도에 맞춰 추론 강도를 맞춘다</h2>
+        <p class="lead">
+          한 작업에 쏟는 추론량을 조절한다. 모든 작업에 <code>max</code>를 쓰면 느리고 토큰만 많이 든다 —
+          난도에 맞추는 것이 핵심이다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">빠른 반복은 <code>low</code>, 아키텍처·보안 분석·에이전트 루프는 <code>high</code> 이상</div></div>
+          <div class="kv"><div class="k">단계</div><div class="v">low / medium / high / <b>xhigh</b> / max / auto — <b>xhigh</b>는 Opus 4.7+ 전용</div></div>
+          <div class="kv"><div class="k">주의</div><div class="v">인자 없이 실행하면 인터랙티브 슬라이더. 스킬·슬래시 명령 frontmatter로 개별 지정 가능</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/effort xhigh</span> <span class="m">— Opus 4.7의 코딩·에이전트 작업에 권장되는 기본값</span></div>
+        </div>
+      </div>
+
+      <!-- 4. /review -->
+      <div class="card" style="--cc:var(--c4);--cbg:var(--c4bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/review</span>
+          <span class="tag">Quality gate</span>
+        </div>
+        <h2>머지 전 동작과 보안을 점검한다</h2>
+        <p class="lead">
+          <code>/review</code>는 변경된 코드를 코드 리뷰 관점에서 점검하고,
+          <code>/security-review</code>는 변경분(diff)에서 취약점을 찾는다. 변경된 코드만 분석해 빠르다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">커밋·PR·배포 전 마지막 검토 단계</div></div>
+          <div class="kv"><div class="k">초점</div><div class="v"><code>/review</code>는 로직·회귀·빠진 테스트, <code>/security-review</code>는 인젝션·인증 우회 등</div></div>
+          <div class="kv"><div class="k">연계</div><div class="v"><code>/diff</code>로 실제 파일 변경을 확인, <code>/pr-comments</code>로 리뷰어 코멘트 반영</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/review</span> <span class="m">→</span> <span class="c">/security-review</span> <span class="m">→</span> <span class="c">/diff</span></div>
+        </div>
+      </div>
+
+      <!-- 5. /compact -->
+      <div class="card" style="--cc:var(--c5);--cbg:var(--c5bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/compact</span>
+          <span class="tag">Keep going</span>
+        </div>
+        <h2>컨텍스트를 압축해 세션을 이어간다</h2>
+        <p class="lead">
+          대화가 길어지면 히스토리를 요약 압축해 컨텍스트 공간을 확보한다.
+          <code>/clear</code>와 달리 무엇을 논의했는지 맥락의 줄기는 보존된다.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">컨텍스트 <b>70~75%</b>에서 — 경고가 뜰 때까지 기다리지 말 것 (한계 근처에서 성능 저하)</div></div>
+          <div class="kv"><div class="k">핵심 요령</div><div class="v">항상 <b>보존 지시</b>를 함께 — 지시가 없으면 일반 요약이 되어 중요한 맥락이 사라진다</div></div>
+          <div class="kv"><div class="k">연계</div><div class="v"><code>/context</code>로 사용량을 점검해 압축 시점을 판단</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/compact</span> 인증 리팩터링 결정만 유지, 마이그레이션 파일은 무시</div>
+        </div>
+      </div>
+
+      <!-- 6. /rewind -->
+      <div class="card" style="--cc:var(--c6c);--cbg:var(--c6bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/rewind</span>
+          <span class="tag">Safety net</span>
+        </div>
+        <h2>잘못된 길은 체크포인트로 되돌린다</h2>
+        <p class="lead">
+          <span style="font-family:var(--mono);font-weight:700;color:#3a4452;">Esc</span>를 두 번 누르면 리와인드 메뉴가 열린다.
+          코드와 대화를 이전 체크포인트로 복원할 수 있다 — git stash보다 빠른 실험 안전망.
+        </p>
+        <div class="rows">
+          <div class="kv"><div class="k">사용 시점</div><div class="v">Claude가 엉뚱한 방향으로 갈 때, 실험이 실패했을 때</div></div>
+          <div class="kv"><div class="k">3가지 옵션</div><div class="v">대화만 / <b>코드만</b> / 둘 다 — "코드만"이 핵심 (대화는 남아 무엇을 왜 시도했는지 기억)</div></div>
+          <div class="kv"><div class="k">주의</div><div class="v"><code>Ctrl+C</code>는 중단일 뿐 되돌리기가 아님 — 되돌리려면 <code>Esc Esc</code></div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="key">Esc</span> <span class="key">Esc</span> <span class="m">→ 메뉴에서</span> "Restore code only" <span class="m">선택</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>Claude Code Workflow Playbook · 설정 → 계획 → 조율 → 검증 → 정리 → 회복</span>
+    <span>2026년 5월 14일 기준 · v2.1.141 · 세부 동작은 버전에 따라 달라질 수 있어 <b>/help</b>로 확인 권장</span>
+  </footer>
+
+</div>
+<script>
+window.COMMAND_DETAILS = {
+  "CLAUDE.md": {
+    source: "https://code.claude.com/docs/ko/memory",
+    sourceLabel: "code.claude.com · 메모리 · CLAUDE.md",
+    summary: "CLAUDE.md 파일은 프로젝트·개인 워크플로우·전체 조직에 대해 Claude에 <b>지속적인 지침</b>을 제공하는 마크다운 파일입니다. 모든 세션의 시작 시 컨텍스트 윈도우에 로드됩니다. 범위별 위치는 관리 정책 → 사용자(<code>~/.claude/CLAUDE.md</code>) → 프로젝트(<code>./CLAUDE.md</code> 또는 <code>./.claude/CLAUDE.md</code>) → 로컬(<code>./CLAUDE.local.md</code>) 순으로 로드됩니다. <code>@path/to/import</code> 구문으로 추가 파일을 가져올 수 있으며, 최대 4개 홉의 깊이까지 재귀 허용. 파일당 200줄 이하를 목표로 합니다. 더 긴 파일은 더 많은 컨텍스트를 소비하고 준수를 줄입니다.",
+    example: "# 빌드 명령\n- 커밋하기 전에 `npm test` 실행\n- 2칸 들여쓰기 사용\n\n# 아키텍처\n- API 핸들러는 `src/api/handlers/`에 있습니다\n\n# 가져오기\n@README\n@docs/git-instructions.md",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/plan": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /plan",
+    summary: "프롬프트에서 직접 <b>plan mode</b>로 들어갑니다. 선택적 설명을 전달하여 plan mode로 들어가고 즉시 해당 작업으로 시작합니다. 예를 들어 <code>/plan fix the auth bug</code>.",
+    example: "> /plan\n\n# plan mode로 진입하면서 작업 지시 함께 전달\n> /plan fix the auth bug",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/effort": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /effort",
+    summary: "모델 <b>effort level</b>을 설정합니다. <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> 또는 <code>max</code>를 허용합니다. 사용 가능한 수준은 모델에 따라 다르며 <code>max</code>는 세션 전용입니다. <code>auto</code>는 모델 기본값으로 재설정합니다. 인수 없이 대화형 슬라이더를 엽니다. 왼쪽 및 오른쪽 화살표를 사용하여 수준을 선택하고 <code>Enter</code>를 눌러 적용합니다. 현재 응답이 완료될 때까지 기다리지 않고 즉시 적용됩니다.",
+    example: "# 대화형 슬라이더 열기\n> /effort\n\n# 특정 수준 설정\n> /effort high\n\n# 모델 기본값으로 재설정\n> /effort auto",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/review": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /review",
+    summary: "현재 세션에서 <b>로컬로 pull request를 검토</b>합니다. 더 깊은 클라우드 기반 검토는 <code>/code-review ultra</code>를 참조하세요.",
+    example: "# 현재 브랜치의 PR을 로컬에서 검토\n> /review\n\n# 특정 PR 지정\n> /review 446",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/compact": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /compact",
+    summary: "지금까지의 대화를 요약하여 <b>컨텍스트를 확보</b>합니다. 선택적으로 요약에 대한 포커스 지침을 전달합니다. compaction이 규칙·skills·메모리 파일을 처리하는 방법은 docs를 참조하세요.",
+    example: "# 요약 실행\n> /compact\n\n# 포커스 지침 전달\n> /compact 인증 결정과 스키마 변경만 유지",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/rewind": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /rewind (별칭 /undo, /checkpoint)",
+    summary: "대화 및/또는 코드를 이전 지점으로 되감기하거나 선택한 메시지에서 요약합니다. checkpointing을 참조하세요. 별칭: <code>/checkpoint</code>, <code>/undo</code>.",
+    example: "> /rewind",
+    caution: "",
+    version: "v2.1.141"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>

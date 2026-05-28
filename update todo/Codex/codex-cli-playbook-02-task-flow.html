@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex CLI 플레이북 02 — 한 작업 완주</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 중립 */
+    --navy:#1c2433; --navy2:#283448; --ink:#222831;
+    --gray:#5f6b7a; --soft-gray:#8b95a3;
+    --line:#e7e9ee; --bg:#ffffff; --soft:#f4f5f8;
+    --page:#dfe3ea;
+    /* 6단계 액센트 */
+    --c1:#2bb3a3; --c1bg:#e4f5f3;
+    --c2:#3f6fd1; --c2bg:#e7eefb;
+    --c3:#5b6ee0; --c3bg:#e9ebfc;
+    --c4:#e09a2d; --c4bg:#fbf0db;
+    --c5:#2f9e6e; --c5bg:#e3f4ec;
+    --c6c:#e0594d; --c6bg:#fbe7e4;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+    color:var(--ink);
+    padding:40px 20px;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+  }
+
+  /* ---------- SHEET ---------- */
+  .sheet{
+    max-width:1180px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:6px;
+    box-shadow:0 18px 48px rgba(20,28,42,.20);
+    overflow:hidden;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--navy);
+    padding:34px 38px 40px;
+    display:flex;
+    gap:34px;
+    align-items:flex-start;
+    justify-content:space-between;
+  }
+  .hero-left{flex:1;min-width:0;padding-top:4px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--c1);
+    margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:41px;
+    font-weight:800;
+    line-height:1.28;
+    color:#fff;
+    letter-spacing:-.01em;
+  }
+  .hero h1 .sub{
+    display:block;
+    font-size:21px;
+    font-weight:600;
+    color:var(--soft-gray);
+    margin-top:10px;
+    letter-spacing:0;
+  }
+
+  .summary-box{
+    width:392px;
+    flex-shrink:0;
+    background:var(--navy2);
+    border:1px solid #3a4860;
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .thesis{
+    font-size:13.5px;
+    color:#cdd5e0;
+    line-height:1.7;
+    padding-bottom:16px;
+    margin-bottom:16px;
+    border-bottom:1px solid #3a4860;
+  }
+  .mini{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px 14px;
+  }
+  .mini div{display:flex;flex-direction:column;gap:2px;}
+  .mini code{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    color:#fff;
+  }
+  .mini span{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    letter-spacing:.02em;
+  }
+
+  /* ---------- BODY ---------- */
+  .body{padding:24px 26px 30px;}
+
+  /* ---------- SUMMARY ROW ---------- */
+  .sumrow{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:22px;
+  }
+  .sumcard{
+    background:var(--soft);
+    border:1px solid var(--line);
+    border-top:3px solid var(--cAccent);
+    border-radius:8px;
+    padding:16px 18px 17px;
+  }
+  .sumcard.s1{--cAccent:var(--c1);}
+  .sumcard.s2{--cAccent:var(--c3);}
+  .sumcard.s3{--cAccent:var(--c5);}
+  .sumcard .step{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.08em;
+    color:var(--cAccent);
+    margin-bottom:7px;
+  }
+  .sumcard h3{
+    font-size:15.5px;
+    font-weight:800;
+    margin-bottom:6px;
+    color:var(--ink);
+  }
+  .sumcard p{
+    font-size:12.5px;
+    color:var(--gray);
+    line-height:1.65;
+  }
+
+  /* ---------- DETAIL GRID ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px 22px 22px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card.k1{--cN:var(--c1);--cNbg:var(--c1bg);}
+  .card.k2{--cN:var(--c2);--cNbg:var(--c2bg);}
+  .card.k3{--cN:var(--c3);--cNbg:var(--c3bg);}
+  .card.k4{--cN:var(--c4);--cNbg:var(--c4bg);}
+  .card.k5{--cN:var(--c5);--cNbg:var(--c5bg);}
+  .card.k6{--cN:var(--c6c);--cNbg:var(--c6bg);}
+
+  .card-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:13px;
+  }
+  .cmd-badge{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:15px;
+    color:var(--cN);
+    background:var(--cNbg);
+    padding:5px 11px;
+    border-radius:6px;
+    letter-spacing:-.01em;
+  }
+  .cmd-badge.long{font-size:13.5px;}
+  .tag{
+    font-size:11px;
+    font-weight:700;
+    color:var(--cN);
+    border:1px solid var(--cN);
+    padding:3px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+    letter-spacing:.02em;
+  }
+  .card h2{
+    font-size:19px;
+    font-weight:800;
+    margin-bottom:9px;
+    color:var(--ink);
+    letter-spacing:-.01em;
+  }
+  .lead{
+    font-size:13px;
+    color:var(--gray);
+    line-height:1.72;
+    margin-bottom:15px;
+  }
+  .lead b{color:var(--ink);font-weight:700;}
+  .lead code{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1.5px 5px;
+    border-radius:4px;
+  }
+
+  .rows{margin-bottom:15px;}
+  .kv{
+    display:grid;
+    grid-template-columns:78px 1fr;
+    gap:10px;
+    padding:7px 0;
+    border-top:1px solid var(--line);
+    font-size:12px;
+  }
+  .kv:first-child{border-top:none;}
+  .kv .lbl{
+    font-weight:700;
+    color:var(--cN);
+    font-size:11.5px;
+  }
+  .kv .val{color:var(--gray);line-height:1.6;}
+  .kv .val code{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:500;
+    background:var(--soft);
+    color:var(--ink);
+    padding:1px 4px;
+    border-radius:3px;
+  }
+
+  .example{
+    background:var(--navy);
+    border-radius:8px;
+    padding:13px 15px 14px;
+    margin-top:auto;
+  }
+  .ex-lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--soft-gray);
+    margin-bottom:8px;
+  }
+  .ex-body{
+    font-family:var(--mono);
+    font-size:11.5px;
+    line-height:1.85;
+    color:#dfe5ee;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .ex-body .p{color:var(--c1);font-weight:700;}      /* 프롬프트 기호 */
+  .ex-body .c{color:#5fd6c8;font-weight:700;}        /* teal 강조 */
+  .ex-body .m{color:#7e8a9a;}                        /* 회색 주석 */
+  .ex-body .y{color:#f0c46a;font-weight:700;}        /* 노랑 강조 */
+  .ex-body .key{
+    display:inline-block;
+    background:#3a4860;
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:1px 7px;
+    border-radius:4px;
+    margin:0 1px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-top:26px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+  }
+  .arc{
+    font-size:11.5px;
+    color:var(--gray);
+    line-height:1.7;
+    max-width:62%;
+  }
+  .arc b{color:var(--ink);font-weight:700;display:block;margin-bottom:3px;font-size:11px;letter-spacing:.04em;}
+  .arc .flow code{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--c3);
+    font-weight:700;
+  }
+  .stamp{text-align:right;flex-shrink:0;}
+  .stamp .ver{
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:5px;
+  }
+  .stamp .caveat{
+    font-size:10.5px;
+    color:var(--soft-gray);
+    line-height:1.65;
+    max-width:300px;
+  }
+  .stamp .caveat code{font-family:var(--mono);font-size:10px;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:880px){
+    body{padding:20px 12px;}
+    .hero{flex-direction:column;gap:22px;padding:26px 22px 30px;}
+    .hero h1{font-size:30px;}
+    .hero h1 .sub{font-size:17px;}
+    .summary-box{width:100%;}
+    .body{padding:20px 16px 24px;}
+    .sumrow{grid-template-columns:1fr;gap:12px;}
+    .grid{grid-template-columns:1fr;gap:14px;}
+    footer{flex-direction:column;gap:16px;}
+    .arc{max-width:100%;}
+    .stamp{text-align:left;}
+    .stamp .caveat{max-width:100%;}
+  }
+</style>
+<link rel="stylesheet" href="../_shared/cmd-detail.css">
+</head>
+<body>
+<div class="sheet">
+
+  <!-- ============ HERO ============ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Codex CLI Playbook · 02</div>
+      <h1>
+        한 작업 완주
+        <span class="sub">계획부터 검증까지 한 흐름</span>
+      </h1>
+    </div>
+    <div class="summary-box">
+      <div class="thesis">
+        계획을 세우고, 실행 중 방향을 잡고, 바뀐 것을 확인하고, <b style="color:#fff">리뷰로 거르고</b>,
+        컨텍스트를 정리해 다음으로 잇는다 — 작업 하나를 끝까지 끌고 가는 6단계.
+      </div>
+      <div class="mini">
+        <div><code>/plan</code><span>Plan first</span></div>
+        <div><code>Enter · Tab</code><span>Steer mid-run</span></div>
+        <div><code>/diff</code><span>See the changes</span></div>
+        <div><code>/review</code><span>Quality gate</span></div>
+        <div><code>/compact</code><span>Keep it lean</span></div>
+        <div><code>/resume</code><span>Pick it back up</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BODY ============ -->
+  <div class="body">
+
+    <!-- 요약 카드 3장 -->
+    <div class="sumrow">
+      <div class="sumcard s1">
+        <div class="step">STEP 1—2</div>
+        <h3>계획하고 끼어들기</h3>
+        <p>plan 모드로 실행 계획을 먼저 받고, 작업이 도는 중에는 Enter·Tab으로 방향을 잡는다.</p>
+      </div>
+      <div class="sumcard s2">
+        <div class="step">STEP 3—4</div>
+        <h3>확인하고 거르기</h3>
+        <p><code style="font-family:var(--mono);font-size:11px">/diff</code>로 바뀐 파일을 살피고, <code style="font-family:var(--mono);font-size:11px">/review</code>로 커밋 전 셀프 리뷰를 돌린다.</p>
+      </div>
+      <div class="sumcard s3">
+        <div class="step">STEP 5—6</div>
+        <h3>정리하고 잇기</h3>
+        <p><code style="font-family:var(--mono);font-size:11px">/compact</code>로 긴 대화를 압축하고, <code style="font-family:var(--mono);font-size:11px">/resume</code>로 다음 세션에 이어간다.</p>
+      </div>
+    </div>
+
+    <!-- 상세 카드 6장 -->
+    <div class="grid">
+
+      <!-- Card 1 -->
+      <div class="card k1">
+        <div class="card-top">
+          <span class="cmd-badge">/plan</span>
+          <span class="tag">Plan first</span>
+        </div>
+        <h2>계획부터 세우기</h2>
+        <p class="lead">
+          <code>/plan</code>을 입력하면 활성 대화가 <b>plan 모드</b>로 전환돼, Codex가 구현에 들어가기 전
+          실행 계획을 먼저 제안한다. <code>/plan 서비스 마이그레이션 계획 세워줘</code>처럼 인라인 프롬프트를
+          붙일 수 있고, 그 상태에서 내용을 붙여넣거나 이미지를 첨부할 수도 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">구현에 들어가기 전 접근법을 먼저 합의하고 싶을 때</span></div>
+          <div class="kv"><span class="lbl">인라인 인자</span><span class="val"><code>/plan &lt;지시&gt;</code> — 첫 계획 요청으로 사용. 텍스트·이미지 첨부 가능</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">작업이 이미 실행 중이면 <code>/plan</code>은 일시적으로 사용 불가</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /plan 인증 모듈 리팩터링 계획
+  ▸ <span class="c">단계별 실행 계획 제시</span>
+  ▸ 단계마다 승인·거부      <span class="m"># 인라인 검토</span></div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card k2">
+        <div class="card-top">
+          <span class="cmd-badge long">Enter · Tab</span>
+          <span class="tag">Steer mid-run</span>
+        </div>
+        <h2>실행 중 끼어들기</h2>
+        <p class="lead">
+          Codex가 도는 중에 <b>Enter</b>를 누르면 현재 턴에 새 지시를 밀어 넣고, <b>Tab</b>을 누르면
+          다음 턴으로 입력을 큐에 넣는다. 큐에 넣는 입력은 일반 프롬프트, <code>/review</code> 같은 슬래시
+          명령어, <code>!</code> 셸 명령어 모두 가능하다. 작성 칸에서 <b>↑ ↓</b> 로 이전 초안을 오갈 수도 있다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val">Codex 실행 중 작성 칸에 입력 후 Enter 또는 Tab</span></div>
+          <div class="kv"><span class="lbl">Enter vs Tab</span><span class="val">Enter = 현재 턴에 즉시 주입 / Tab = 다음 턴 큐에 적재</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">큐에 <code>/review</code>·<code>!cmd</code>도 가능. 큐된 슬래시는 실행 시점에 파싱</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="m">실행 중...</span>
+<span class="key">Enter</span> 현재 턴에 지시 주입
+<span class="key">Tab</span> <span class="c">다음 턴 큐에 적재</span></div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card k3">
+        <div class="card-top">
+          <span class="cmd-badge">/diff</span>
+          <span class="tag">See the changes</span>
+        </div>
+        <h2>바뀐 것 확인하기</h2>
+        <p class="lead">
+          <code>/diff</code>는 Git diff를 CLI 안에서 보여 준다 — 스테이징한 변경, 아직 스테이징 안 한 변경,
+          그리고 <b>Git이 아직 추적하지 않는 새 파일</b>까지 포함한다. 무엇을 남기고 무엇을 버릴지
+          커밋·테스트 전에 판단하는 용도다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">Codex가 편집을 끝낸 뒤, 커밋·테스트에 들어가기 전</span></div>
+          <div class="kv"><span class="lbl">포함 범위</span><span class="val">스테이징됨 / 안 됨 / 미추적 신규 파일까지 전부</span></div>
+          <div class="kv"><span class="lbl">연계</span><span class="val">한 번 더 눈이 필요하면 <code>/review</code>와 함께. Git 명령은 그대로 병행</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /diff
+  <span class="c">M</span>  src/auth.ts          <span class="m"># 변경됨</span>
+  <span class="y">??</span> src/auth.test.ts     <span class="m"># 미추적 신규</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card k4">
+        <div class="card-top">
+          <span class="cmd-badge">/review</span>
+          <span class="tag">Quality gate</span>
+        </div>
+        <h2>커밋 전 셀프 리뷰</h2>
+        <p class="lead">
+          <code>/review</code>는 Codex에게 작업 트리를 리뷰시킨다. <b>동작 변경</b>과 <b>누락된 테스트</b>에
+          초점을 맞춰 문제를 요약해 준다. 기본적으로 현재 세션 모델을 쓰지만, <code>config.toml</code>에
+          <code>review_model</code>을 지정하면 그 모델로 리뷰한다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">Codex가 작업을 끝냈을 때, 또는 로컬 변경에 한 번 더 눈이 필요할 때</span></div>
+          <div class="kv"><span class="lbl">검토 초점</span><span class="val">동작 변경, 누락된 테스트</span></div>
+          <div class="kv"><span class="lbl">설정</span><span class="val"><code>review_model</code>로 리뷰 전용 모델 지정. 팀 규칙은 <code>code_review.md</code></span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /review
+  <span class="y">⚠</span> 엣지 케이스 미처리       <span class="m"># 동작 변경 지적</span>
+<span class="p">&gt;</span> /diff <span class="c">정확한 변경 확인</span></div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card k5">
+        <div class="card-top">
+          <span class="cmd-badge">/compact</span>
+          <span class="tag">Keep it lean</span>
+        </div>
+        <h2>긴 대화 압축하기</h2>
+        <p class="lead">
+          긴 작업 뒤 <code>/compact</code>를 쓰면 Codex가 이전 턴들을 <b>간결한 요약</b>으로 대체해,
+          핵심 정보는 유지하면서 컨텍스트 창을 비운다. Codex는 대화를 <b>자동으로도 압축</b>하므로,
+          <code>/compact</code>는 수동으로 시점을 당기고 싶을 때 쓴다.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">사용 시점</span><span class="val">스레드가 길어져 컨텍스트 창이 빠듯할 때</span></div>
+          <div class="kv"><span class="lbl">동작</span><span class="val">이전 턴 → 요약으로 치환, 핵심 디테일은 유지</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">Codex가 자동 압축도 수행 — <code>/compact</code>는 수동 트리거</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /compact
+  ▸ 이전 대화 요약 생성     <span class="m"># 핵심만 보존</span>
+  ▸ <span class="c">컨텍스트 여유 확보</span></div>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="card k6">
+        <div class="card-top">
+          <span class="cmd-badge">/resume</span>
+          <span class="tag">Pick it back up</span>
+        </div>
+        <h2>다음에 이어가기</h2>
+        <p class="lead">
+          <code>/resume</code>를 입력하면 저장된 세션 목록에서 골라 그 대화의 전체 transcript를 다시 불러온다 —
+          원래 히스토리는 그대로 둔 채 이어서 작업한다. 새 맥락이 필요하면 <code>/new</code>, 분기해 다른
+          접근을 시험하려면 <code>/fork</code>. 저장된 세션을 분기·복원하려면 셸에서 <code>codex fork</code>·<code>codex resume</code>.
+        </p>
+        <div class="rows">
+          <div class="kv"><span class="lbl">진입 방법</span><span class="val">세션 중 <code>/resume</code> → 저장 세션 피커에서 선택</span></div>
+          <div class="kv"><span class="lbl">vs /new·/fork</span><span class="val"><code>/new</code> 같은 세션 내 새 대화 / <code>/fork</code> 현재 대화 분기</span></div>
+          <div class="kv"><span class="lbl">주의</span><span class="val">저장된 세션 분기·복원은 셸 <code>codex fork</code>·<code>codex resume</code> (Playbook ④ 참고)</span></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="p">&gt;</span> /resume
+  ▸ 저장 세션 피커          <span class="m"># transcript 복원</span>
+<span class="p">$</span> codex resume <span class="c">셸에서 직접</span></div>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- ============ FOOTER ============ -->
+    <footer>
+      <div class="arc">
+        <b>6단계 아크</b>
+        <div class="flow">
+          <code>계획</code> → <code>끼어들기</code> → <code>변경 확인</code> → <code>리뷰</code> → <code>압축</code> → <code>이어가기</code>
+        </div>
+        <div style="margin-top:6px">한 작업을 이 흐름으로 돌리면, 권한·자동화·멀티스레드 플레이북의 고급 기법도 같은 사이클 위에 얹힌다.</div>
+      </div>
+      <div class="stamp">
+        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="caveat">
+          Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /body -->
+</div><!-- /sheet -->
+<script>
+window.COMMAND_DETAILS = {
+  "/plan": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#switch-to-plan-mode-with-plan",
+    sourceLabel: "developers.openai.com · /plan",
+    summary: "플랜 모드로 전환하면서 선택적으로 프롬프트를 함께 전송합니다. 구현 작업을 시작하기 전에 Codex에 실행 계획을 먼저 제안하도록 요청할 때 사용합니다. 형식은 <code>/plan</code> 또는 <code>/plan &lt;목표 텍스트&gt;</code>입니다.",
+    example: "/plan\n/plan 결제 모듈 리팩터링 계획을 제안해 줘",
+    caution: "이미 작업이 실행 중일 때는 이 명령을 일시적으로 사용할 수 없습니다.",
+    version: "rust-v0.134.0"
+  },
+  "/diff": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#review-changes-with-diff",
+    sourceLabel: "developers.openai.com · /diff",
+    summary: "Git이 아직 추적하지 않는 파일까지 포함해 Git diff를 보여줍니다. 커밋이나 테스트 실행 전에 Codex가 만든 편집을 확인할 때 사용합니다. 스테이지된 변경, 스테이지되지 않은 변경, 추적되지 않는 파일을 함께 출력해 의사결정에 활용할 수 있습니다.",
+    example: "/diff",
+    caution: "",
+    version: "rust-v0.134.0"
+  },
+  "/review": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#ask-for-a-working-tree-review-with-review",
+    sourceLabel: "developers.openai.com · /review",
+    summary: "Codex에 작업 트리 검토를 요청합니다. Codex가 작업을 마친 뒤 또는 로컬 변경을 다른 시각으로 확인받고 싶을 때 실행합니다. Codex는 동작 변경과 누락된 테스트를 중심으로 발견한 이슈를 요약해 보고합니다.",
+    example: "/review",
+    caution: "",
+    version: "rust-v0.134.0"
+  },
+  "/compact": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#keep-transcripts-lean-with-compact",
+    sourceLabel: "developers.openai.com · /compact",
+    summary: "현재 보이는 대화를 요약해 토큰을 확보합니다. 긴 실행 이후 컨텍스트 윈도우를 넘기지 않으면서 Codex가 핵심 정보를 유지하도록 할 때 사용합니다. <code>/compact</code>를 입력한 뒤 Codex가 대화 요약을 제안하면 이를 승인합니다.",
+    example: "/compact",
+    caution: "",
+    version: "rust-v0.134.0"
+  },
+  "/resume": {
+    source: "https://developers.openai.com/codex/cli/slash-commands#resume-a-saved-conversation-with-resume",
+    sourceLabel: "developers.openai.com · /resume",
+    summary: "세션 목록에서 저장된 대화를 다시 불러옵니다. 이전 CLI 세션에서 진행하던 작업을 처음부터 다시 시작하지 않고 이어서 진행할 때 사용합니다. <code>/resume</code>을 입력하고 Enter를 누른 뒤 선택기에서 세션을 선택합니다.",
+    example: "/resume",
+    caution: "",
+    version: "rust-v0.134.0"
+  }
+};
+</script>
+<script src="../_shared/cmd-detail.js"></script>
+</body>
+</html>
