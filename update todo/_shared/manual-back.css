@@ -1,0 +1,32 @@
+/* manual-back.css — 매뉴얼 본문 상단 "← 매뉴얼 허브" 백버튼 (16편 공용) */
+
+.manual-back-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 22px 0;
+}
+
+.manual-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: 'Pretendard', -apple-system, "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: #5f6b7a;
+  text-decoration: none;
+  border: 1px solid #d8dce4;
+  border-radius: 999px;
+  background: #ffffff;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.manual-back:hover {
+  color: #1c2433;
+  border-color: #8b95a3;
+  background: #f4f5f8;
+}
+
+@media (max-width: 880px) {
+  .manual-back-wrap { padding: 14px 14px 0; }
+}

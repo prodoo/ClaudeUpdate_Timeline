@@ -1,0 +1,79 @@
+/* manual-search.css — 매뉴얼 허브 명령어 검색 UI */
+
+.cmd-search {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: min(420px, 100%);
+  margin: 8px 0 4px;
+}
+.cmd-search-input {
+  width: 100%;
+  padding: 9px 36px 9px 34px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.cmd-search-input::placeholder { color: var(--ink-dim); }
+.cmd-search-input:focus { border-color: var(--accent-soft); }
+.cmd-search-icon {
+  position: absolute;
+  left: 13px;
+  color: var(--ink-dim);
+  font-size: 13px;
+  pointer-events: none;
+}
+.cmd-search-clear {
+  position: absolute;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-dim);
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cmd-search-clear:hover { background: var(--hover); color: var(--ink); }
+.cmd-search-clear[hidden] { display: none; }
+
+.cmd-search-hint {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  letter-spacing: .02em;
+}
+.cmd-search-hint[hidden] { display: none; }
+.cmd-search-hint b { color: var(--ink); font-weight: 600; }
+
+.cards .card.is-hidden { display: none; }
+
+.cmd-search-empty {
+  grid-column: 1 / -1;
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--ink-dim);
+  font-size: 13px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  background: var(--bg-soft);
+}
+.cmd-search-empty[hidden] { display: none; }
+.cmd-search-empty code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--ink-soft);
+  padding: 1px 6px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 11.5px;
+}

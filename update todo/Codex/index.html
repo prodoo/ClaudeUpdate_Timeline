@@ -91,6 +91,7 @@ a { color: inherit; }
   .cards { grid-template-columns: 1fr; }
 }
 </style>
+<link rel="stylesheet" href="../_shared/manual-search.css">
 </head>
 <body>
 <header class="hdr">
@@ -99,6 +100,13 @@ a { color: inherit; }
       <a href="../../codex.html" class="back">← ChatGPT 2025–26 타임라인</a>
       <h1 class="serif">Codex CLI <em>매뉴얼</em></h1>
       <p class="lede">OpenAI Codex CLI 사용 노하우를 단일 파일 HTML로 정리한 시리즈. 명령어 나열형 <b>레퍼런스 2편</b>과 "언제·주의·실전 예시"까지 깊게 파는 <b>플레이북 5편</b> — 시리즈 완결. 전부 한국어 · 정적 HTML · 의존성 없음.</p>
+      <div class="cmd-search">
+        <span class="cmd-search-icon" aria-hidden="true">⌕</span>
+        <input class="cmd-search-input" id="cmd-search-input" type="search" autocomplete="off" spellcheck="false"
+               placeholder="명령어로 검색 — /model, --sandbox, codex exec, config.toml …">
+        <button class="cmd-search-clear" type="button" aria-label="검색어 지우기" hidden>×</button>
+      </div>
+      <div class="cmd-search-hint" id="cmd-search-hint" hidden></div>
     </div>
     <button class="dark-btn" id="dark-btn"><span>☾</span><span>DARK</span></button>
   </div>
@@ -109,13 +117,13 @@ a { color: inherit; }
   <section class="section">
     <div class="section-h"><span>Reference 계열</span><span class="cnt">2편 · 명령어 나열형</span></div>
     <div class="cards">
-      <a class="card" href="codex-cli-reference-essentials.html">
+      <a class="card" href="codex-cli-reference-essentials.html" data-commands="/model /fast /plan /permissions /status /personality /new /clear /compact /resume /fork /review /diff /copy /init /mention codex codex exec codex resume codex review codex mcp codex cloud -s --sandbox -a --ask-for-approval -p --profile --cd --search -c key=value">
         <div class="card-top"><span class="card-tag">Reference · Essentials</span><span class="card-arr">↗</span></div>
         <h3>핵심판</h3>
         <p class="desc">패널 A~E — 세션 조종 / 컨텍스트·스레드 / 검토·파일 / 핵심 서브커맨드 / 자주 쓰는 플래그.</p>
         <p class="fn">codex-cli-reference-essentials.html</p>
       </a>
-      <a class="card" href="codex-cli-reference-complete.html">
+      <a class="card" href="codex-cli-reference-complete.html" data-commands="/model /fast /personality /plan /goal /status /permissions /experimental /debug-config /sandbox-add-read-dir /new /clear /compact /resume /fork /side /agent /review /diff /copy /mention /init /mcp /apps /plugins /statusline /title /keymap /theme /ps /stop /feedback /logout /quit /exit codex codex mcp codex exec codex mcp-server codex resume codex remote-control codex fork codex app codex app-server codex review codex features codex cloud codex execpolicy codex apply codex completion codex login codex logout codex update -s --sandbox --cd -a --ask-for-approval -c key=value -p --profile --add-write-dir --search --remote --json --output-last-message --full-auto --yolo /vim /hooks">
         <div class="card-top"><span class="card-tag">Reference · Complete</span><span class="card-arr">↗</span></div>
         <h3>전체판</h3>
         <p class="desc">패널 A~H + 버전 의존 스트립 — 공개 명령어 전수, 서브커맨드(wide), CLI 글로벌 플래그(wide), 미수록 항목 별도 분리.</p>
@@ -127,35 +135,35 @@ a { color: inherit; }
   <section class="section">
     <div class="section-h"><span>Playbook 계열</span><span class="cnt">5편 · 시리즈 완결 · 6단계 서사 아크</span></div>
     <div class="cards">
-      <a class="card" href="codex-cli-playbook-01-setup.html">
+      <a class="card" href="codex-cli-playbook-01-setup.html" data-commands="codex /model /fast /permissions /init config.toml /status /debug-config 설치 인증 환경">
         <div class="card-top"><span class="card-tag">Playbook 01 · Setup</span><span class="card-arr">↗</span></div>
         <h3>환경 세팅</h3>
         <p class="desc">codex(설치·인증) · /model · /fast · /permissions · /init · config.toml · /status · /debug-config.</p>
         <p class="arc">설치 → 모델 → 권한 → 초기화 → 설정 → 점검</p>
         <p class="fn">codex-cli-playbook-01-setup.html</p>
       </a>
-      <a class="card" href="codex-cli-playbook-02-task-flow.html">
+      <a class="card" href="codex-cli-playbook-02-task-flow.html" data-commands="/plan Enter Tab /diff /review /compact /resume 작업 완주 task flow">
         <div class="card-top"><span class="card-tag">Playbook 02 · Task Flow</span><span class="card-arr">↗</span></div>
         <h3>한 작업 완주</h3>
         <p class="desc">/plan · Enter·Tab(실행 중 끼어들기) · /diff · /review · /compact · /resume.</p>
         <p class="arc">계획 → 끼어들기 → 차이 → 검토 → 압축 → 재개</p>
         <p class="fn">codex-cli-playbook-02-task-flow.html</p>
       </a>
-      <a class="card" href="codex-cli-playbook-03-automation.html">
+      <a class="card" href="codex-cli-playbook-03-automation.html" data-commands="codex exec --json --output-last-message --sandbox -a never codex mcp Skills Hooks codex cloud codex apply 자동화 비대화형">
         <div class="card-top"><span class="card-tag">Playbook 03 · Automation</span><span class="card-arr">↗</span></div>
         <h3>비대화형 자동화</h3>
         <p class="desc">codex exec · --json · --output-last-message · --sandbox · -a never · codex mcp · Skills · Hooks · codex cloud · apply.</p>
         <p class="arc">실행 → 출력 → 샌드박스 → 확장 → 클라우드 → 적용</p>
         <p class="fn">codex-cli-playbook-03-automation.html</p>
       </a>
-      <a class="card" href="codex-cli-playbook-04-context-threads.html">
+      <a class="card" href="codex-cli-playbook-04-context-threads.html" data-commands="/new /clear /fork /side /agent /resume /title /statusline 컨텍스트 스레드 멀티스레드">
         <div class="card-top"><span class="card-tag">Playbook 04 · Context · Threads</span><span class="card-arr">↗</span></div>
         <h3>컨텍스트 · 멀티스레드</h3>
         <p class="desc">/new · /clear · /fork · /side · /agent · /resume · /title · /statusline.</p>
         <p class="arc">시작 → 분기 → 사이드 → 에이전트 → 재개 → 메타</p>
         <p class="fn">codex-cli-playbook-04-context-threads.html</p>
       </a>
-      <a class="card" href="codex-cli-playbook-05-permissions.html">
+      <a class="card" href="codex-cli-playbook-05-permissions.html" data-commands="--sandbox -a --ask-for-approval permission profiles /experimental Smart Approvals /sandbox-add-read-dir /debug-config 권한 보안">
         <div class="card-top"><span class="card-tag">Playbook 05 · Permissions</span><span class="card-arr">↗</span></div>
         <h3>권한 · 보안 심화</h3>
         <p class="desc">--sandbox · -a/--ask-for-approval · permission profiles · /experimental (Smart Approvals) · /sandbox-add-read-dir · /debug-config.</p>
@@ -181,5 +189,6 @@ btn.addEventListener("click", () => {
   else { document.documentElement.dataset.theme = "dark"; localStorage.setItem("theme", "dark"); }
 });
 </script>
+<script src="../_shared/manual-search.js"></script>
 </body>
 </html>
