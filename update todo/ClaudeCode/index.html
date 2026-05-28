@@ -197,10 +197,19 @@ a { color: inherit; }
 <script>
 const btn = document.getElementById("dark-btn");
 if (localStorage.getItem("theme") === "dark") document.documentElement.dataset.theme = "dark";
+function syncDarkLabel() {
+  const spans = btn.getElementsByTagName("span");
+  if (spans.length < 2) return;
+  const dark = document.documentElement.dataset.theme === "dark";
+  spans[0].textContent = dark ? "☀" : "☾";
+  spans[1].textContent = dark ? "LIGHT" : "DARK";
+}
+syncDarkLabel();
 btn.addEventListener("click", () => {
   const cur = document.documentElement.dataset.theme;
   if (cur === "dark") { delete document.documentElement.dataset.theme; localStorage.setItem("theme", "light"); }
   else { document.documentElement.dataset.theme = "dark"; localStorage.setItem("theme", "dark"); }
+  syncDarkLabel();
 });
 </script>
 <script src="../_shared/manual-search.js"></script>

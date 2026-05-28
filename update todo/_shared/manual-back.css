@@ -1,9 +1,13 @@
-/* manual-back.css — 매뉴얼 본문 상단 "← 매뉴얼 허브" 백버튼 (16편 공용) */
+/* manual-back.css — 매뉴얼 본문 상단 "← 매뉴얼 허브" 백버튼 + 다크 토글 (16편 공용) */
 
 .manual-back-wrap {
   max-width: 1180px;
   margin: 0 auto;
   padding: 18px 22px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
 .manual-back {
@@ -25,6 +29,40 @@
   color: #1c2433;
   border-color: #8b95a3;
   background: #f4f5f8;
+}
+
+.manual-back-wrap .dark-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: 'Pretendard', -apple-system, "Segoe UI", sans-serif;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: #5f6b7a;
+  border: 1px solid #d8dce4;
+  border-radius: 999px;
+  background: #ffffff;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.manual-back-wrap .dark-btn:hover {
+  color: #1c2433;
+  border-color: #8b95a3;
+  background: #f4f5f8;
+}
+
+[data-theme="dark"] .manual-back,
+[data-theme="dark"] .manual-back-wrap .dark-btn {
+  color: #C8BCA5;
+  background: #28231D;
+  border-color: #3A332B;
+}
+[data-theme="dark"] .manual-back:hover,
+[data-theme="dark"] .manual-back-wrap .dark-btn:hover {
+  color: #F2EAD9;
+  background: #322B23;
+  border-color: #5C544A;
 }
 
 @media (max-width: 880px) {

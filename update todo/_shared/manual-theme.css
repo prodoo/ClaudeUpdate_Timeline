@@ -1,0 +1,123 @@
+/* manual-theme.css — 매뉴얼 본문 16편 다크모드 (override only, 본문 <style> 미수정) */
+
+/* ===== 변수 override — 본문 :root 토큰을 다크 톤으로 갈아끼움 ===== */
+[data-theme="dark"] {
+  --navy: #14191F;
+  --navy2: #1A2230;
+  --ink: #F2EAD9;
+  --gray: #C8BCA5;
+  --soft-gray: #8A7F70;
+  --line: #3A332B;
+  --bg: #28231D;        /* .sheet, .card, .sumcard, .panel 흰 배경 → 다크 패널 */
+  --soft: #322B23;      /* code 배경 등 light gray → 다크 soft */
+  --page: #18140F;      /* reference 4편 페이지 배경 */
+  --panel: #28231D;     /* cheat-sheet.html 고유 토큰 (.panel 배경) */
+}
+
+/* ===== 직접 selector override (하드코딩 hex 영역) ===== */
+
+/* 페이지 배경 — playbook 12편은 body에 #dfe3ea 직접 지정 */
+[data-theme="dark"] body { background: #18140F; }
+
+/* .sheet 그림자 */
+[data-theme="dark"] .sheet { box-shadow: 0 8px 44px rgba(0,0,0,.55); }
+
+/* hero (이미 navy. 미세 톤만) */
+[data-theme="dark"] .eyebrow { color: #9FB0CC; }
+[data-theme="dark"] .hero h1 .acc { color: #6FE2D2; }
+
+/* summary box (playbook) + hero-note (reference) */
+[data-theme="dark"] .summary-box { border-color: #3A4860; }
+[data-theme="dark"] .summary-box .thesis { color: #D8E0EC; }
+[data-theme="dark"] .mini code { color: #F2EAD9; }
+[data-theme="dark"] .mini span { color: #9FB0CC; }
+[data-theme="dark"] .hero-note { border-color: #3A4860; color: #D8E0EC; }
+[data-theme="dark"] .hero-note b { color: #F2EAD9; }
+
+/* sumcard (playbook 요약 3장) */
+[data-theme="dark"] .sumcard p { color: #C8BCA5; }
+[data-theme="dark"] .sumcard p b { color: #F2EAD9; }
+
+/* detail card (playbook 6장) */
+[data-theme="dark"] .card h2 { color: #F2EAD9; }
+[data-theme="dark"] .card .lead { color: #C8BCA5; }
+[data-theme="dark"] .card .lead b { color: #F2EAD9; }
+[data-theme="dark"] .card .lead code { color: #F2EAD9; }
+
+/* kv 행 */
+[data-theme="dark"] .kv { border-top-color: #3A332B; }
+[data-theme="dark"] .kv .k { color: #8A7F70; }
+[data-theme="dark"] .kv .v { color: #C8BCA5; }
+[data-theme="dark"] .kv .v b { color: #F2EAD9; }
+[data-theme="dark"] .kv .v code { color: #F2EAD9; background: #322B23; }
+
+/* example 박스 (playbook) */
+[data-theme="dark"] .example { background: #0F141B; }
+[data-theme="dark"] .example .ex-lbl { color: #8898B5; }
+[data-theme="dark"] .example .ex-body { color: #E8ECF3; }
+[data-theme="dark"] .example .ex-body .key { border-color: #44516A; color: #FFFFFF; }
+
+/* footer (playbook + reference 공용) */
+[data-theme="dark"] footer { color: #9AA3B2; border-top-color: #3A332B; }
+[data-theme="dark"] footer b { color: #C8BCA5; }
+
+/* ===== cheat-sheet 2편 고유 selector ===== */
+[data-theme="dark"] .cmd { border-top-color: #3A332B; }
+[data-theme="dark"] .cmd code { color: #F2EAD9; }
+[data-theme="dark"] .cmd .desc { color: #C8BCA5; }
+[data-theme="dark"] .cmd .desc b { color: #F2EAD9; }
+[data-theme="dark"] .subcard h3 { color: #F2EAD9; }
+[data-theme="dark"] .subcard p { color: #C8BCA5; }
+[data-theme="dark"] .subcard code,
+[data-theme="dark"] .cmd-strip code { background: #322B23; color: #F2EAD9; }
+
+/* ===== reference 4편 추가 selector ===== */
+
+[data-theme="dark"] .panel-title { color: #F2EAD9; }
+[data-theme="dark"] .panel-title .en { color: #8A7F70; }
+[data-theme="dark"] .panel-head { border-bottom-color: #3A332B; }
+
+[data-theme="dark"] .row { border-top-color: #3A332B; }
+[data-theme="dark"] .row .desc { color: #C8BCA5; }
+[data-theme="dark"] .row .desc code { color: #F2EAD9; background: #322B23; }
+
+[data-theme="dark"] .legend { color: #C8BCA5; }
+[data-theme="dark"] .labelstrip { color: #C8BCA5; background: #322B23; border-left-color: #E09A2D; }
+
+[data-theme="dark"] .arc { color: #C8BCA5; }
+[data-theme="dark"] .arc b { color: #F2EAD9; }
+[data-theme="dark"] .arc .flow code { color: #8FA5F0; }
+[data-theme="dark"] .stamp .ver { color: #F2EAD9; }
+[data-theme="dark"] .stamp .caveat { color: #8A7F70; }
+
+/* ===== cmd-detail drawer (12 playbook + cheat-sheet 인라인 정의 공용) ===== */
+
+[data-theme="dark"] .cmd-detail-drawer {
+  background: #1F1B17;
+  color: #F2EAD9;
+  border-left-color: #3A332B;
+  box-shadow: -20px 0 60px rgba(0,0,0,.6), -2px 0 8px rgba(0,0,0,.4);
+}
+[data-theme="dark"] .cmd-detail-backdrop { background: rgba(0,0,0,.6); }
+[data-theme="dark"] .cmd-detail-head { background: #1F1B17; border-bottom-color: #3A332B; }
+[data-theme="dark"] .cmd-detail-close { color: #C8BCA5; background: #28231D; border-color: #3A332B; }
+[data-theme="dark"] .cmd-detail-close:hover { color: #F2EAD9; background: #322B23; }
+[data-theme="dark"] .cmd-detail-label { color: #8A7F70; }
+[data-theme="dark"] .cmd-detail-summary { color: #C8BCA5; }
+[data-theme="dark"] .cmd-detail-summary b { color: #F2EAD9; }
+[data-theme="dark"] .cmd-detail-example {
+  background: #14110D;
+  color: #E8ECF3;
+  border-color: #3A332B;
+}
+[data-theme="dark"] .cmd-detail-caution {
+  color: #F0CC8A;
+  background: rgba(240,168,48,.12);
+}
+[data-theme="dark"] .cmd-detail-caution code {
+  color: #F0CC8A;
+  background: rgba(240,168,48,.22);
+}
+[data-theme="dark"] .cmd-detail-version { color: #8A7F70; }
+[data-theme="dark"] .row.cmd-detail-trigger:hover,
+[data-theme="dark"] .cmd.cmd-detail-trigger:hover { background: rgba(43,179,163,.14); }

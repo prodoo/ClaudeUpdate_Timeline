@@ -831,12 +831,20 @@ function applyDark(d) {
   $dark.querySelector("span:first-child").textContent = d ? "☀" : "☾";
   $dark.querySelector("span:last-child").textContent = d ? "LIGHT" : "DARK";
 }
-const savedDark = localStorage.getItem("codex2026-dark") === "1";
+// 1회성 마이그레이션: codex2026-dark → theme (사이트 전체 단일 키 통일)
+const legacyDark = localStorage.getItem("codex2026-dark");
+if (legacyDark !== null) {
+  if (!localStorage.getItem("theme")) {
+    localStorage.setItem("theme", legacyDark === "1" ? "dark" : "light");
+  }
+  localStorage.removeItem("codex2026-dark");
+}
+const savedDark = localStorage.getItem("theme") === "dark";
 applyDark(savedDark);
 $dark.addEventListener("click", () => {
   const cur = document.documentElement.getAttribute("data-theme") === "dark";
   applyDark(!cur);
-  localStorage.setItem("codex2026-dark", !cur ? "1" : "0");
+  localStorage.setItem("theme", !cur ? "dark" : "light");
   render();
 });
 
