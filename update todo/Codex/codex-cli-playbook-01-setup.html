@@ -543,6 +543,7 @@ model = <span class="c">"gpt-5.5"</span>
           <code>/status</code>는 활성 모델·승인 정책·쓰기 가능 루트·토큰 사용량을 한 화면에 보여 준다.
           설정이 의도대로 안 먹을 땐 <code>/debug-config</code>로 설정 레이어 우선순위와 정책 출처를 들여다본다 —
           <code>config.toml</code> 값과 실제 적용값이 왜 다른지 추적하는 용도다.
+          셸에서 <code>codex doctor</code>를 돌리면 환경·Git·터미널·app-server·스레드 진단까지 한 번에 점검한다(v0.131+).
         </p>
         <div class="rows">
           <div class="kv"><span class="lbl">사용 시점</span><span class="val">작업 시작 전, 또는 설정이 의심스러울 때</span></div>
@@ -559,7 +560,7 @@ model = <span class="c">"gpt-5.5"</span>
     </div><!-- /grid -->
 
     <!-- ============ FOOTER ============ -->
-    <!-- LAST_CHECKED: 2026-05-28 Codex CLI v0.130.x -->
+    <!-- LAST_CHECKED: 2026-05-31 Codex CLI v0.135.0 -->
     <footer>
       <div class="arc">
         <b>6단계 아크</b>
@@ -569,10 +570,10 @@ model = <span class="c">"gpt-5.5"</span>
         <div style="margin-top:6px">한 번 깔아 두면 이후 플레이북(작업 완주 · 자동화 · 멀티스레드 · 권한 심화)이 모두 이 바닥 위에서 돈다.</div>
       </div>
       <div class="stamp">
-        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="ver">2026년 5월 31일 기준 · v0.135.0</div>
         <div class="caveat">
           Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
-          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/ps</code> 등 일부는 experimental.
         </div>
       </div>
     </footer>

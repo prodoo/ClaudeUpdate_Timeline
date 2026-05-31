@@ -422,6 +422,10 @@
             <div class="desc">완료 조건을 설정하면 충족될 때까지 여러 턴에 걸쳐 작업 지속</div>
           </div>
           <div class="cmd">
+            <code>/loop [간격]</code>
+            <div class="desc">세션이 열린 동안 프롬프트를 반복 실행; 간격 생략 시 자동 속도 조절 (별칭 <b>/proactive</b>)</div>
+          </div>
+          <div class="cmd">
             <code>/fast</code>
             <div class="desc">패스트 모드 토글; 빠른 반복 작업에 유용</div>
           </div>
@@ -492,7 +496,7 @@
           </div>
           <div class="subcard">
             <h3>클라우드 및 원격 제어</h3>
-            <p><code>/remote-control</code>(별칭 <code>/rc</code>)로 클라우드 세션 연결, <code>/schedule</code>로 예약 작업 실행, <code>/teleport</code>로 기기 간 세션 전환.</p>
+            <p><code>/remote-control</code>(별칭 <code>/rc</code>)로 클라우드 세션 연결, <code>/schedule</code>로 예약 작업 실행, <code>/teleport</code>로 기기 간 세션 전환, <code>/remote-env</code>로 기본 클라우드 환경 자동 구성.</p>
           </div>
         </div>
         <div class="cmds" style="padding-top:2px;">
@@ -510,10 +514,10 @@
 
   </div>
 
-  <!-- LAST_CHECKED: 2026-05-28 Claude Code v2.1.141 -->
+  <!-- LAST_CHECKED: 2026-05-31 Claude Code v2.1.158 -->
   <footer>
     <span>Claude Code Command Reference</span>
-    <span>2026년 5월 14일 기준 · 버전 업데이트에 따라 일부 명령어는 변경될 수 있음</span>
+    <span>2026년 5월 31일 기준 · 버전 업데이트에 따라 일부 명령어는 변경될 수 있음</span>
   </footer>
 
 </div>
@@ -689,6 +693,14 @@
       sourceLabel: "code.claude.com · 명령어 · /goal",
       summary: "<a href=\"https://code.claude.com/docs/ko/goal\" target=\"_blank\" rel=\"noopener noreferrer\"><b>goal</b></a>을 설정합니다. Claude는 조건이 충족될 때까지 여러 턴에 걸쳐 계속 작업합니다. 인수 없이 현재 또는 가장 최근에 달성한 goal을 표시합니다. <code>clear</code>, <code>stop</code>, <code>off</code>, <code>reset</code>, <code>none</code> 또는 <code>cancel</code>은 활성 goal을 조기에 제거합니다.",
       example: "# goal 설정\n> /goal all tests pass\n\n# 현재 또는 가장 최근에 달성한 goal 표시\n> /goal\n\n# 활성 goal 조기에 제거\n> /goal clear",
+      caution: "",
+      version: "v2.1.141"
+    },
+    "/loop [간격]": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /loop (별칭 /proactive)",
+      summary: "<b>Skill</b>. 세션이 열려 있는 동안 프롬프트를 반복적으로 실행합니다. 간격을 생략하면 Claude가 반복 사이에 자동으로 속도를 조절합니다. 프롬프트를 생략하면 Claude가 자동 유지 관리 검사를 실행하거나, 사용 가능한 경우, <code>.claude/loop.md</code>의 프롬프트를 실행합니다. 예: <code>/loop 5m check if the deploy finished</code>. 별칭: <code>/proactive</code>.",
+      example: "/loop 5m check if the deploy finished",
       caution: "",
       version: "v2.1.141"
     },

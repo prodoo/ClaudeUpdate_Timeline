@@ -424,8 +424,7 @@
     </div>
     <div class="hero-note">
       Codex CLI의 공개 <b>슬래시 명령어</b>와 <b>codex 서브커맨드</b>를 빠짐없이 정리한 전체판.
-      experimental · Windows 전용 · deprecated 항목은 라벨로 구분하고, 공식 슬래시 문서에 아직 없는
-      항목은 하단 〈버전 의존〉으로 분리한다.
+      experimental · Windows 전용 · deprecated 항목은 라벨로 구분한다.
     </div>
   </div>
 
@@ -451,8 +450,8 @@
           <div class="row"><code>/fast</code><span class="desc">Fast 모드 <code>on|off|status</code></span></div>
           <div class="row"><code>/personality</code><span class="desc">응답 스타일 (friendly·pragmatic·none)</span></div>
           <div class="row"><code>/plan</code><span class="desc">plan 모드 진입 — 인라인 프롬프트 가능</span></div>
-          <div class="row"><code>/goal</code><span class="desc">장기 작업 목표 설정·조회·정리<span class="minitag exp">EXP</span></span></div>
-          <div class="row"><code>/status</code><span class="desc">모델·정책·쓰기 루트·토큰 요약</span></div>
+          <div class="row"><code>/goal</code><span class="desc">작업 목표 설정·일시정지·재개·확인·해제</span></div>
+          <div class="row"><code>/status</code><span class="desc">모델·정책·쓰기 루트·토큰 요약 — 원격 연결 시 원격 정보·서버 버전 포함</span></div>
         </div>
       </div>
 
@@ -484,6 +483,7 @@
           <div class="row"><code>/fork</code><span class="desc">현재 대화를 새 스레드로 분기</span></div>
           <div class="row"><code>/side</code><span class="desc">휘발성 곁가지 대화</span></div>
           <div class="row"><code>/agent</code><span class="desc">활성 에이전트 스레드 전환</span></div>
+          <div class="row"><code>@</code><span class="desc">멘션 선택기 — 파일·디렉토리·플러그인·스킬 한 곳에서 검색 (v0.131)</span></div>
         </div>
       </div>
 
@@ -525,6 +525,8 @@
           <div class="row"><code>/statusline</code><span class="desc">푸터 상태줄 항목 구성</span></div>
           <div class="row"><code>/title</code><span class="desc">터미널 창·탭 제목 항목 구성</span></div>
           <div class="row"><code>/keymap</code><span class="desc">TUI 단축키 리매핑</span></div>
+          <div class="row"><code>/vim</code><span class="desc">컴포저 Vim 모드 토글 (v0.129)</span></div>
+          <div class="row"><code>/hooks</code><span class="desc">라이프사이클 훅 조회 (v0.129)</span></div>
           <div class="row"><code>/theme</code><span class="desc">테마 미리보기·저장</span></div>
           <div class="row"><code>/ps</code><span class="desc">백그라운드 터미널 보기<span class="minitag exp">EXP</span></span></div>
           <div class="row"><code>/stop</code><span class="desc">백그라운드 터미널 중지 — 별칭 <code>/clean</code></span></div>
@@ -557,6 +559,7 @@
           <div class="row"><code>codex completion</code><span class="desc">셸 자동완성 스크립트 생성</span></div>
           <div class="row"><code>codex login · logout</code><span class="desc">인증 / 저장된 자격증명 제거</span></div>
           <div class="row"><code>codex update</code><span class="desc">CLI를 최신 버전으로 업데이트</span></div>
+          <div class="row"><code>codex doctor</code><span class="desc">환경·Git·터미널·app-server·스레드 진단 (v0.131+)</span></div>
         </div>
       </div>
 
@@ -571,12 +574,13 @@
           <div class="row"><code>--cd</code><span class="desc">에이전트 작업 디렉터리 지정</span></div>
           <div class="row"><code>-a, --ask-for-approval</code><span class="desc"><code>untrusted</code>·<code>on-request</code>·<code>never</code> (<code>on-failure</code><span class="minitag dep">DEP</span>)</span></div>
           <div class="row"><code>-c key=value</code><span class="desc">config 값 1회 오버라이드</span></div>
-          <div class="row"><code>-p, --profile</code><span class="desc">config.toml의 권한·설정 프로파일 로드</span></div>
+          <div class="row"><code>-p, --profile</code><span class="desc">config.toml 권한·설정 프로파일 로드 — CLI·TUI 흐름의 기본 프로필 선택기 (v0.134)</span></div>
           <div class="row"><code>--add-write-dir</code><span class="desc">쓰기 가능 디렉터리 추가 (반복 가능)</span></div>
           <div class="row"><code>--search</code><span class="desc">라이브 웹 검색 활성화 (기본 cached)</span></div>
           <div class="row"><code>--remote</code><span class="desc">원격 app-server WebSocket 연결</span></div>
           <div class="row"><code>--json</code><span class="desc">줄 단위 JSON 이벤트 출력 (<code>codex exec</code>)</span></div>
           <div class="row"><code>--output-last-message</code><span class="desc">최종 응답을 파일로 저장 (<code>codex exec</code>)</span></div>
+          <div class="row"><code>--output-schema</code><span class="desc">구조화 JSON 출력 스키마 (<code>codex exec resume</code>, v0.132)</span></div>
           <div class="row"><code>--full-auto</code><span class="desc">편의 플래그<span class="minitag dep">DEP</span> — 명시적 <code>-s</code>·<code>-a</code> 권장</span></div>
           <div class="row"><code>--yolo</code><span class="desc">샌드박스·승인 모두 우회 — 정식명 <code>--dangerously-bypass-approvals-and-sandbox</code>, 격리 환경만</span></div>
         </div>
@@ -584,16 +588,9 @@
 
     </div><!-- /panels -->
 
-    <!-- ============ VERSION-DEPENDENT STRIP ============ -->
-    <div class="labelstrip">
-      <h4>버전 의존 · 공식 슬래시 문서 미수록</h4>
-      <div class="sub">3자 자료·체인지로그 기반으로 존재가 보고됐으나, 현재 공식 슬래시 명령어 문서에는 등재돼 있지 않다. 사용 전 <code style="font-family:var(--mono);font-size:10px">codex --version</code>과 공식 docs로 확인할 것.</div>
-      <div class="lrow"><code>/vim</code><span class="desc">TUI 컴포저 모달 Vim 편집 — 3자 자료(치트시트) 기반, 공식 docs 미확인</span></div>
-      <div class="lrow"><code>/hooks</code><span class="desc">TUI 훅 브라우저 (활성 훅 조회·토글) — 3자 자료상 v0.129 추가 보고, 공식 슬래시 문서 미수록</span></div>
-    </div>
 
     <!-- ============ FOOTER ============ -->
-    <!-- LAST_CHECKED: 2026-05-28 Codex CLI v0.130.x -->
+    <!-- LAST_CHECKED: 2026-05-31 Codex CLI v0.135.0 -->
     <footer>
       <div class="arc">
         <b>전체판</b>
@@ -601,7 +598,7 @@
         명령어를 "언제·왜·어떻게" 쓰는지는 플레이북 5편 — 환경 세팅 · 작업 완주 · 자동화 · 멀티스레드 · 권한 심화 — 에서 다룬다.</div>
       </div>
       <div class="stamp">
-        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="ver">2026년 5월 31일 기준 · v0.135.0</div>
         <div class="caveat">
           Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
           <code>codex --version</code>과 공식 docs로 확인할 것.
@@ -660,16 +657,24 @@
     },
     "/goal": {
       source: "https://developers.openai.com/codex/cli/slash-commands#set-or-view-a-task-goal-with-goal",
-      sourceLabel: "developers.openai.com · /goal (experimental)",
+      sourceLabel: "developers.openai.com · /goal",
       summary: "작업 목표를 설정·일시정지·재개·확인·해제한다. 장기 작업 동안 Codex가 추적할 영속적 목표(최대 4,000자)를 등록해 두면, 이후 턴에서 목표에 정렬해 진행 상황을 점검한다. <code>/goal &lt;objective&gt;</code>로 설정하고, 인자 없는 <code>/goal</code>로 확인하며, <code>/goal pause</code>·<code>/goal resume</code>·<code>/goal clear</code>로 제어한다.",
       example: "/goal Ship the migration script and add coverage tests",
-      caution: "experimental — <code>features.goals</code>가 활성화돼 있어야 사용할 수 있다. 목표 본문은 비어 있지 않아야 하고 4,000자 이내여야 한다.",
+      caution: "v0.133.0부터 목표 기능이 기본 활성화되어 실험 기능에서 정식 기능으로 전환됐다. 목표 본문은 비어 있지 않아야 하고 4,000자 이내여야 한다.",
       version: "v0.49"
+    },
+    "@": {
+      source: "https://github.com/openai/codex/releases/tag/rust-v0.131.0",
+      sourceLabel: "github.com/openai/codex · @ 멘션 선택기 (v0.131)",
+      summary: "입력 중 <code>@</code>를 치면 <b>멘션 선택기</b>가 열려 파일·디렉토리·플러그인·스킬을 한 곳에서 검색해 대화에 첨부한다. v0.131.0에서 멘션 선택기가 이 네 종류를 단일 선택기로 통합하도록 확장됐다.",
+      example: "@src/api    # 선택기에서 검색·첨부",
+      caution: "",
+      version: "v0.131"
     },
     "/status": {
       source: "https://developers.openai.com/codex/cli/slash-commands#inspect-the-session-with-status",
       sourceLabel: "developers.openai.com · /status",
-      summary: "세션 설정과 토큰 사용량을 표시한다. 활성 모델, 승인 정책, 쓰기 가능 루트, 남아 있는 컨텍스트 용량을 한 번에 확인해 현재 세션이 어떤 상태로 동작 중인지 점검할 수 있다.",
+      summary: "세션 설정과 토큰 사용량을 표시한다. 활성 모델, 승인 정책, 쓰기 가능 루트, 남아 있는 컨텍스트 용량을 한 번에 확인해 현재 세션이 어떤 상태로 동작 중인지 점검할 수 있다. 원격 전송에 연결된 경우 원격 연결 정보와 서버 버전도 함께 표시한다(v0.135).",
       example: "/status",
       caution: "",
       version: "v0.49"
@@ -1026,6 +1031,14 @@
       caution: "디버그 빌드에서는 자체 업데이트가 동작하지 않으며, 대신 릴리스 빌드를 설치하라는 메시지가 출력됩니다.",
       version: "v0.49"
     },
+    "codex doctor": {
+      source: "https://github.com/openai/codex/releases/tag/rust-v0.135.0",
+      sourceLabel: "github.com/openai/codex · codex doctor (v0.131 도입·v0.135 보강)",
+      summary: "환경·Git·터미널·app-server·스레드 인벤토리 진단을 보고한다. 설치 상태와 실행 환경의 문제를 한 번에 점검하는 진단 명령으로, v0.131.0에서 도입되어 v0.135.0에서 보고 범위가 넓어졌다.",
+      example: "codex doctor",
+      caution: "",
+      version: "v0.131"
+    },
     "-s, --sandbox": {
       source: "https://developers.openai.com/codex/cli/reference#global-flags",
       sourceLabel: "Codex CLI reference · --sandbox",
@@ -1061,7 +1074,7 @@
     "-p, --profile": {
       source: "https://developers.openai.com/codex/cli/reference#global-flags",
       sourceLabel: "Codex CLI reference · --profile",
-      summary: "기본 사용자 설정 위에 <code>$CODEX_HOME/profile-name.config.toml</code>을 겹쳐 적용한다(Layer $CODEX_HOME/profile-name.config.toml on top of the base user config). 프로파일 기반 설정 합성을 활성화한다.",
+      summary: "기본 사용자 설정 위에 <code>$CODEX_HOME/profile-name.config.toml</code>을 겹쳐 적용한다(Layer $CODEX_HOME/profile-name.config.toml on top of the base user config). 프로파일 기반 설정 합성을 활성화한다. v0.134.0부터 CLI·TUI 권한·샌드박스 흐름 전반의 기본 프로필 선택기로 동작한다.",
       example: "codex -p review \"PR #42 분석\"",
       caution: "",
       version: "v0.49"
@@ -1105,6 +1118,14 @@
       example: "codex exec -o result.md \"릴리스 노트 작성\"",
       caution: "<code>codex exec</code> 서브커맨드에서만 사용 가능. 단축 형태는 <code>-o</code>.",
       version: "v0.49"
+    },
+    "--output-schema": {
+      source: "https://github.com/openai/codex/releases/tag/rust-v0.132.0",
+      sourceLabel: "github.com/openai/codex · codex exec resume --output-schema (v0.132)",
+      summary: "<code>codex exec resume</code>가 세션 맥락을 유지하면서 지정한 스키마에 맞춰 <b>구조화된 JSON 출력</b>을 반환하도록 한다. 텍스트 전용 워크플로에서 재개 실행 결과를 기계 판독 가능한 JSON으로 받을 때 사용한다.",
+      example: "codex exec resume --output-schema schema.json",
+      caution: "<code>codex exec resume</code>에서 사용한다.",
+      version: "v0.132"
     },
     "--full-auto": {
       source: "https://developers.openai.com/codex/cli/reference#codex-exec",

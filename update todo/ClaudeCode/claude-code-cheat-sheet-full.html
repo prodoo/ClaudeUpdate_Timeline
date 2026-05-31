@@ -288,7 +288,7 @@
     <div class="head-sub">
       세션 관리 · 설정/권한 · 작업 제어 · 스킬/MCP · Git/PR · 원격 · UI 단축키 ·
       진단까지 공개 명령어를 기능별로 전수 수록<br>
-      2026.05.14 기준 · v2.1.141 반영
+      2026.05.31 기준 · v2.1.158 반영
     </div>
   </header>
 
@@ -388,13 +388,15 @@
         <div class="panel-head">
           <div class="badge b-amber">D</div>
           <h2>스킬 · 에이전트 · 플러그인 · MCP</h2>
-          <span class="cnt">9</span>
+          <span class="cnt">11</span>
         </div>
         <div class="cmds">
           <div class="cmd"><code>/agents</code><div class="desc">서브에이전트 관리; <b>claude agents</b>로 에이전트 뷰 확인</div></div>
+          <div class="cmd"><code>/workflows</code><div class="desc">동적 워크플로우 진행 뷰 — 실행·완료 workflows 감시·일시중지·재개·저장 (v2.1.154)</div></div>
           <div class="cmd"><code>/skills</code><div class="desc">사용 가능한 스킬 목록; 타입 필터 검색 지원</div></div>
           <div class="cmd"><code>/plugin</code><div class="desc">플러그인 관리; 컴포넌트 인벤토리·세션당 토큰 비용 표시</div></div>
           <div class="cmd"><code>/reload-plugins</code><div class="desc">설치된 플러그인 핫 리로드 (플러그인 테스트 시 유용)</div></div>
+          <div class="cmd"><code>/reload-skills</code><div class="desc">스킬·명령어 디렉토리 재스캔 — 재시작 없이 디스크 변경 반영 (v2.1.152+)</div></div>
           <div class="cmd"><code>/mcp</code><div class="desc">MCP 서버 관리; .mcp.json 편집을 재시작 없이 반영</div></div>
           <div class="cmd"><code>/mcp__서버__프롬프트</code><div class="desc">연결된 MCP 서버가 노출하는 동적 슬래시 명령 패턴</div></div>
           <div class="cmd"><code>/claude-api</code><div class="desc">Claude API/SDK 헬퍼 워크플로 (Managed Agents 포함)</div></div>
@@ -438,7 +440,7 @@
           <div class="cmd"><code>/remote-env</code><div class="desc">원격 환경 구성; 기본 클라우드 환경 자동 생성</div></div>
           <div class="cmd"><code>/schedule</code><div class="desc">클라우드 예약 작업 관리</div></div>
           <div class="cmd"><code>/teleport</code><div class="desc">기기 간 세션 전송·브리지</div></div>
-          <div class="cmd"><code>/chrome</code><div class="desc">Chrome 브라우저 통합 (가용성은 환경별 상이)</div></div>
+          <div class="cmd"><code>/chrome</code><div class="desc">Chrome 브라우저 통합; <b>Select browser…</b>로 연결 브라우저 선택 (가용성은 환경별 상이)</div></div>
           <div class="cmd"><code>/desktop</code><div class="desc">데스크톱 앱으로 세션 핸드오프</div></div>
           <div class="cmd"><code>/ide</code><div class="desc">IDE 통합 열기·관리 (VS Code / JetBrains 등)</div></div>
           <div class="cmd"><code>/voice</code><div class="desc">푸시투토크 음성 입력 모드 활성화</div></div>
@@ -485,6 +487,7 @@
           <div class="cmd"><code>/help</code><div class="desc">사용 가능한 명령어 도움말 표시</div></div>
           <div class="cmd"><code>/usage</code><div class="desc">플랜 한도·사용량·비용·통계 통합 화면</div></div>
           <div class="cmd"><code>/cost · /stats</code><div class="desc">v2.1.118부터 <b>/usage</b>의 해당 탭으로 통합</div></div>
+          <div class="cmd"><code>/usage-credits</code><div class="desc">한도 도달 시 계속 작업할 사용 크레딧 구성 (이전 이름 <b>/extra-usage</b>)</div></div>
           <div class="cmd"><code>/insights</code><div class="desc">사용·세션 인사이트 표시</div></div>
           <div class="cmd"><code>/release-notes</code><div class="desc">버전별 릴리스 노트 열기</div></div>
           <div class="cmd"><code>/powerup</code><div class="desc">인터랙티브 기능 학습 (2026 추가)</div></div>
@@ -493,7 +496,7 @@
         </div>
         <div class="note">
           <div class="lbl">내부 · 유출 기반 (표준 공개 빌드에 없을 수 있음)</div>
-          <p><code>/version</code> <code>/upgrade</code> <code>/extra-usage</code> <code>/tasks</code> <code>/files</code> <code>/summary</code> <code>/session</code> <code>/share</code> <code>/statusline</code> <code>/privacy-settings</code> <code>/init-verifiers</code> <code>/env</code> <code>/rate-limit-options</code> <code>/advisor</code> <code>/bughunter</code> <code>/passes</code> <code>/bridge</code> · Anthropic 내부 전용: <code>/ant-trace</code> <code>/heapdump</code> <code>/mock-limits</code> <code>/reset-limits</code> <code>/break-cache</code> <code>/ctx_viz</code> <code>/thinkback</code> <code>/x402</code> <code>/good-claude</code></p>
+          <p><code>/version</code> <code>/upgrade</code> <code>/tasks</code> <code>/files</code> <code>/summary</code> <code>/session</code> <code>/share</code> <code>/statusline</code> <code>/privacy-settings</code> <code>/init-verifiers</code> <code>/env</code> <code>/rate-limit-options</code> <code>/advisor</code> <code>/bughunter</code> <code>/passes</code> <code>/bridge</code> · Anthropic 내부 전용: <code>/ant-trace</code> <code>/heapdump</code> <code>/mock-limits</code> <code>/reset-limits</code> <code>/break-cache</code> <code>/ctx_viz</code> <code>/thinkback</code> <code>/x402</code> <code>/good-claude</code></p>
         </div>
       </section>
     </div>
@@ -519,6 +522,7 @@
             <div class="flags-lbl">자주 쓰는 플래그</div>
             <div class="chips">
               <span class="chip">--model</span>
+              <span class="chip">--fallback-model</span>
               <span class="chip">--effort</span>
               <span class="chip">--permission-mode</span>
               <span class="chip">-w / --worktree</span>
@@ -550,10 +554,10 @@
 
   </div>
 
-  <!-- LAST_CHECKED: 2026-05-28 Claude Code v2.1.141 -->
+  <!-- LAST_CHECKED: 2026-05-31 Claude Code v2.1.158 -->
   <footer>
     <span>Claude Code Full Command Reference · A–H + CLI</span>
-    <span>2026년 5월 14일 기준 · v2.1.141 · 거의 주간 단위로 릴리스되므로 실제 환경에서는 <b style="color:#7b8696;">/help</b>로 최종 확인 권장</span>
+    <span>2026년 5월 31일 기준 · v2.1.158 · 거의 주간 단위로 릴리스되므로 실제 환경에서는 <b style="color:#7b8696;">/help</b>로 최종 확인 권장</span>
   </footer>
 
 </div>
@@ -1004,6 +1008,22 @@
       caution: "",
       version: "v2.1.141"
     },
+    "/reload-skills": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /reload-skills",
+      summary: "<b>skill 및 명령어 디렉토리를 다시 스캔</b>하여 세션 중에 디스크에서 추가되거나 변경된 skills를 재시작하지 않고 사용할 수 있도록 합니다. 사용 가능한 skills의 개수와 추가되거나 제거된 skills의 개수를 보고합니다.",
+      example: "/reload-skills",
+      caution: "<code>SessionStart</code> 훅이 <code>reloadSkills: true</code>를 반환하면 같은 세션에서 설치한 skills를 즉시 사용할 수 있다.",
+      version: "v2.1.152"
+    },
+    "/workflows": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /workflows",
+      summary: "<b>workflow 진행 상황 뷰</b>를 열어 실행 중이거나 완료된 workflows를 감시하고, 일시 중지하고, 재개하거나, 저장합니다. 워크플로우는 Claude가 작성해 백그라운드에서 많은 서브에이전트에 걸쳐 실행하는 오케스트레이션 스크립트입니다.",
+      example: "/workflows",
+      caution: "연구 미리보기. 작업 설명에 <b>workflow</b>라는 단어를 포함하면 Claude가 워크플로우를 작성한다. v2.1.154 이상.",
+      version: "v2.1.154"
+    },
     "/mcp": {
       source: "https://code.claude.com/docs/ko/commands",
       sourceLabel: "code.claude.com · 명령어 · /mcp",
@@ -1167,7 +1187,7 @@
     "/chrome": {
       source: "https://code.claude.com/docs/ko/commands#chrome",
       sourceLabel: "code.claude.com · /chrome",
-      summary: "<b>Claude in Chrome</b> 설정을 구성합니다.",
+      summary: "<b>Claude in Chrome</b> 설정을 구성합니다. 연결된 브라우저가 여러 개면 <code>/chrome</code> → <b>Select browser…</b>로 사용할 브라우저를 선택하거나, 브라우저 작업 실행 시 채팅에서 선택합니다.",
       example: "/chrome",
       caution: "Claude in Chrome 확장이 설치된 환경에서만 의미가 있다. 플랫폼/요금제에 따라 명령이 노출되지 않을 수 있다.",
       version: "v2.1.141"
@@ -1355,6 +1375,14 @@
       example: "/cost\n/stats",
       caution: "",
       version: "v2.1.141"
+    },
+    "/usage-credits": {
+      source: "https://code.claude.com/docs/ko/commands",
+      sourceLabel: "code.claude.com · 명령어 · /usage-credits (이전 /extra-usage)",
+      summary: "제한에 도달했을 때 계속 작업할 수 있도록 <b>사용 크레딧을 구성</b>합니다. 이전에는 <code>/extra-usage</code>였으며 이전 이름도 계속 작동합니다.",
+      example: "/usage-credits",
+      caution: "",
+      version: "v2.1.149"
     },
     "/insights": {
       source: "https://code.claude.com/docs/ko/commands",

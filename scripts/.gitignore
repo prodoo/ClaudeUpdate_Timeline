@@ -1,0 +1,3 @@
+# 사이클마다 재생성/덮어쓰기되는 전이 아티팩트 (커밋된 데이터 파일 + git 이력이 SSOT)
+state.json
+candidates.json

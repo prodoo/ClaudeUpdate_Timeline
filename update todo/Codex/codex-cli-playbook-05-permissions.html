@@ -470,6 +470,7 @@
           같은 정책 묶음을 매번 플래그로 치기 싫으면 <b>named 권한 프로파일</b>로 묶는다.
           <code>config.toml</code>의 <code>[profiles.NAME]</code>에 <code>sandbox_mode</code>·<code>approval_policy</code> 등을
           적고 <code>codex -p NAME</code>으로 실행한다. 빌트인 프로파일로 <code>:read-only</code>·<code>:workspace</code>·<code>:danger-no-sandbox</code>가 있다.
+          v0.134부터 <code>--profile</code>이 CLI·TUI 권한·샌드박스 흐름 전반의 기본 프로필 선택기가 되고, 목록 API·상속·관리형 <code>requirements.toml</code> 지원이 더해졌다.
         </p>
         <div class="rows">
           <div class="kv"><span class="lbl">위치</span><span class="val"><code>config.toml</code>의 <code>[profiles.&lt;이름&gt;]</code> 섹션</span></div>
@@ -564,7 +565,7 @@ sandbox_mode = <span class="c">"read-only"</span>
     </div><!-- /grid -->
 
     <!-- ============ FOOTER ============ -->
-    <!-- LAST_CHECKED: 2026-05-28 Codex CLI v0.130.x -->
+    <!-- LAST_CHECKED: 2026-05-31 Codex CLI v0.135.0 -->
     <footer>
       <div class="arc">
         <b>6단계 아크</b>
@@ -574,10 +575,10 @@ sandbox_mode = <span class="c">"read-only"</span>
         <div style="margin-top:6px">권한은 풀수록 빠르지만 위험도 같이 커진다 — 기본값에서 시작해 신뢰하는 저장소에서만 한 칸씩 푼다. 이로써 플레이북 5편 완결.</div>
       </div>
       <div class="stamp">
-        <div class="ver">2026년 5월 14일 기준 · v0.130.x 계열</div>
+        <div class="ver">2026년 5월 31일 기준 · v0.135.0</div>
         <div class="caveat">
           Codex CLI는 거의 매일 패치된다. 슬래시 명령어·플래그·동작은 버전에 따라 달라질 수 있으니
-          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/goal</code> 등 일부는 experimental.
+          <code>codex --version</code>과 공식 docs로 확인할 것. <code>/ps</code> 등 일부는 experimental.
         </div>
       </div>
     </footer>

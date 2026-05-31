@@ -3,6 +3,7 @@
 > Claude Code 또는 ChatGPT Codex의 신규 기능·명령어를 매뉴얼 시리즈와 메인 타임라인에 반영할 때, 이 문서 단계대로 진행한다. 새 세션이 이 문서 하나만 보고도 작업을 완수할 수 있도록 자족적으로 작성됨.
 
 작성 기준일: **2026-05-28**
+최근 사이클: **2026-05-31** (Claude v2.1.158 · Codex v0.135.0, 하이브리드 하네스 1차 운영 — Claude 37건 / Codex 22건 추가)
 참조: 루트 `CLAUDE.md`, `update todo/ClaudeCode/CLAUDE.md`, `update todo/Codex/CLAUDE.md`, 메모리 `MEMORY.md`.
 
 ---
@@ -24,6 +25,14 @@
 ---
 
 ## 2. 단계별 워크플로
+
+> **하이브리드 하네스 (2026-05-31 도입).** 메인 타임라인 데이터(`data/*.js`·`data/codex/*.js`) 갱신은 `scripts/` 스크립트로 기계적 작업을 처리하고, 판단(조사·검토)은 사람이 맡는다. 매뉴얼 측 패치는 종전대로 수기.
+> 1. `node scripts/snapshot.mjs` — 레인별 실제 cutoff·드리프트 표 + `scripts/state.json` 산출 (단계 0 대체, "trust-but-verify" cutoff 혼선 제거).
+> 2. Workflow 8그룹 조사 — `state.json` cutoff 이후 신규 이벤트를 공식 출처에서 병렬 조사 → 검토 후 `scripts/candidates.json` 작성 (단계 1).
+> 3. `node scripts/ingest.mjs` — candidates를 레인 파일에 날짜순 삽입·중복 제거. 멱등(재실행 0건), LF 정규화 (단계 3).
+> 4. `node scripts/ingest.mjs --stamp <YYYY-MM-DD> <claudeVer> <codexVer>` — `index.html`·`codex.html` footer 기준일 + `LAST_CHECKED` 동기 (단계 4).
+> 정확성 철칙상 단계 2의 검토(중복·추정·용어·레인 적합성)는 사람이 수기로 수행한다. 무인 자동 커밋은 채택하지 않는다.
+> 5. `node scripts/manual-lint.mjs` — **매뉴얼 측** 무결성 게이트(타임라인의 `snapshot`에 대응). 드로어 바인딩(패널 셀 textContent === `COMMAND_DETAILS` 키)·스탬프 정합·버전 지연·허브 검색 전수성을 정적 검사. 커밋 전 **FAIL 0** 확인 (단계 5).
 
 ### 0. 스냅샷 (현재 상태 파악)
 
@@ -66,6 +75,7 @@ grep -n "LAST_CHECKED" index.html codex.html "update todo"/**/*.html
 
 ### 5. 검증 + 커밋
 
+- **`node scripts/manual-lint.mjs`** — 커밋 전 게이트. **FAIL 0** 필수(드로어 JS 파싱·파일 내 스탬프 정합), WARN(죽은 행·고아 엔트리·버전 지연·.cnt 불일치·검색 누락)은 사람 검토. 매뉴얼판 `snapshot`이다.
 - 영향 매뉴얼 1~2편 브라우저 더블클릭으로 시각 회귀 확인.
 - 다크/라이트 토글, cmd-detail 드로어(플레이북 12편), 허브 검색(허브 2편) 정상 동작.
 - 커밋 메시지 템플릿:
@@ -85,13 +95,13 @@ grep -n "LAST_CHECKED" index.html codex.html "update todo"/**/*.html
 
 | 출처 | URL/위치 | 마지막 본 SHA·버전 | 마지막 확인일 |
 |---|---|---|---|
-| Claude Code 공식 docs | `code.claude.com/docs` (메모리 `reference_anthropic_sources`) | v2.1.141 | 2026-05-28 |
-| Anthropic CHANGELOG·블로그 | 동상 | (첫 사이클에서 SHA 채움) | 2026-05-28 |
-| OpenAI ChatGPT 공식 안내 | (메모리 `reference_openai_codex_sources`) | v0.130.x 계열 | 2026-05-28 |
-| GitHub `openai/codex` | github.com/openai/codex | (첫 사이클에서 commit SHA 채움) | 2026-05-28 |
-| `@openai/codex-sdk` (npm) | 동기 패키지 버전 핀 | 0.130.0 | 2026-05-28 |
+| Claude Code 공식 docs | `code.claude.com/docs` (메모리 `reference_anthropic_sources`) | v2.1.158 (whats-new 22주차) | 2026-05-31 |
+| Anthropic CHANGELOG·블로그 | 동상 | CHANGELOG v2.1.158 / research 2026-05-27 | 2026-05-31 |
+| OpenAI ChatGPT 공식 안내 | (메모리 `reference_openai_codex_sources`) | developers.openai.com changelog 2026-05-29 | 2026-05-31 |
+| GitHub `openai/codex` | github.com/openai/codex | rust-v0.135.0 (2026-05-28, alpha 제외) | 2026-05-31 |
+| `@openai/codex-sdk` (npm) | 동기 패키지 버전 핀 | 0.135.0 | 2026-05-31 |
 
-*WATCHLIST의 SHA·버전 컬럼은 첫 운영 사이클에서 정확한 값으로 채운다.*
+*1차 사이클(2026-05-31)에서 기준점 확정. 다음 사이클은 이 값 이후만 조사한다. cutoff는 `node scripts/snapshot.mjs`가 레인별 실제 값으로 재계산하므로 이 표는 사람이 읽는 요약.*
 
 ---
 
@@ -109,8 +119,8 @@ grep -n "LAST_CHECKED" index.html codex.html "update todo"/**/*.html
 
 | 변경 종류 | 영향 파일 |
 |---|---|
-| 신규 슬래시 명령어 (Claude) | `update todo/ClaudeCode/claude-code-cheat-sheet.html` 또는 `cheat-sheet-full.html` 패널 + 해당 워크플로 관련 플레이북 카드 검토 |
-| 신규 슬래시 명령어 (Codex) | `update todo/Codex/codex-cli-reference-essentials.html` 또는 `codex-cli-reference-complete.html` 패널 + 관련 플레이북 카드 |
+| 신규 슬래시 명령어 (Claude) | `update todo/ClaudeCode/claude-code-cheat-sheet.html` 또는 `cheat-sheet-full.html` 패널 + 해당 워크플로 관련 플레이북 카드 검토 + 링크된 허브 카드(`update todo/ClaudeCode/index.html`)의 `data-commands`에 동일 토큰 추가(검색 전수성 유지) |
+| 신규 슬래시 명령어 (Codex) | `update todo/Codex/codex-cli-reference-essentials.html` 또는 `codex-cli-reference-complete.html` 패널 + 관련 플레이북 카드 + 링크된 허브 카드(`update todo/Codex/index.html`)의 `data-commands`에 동일 토큰 추가(검색 전수성 유지) |
 | 기존 명령어 동작 변경 | 해당 플레이북의 6카드 중 영향 카드의 `.lead`·`.kv`·`.example` 갱신 |
 | 폐기 | 본문에서 제거, footer 캐비엇에 폐기 사실만 1줄 |
 | 신규 카테고리 (예: Claude G 원격&멀티디바이스 플레이북) | 신규 플레이북 HTML 1편. 절차는 `update todo/ClaudeCode/CLAUDE.md` §4 그대로 |
@@ -144,6 +154,16 @@ grep -n "LAST_CHECKED" index.html codex.html "update todo"/**/*.html
 - **공식 출처 검증 우선**: 추정 항목 금지. 1순위 출처는 공식 docs, 2순위 공식 블로그·CHANGELOG, 3순위 최근 가이드. 자료 간 불일치 항목은 캐비엇으로 분리. 메모리 `feedback_data_accuracy` 영구 반영.
 - **공식 docs 용어 SSOT**: 매뉴얼 본문 콘텐츠는 한국어 공식 docs의 단어·용어를 그대로 사용. 비공식 직역 금지. 메모리 `feedback_official_terminology` 영구 반영.
 
+매뉴얼 버전 캐치업 사이클(2026-05-31 · Claude v2.1.141→v2.1.158 / Codex v0.130.x→v0.135.0)에서 추가 — 대부분 `scripts/manual-lint.mjs`가 자동 차단:
+
+- **매뉴얼은 타임라인보다 조용히 뒤처진다**: `snapshot.mjs`는 메인 2편만 본다. 매뉴얼 버전 지연은 `manual-lint.mjs`가 메인 LAST_CHECKED와 대조해 잡는다 — 매 사이클 실행.
+- **후보 목록 ≠ 실제 공백**: 핸드오프·whats-new 후보는 grep + 타임라인 데이터로 교차검증한다. 절반이 이미 문서화돼 있을 수 있다(trust-but-verify). 이번에 후보 14개 중 7개가 기존 수록이었다.
+- **드로어 = 패널 셀 textContent의 정확 일치**: 신규 명령어는 패널 행 `<code>`와 `COMMAND_DETAILS` 키가 글자까지 일치해야 클릭이 열린다. 엔티티(`&lt;`)·인자(`[PR#]`)·결합(`/cost · /stats`) 표기 차이 주의. lint의 "죽은 행/고아 엔트리" 경고로 확인.
+- **콘텐츠 삭제는 참조를 고아로 남긴다**: 섹션(예 버전 의존 스트립) 제거 시 본문 안내문·hero-note를 함께 정리. 인라인 `<style>`의 죽은 CSS는 §5 보존 원칙상 남겨도 무해 — 건드리지 않는다.
+- **EXP·"미수록" 라벨은 stale 된다**: 공식 슬래시 docs를 사이클마다 재확인해 승격/해제(이번: `/goal` EXP 해제, `/vim`·`/hooks` 패널 승격). 데이터는 "언제 재검토"를 모른다.
+- **드로어 개별 `version` ≠ 매뉴얼 스탬프**: 명령어별 도입 버전 메타데이터는 footer·LAST_CHECKED 갱신 시 일괄 변경하지 않는다(개별 재검증 거짓 암시 금지). 신규 엔트리에만 실제 도입 버전 기입.
+- **SSOT 워크시트(`ssot/`)와 HTML 동기**: HTML 직접 갱신 시 `ssot/INDEX.md`에 사이클을 기록하고 per-stub 백필은 추후로 명시. `ssot/`는 gitignore 대상(로컬 작업 파일)이라 커밋엔 안 들어간다.
+
 ---
 
 ## 7. 메타 주석 (LAST_CHECKED)
@@ -155,7 +175,7 @@ grep -n "LAST_CHECKED" index.html codex.html "update todo"/**/*.html
 ```
 
 - `YYYY-MM-DD`: 마지막 사이클 종료일.
-- `vX.X.X`: 해당 매뉴얼 시리즈의 기준 버전 (Claude는 `v2.1.141` 계열, Codex는 `v0.130.x` 계열, 메인 타임라인은 버전 생략 가능).
+- `vX.X.X`: 해당 매뉴얼 시리즈의 기준 버전 (Claude는 `v2.1.158` 계열, Codex는 `v0.135.x` 계열, 메인 타임라인은 버전 생략 가능).
 - HTML 주석이므로 사용자 화면에 노출되지 않는다.
 - §2 단계 0의 `grep -n "LAST_CHECKED"` 한 번으로 가장 뒤처진 파일을 즉시 식별.
 

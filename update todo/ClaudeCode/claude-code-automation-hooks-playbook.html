@@ -209,7 +209,7 @@
         <div class="rows">
           <div class="kv"><div class="k">세션당</div><div class="v"><code>SessionStart</code> · <code>SessionEnd</code> — 환경 준비, 정리</div></div>
           <div class="kv"><div class="k">턴당</div><div class="v"><code>UserPromptSubmit</code> · <code>Stop</code> · <code>StopFailure</code> — 입력 검증, 완료 게이트</div></div>
-          <div class="kv"><div class="k">도구마다</div><div class="v"><code>PreToolUse</code> · <code>PostToolUse</code> (+<code>PostToolUseFailure</code>, <code>SubagentStop</code>, <code>PreCompact</code> 등)</div></div>
+          <div class="kv"><div class="k">도구마다</div><div class="v"><code>PreToolUse</code> · <code>PostToolUse</code> (+<code>PostToolUseFailure</code>, <code>SubagentStop</code>, <code>PreCompact</code>, <code>MessageDisplay</code> 등)</div></div>
         </div>
         <div class="example">
           <div class="ex-lbl">실전 예시</div>
@@ -273,8 +273,8 @@
           JSON 출력으로 권한 결정·입력 재작성·컨텍스트 주입까지 훅이 직접 돌려줄 수 있다.
         </p>
         <div class="rows">
-          <div class="kv"><div class="k">4종</div><div class="v"><code>command</code>(셸) / <code>http</code>(엔드포인트 POST) / <code>prompt</code>(경량 Claude 판단) / <code>agent</code>(도구 접근 심층 분석)</div></div>
-          <div class="kv"><div class="k">JSON 제어</div><div class="v"><code>permissionDecision</code>(allow/deny/ask) · <code>updatedInput</code>(입력 수정) · <code>additionalContext</code>(주입)</div></div>
+          <div class="kv"><div class="k">4종</div><div class="v"><code>command</code>(셸; <code>args:[]</code> exec 형식은 셸 없이 직접 실행) / <code>http</code>(엔드포인트 POST) / <code>prompt</code>(경량 Claude 판단) / <code>agent</code>(도구 접근 심층 분석)</div></div>
+          <div class="kv"><div class="k">JSON 제어</div><div class="v"><code>permissionDecision</code>(allow/deny/ask) · <code>updatedInput</code>(입력 수정) · <code>additionalContext</code>(주입) · <code>continueOnBlock</code>(거부 사유 피드 후 계속) · <code>terminalSequence</code>(알림·벨·창 제목)</div></div>
           <div class="kv"><div class="k">async</div><div class="v"><code>async: true</code> — 로그·알림·백업은 백그라운드로, Claude 실행을 막지 않음</div></div>
         </div>
         <div class="example">
@@ -306,12 +306,59 @@
       </div>
 
     </div>
+
+    <!-- ============ 보조 섹션: 명령어 기반 자동화 (훅 외) ============ -->
+    <div class="sumcard" style="--cc:var(--c2);margin-top:26px;">
+      <div class="step">보조 · 명령어 기반 자동화</div>
+      <h3>훅이 이벤트를 가로챈다면, 이쪽은 시간·반복으로 건다</h3>
+      <p>Hooks가 도구 호출 <b>이벤트</b>에 반응하는 자동화라면, <b>/loop</b>는 세션 내 <b>반복</b> 실행을, <b>/schedule</b>은 Anthropic 관리 클라우드의 <b>예약</b> 실행(routines)을 담당한다. 훅과 보완 관계이며, 두 명령어는 전체 명령어 시트에서도 확인할 수 있다.</p>
+    </div>
+
+    <div class="grid" style="margin-top:18px;">
+      <!-- /loop -->
+      <div class="card" style="--cc:var(--c2);--cbg:var(--c2bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/loop</span>
+          <span class="tag">Repeat in-session</span>
+        </div>
+        <h2>세션이 열린 동안 반복 실행한다</h2>
+        <p class="lead"><code>/loop [간격]</code>은 <b>Skill</b>로, 세션이 살아 있는 동안 프롬프트를 반복 실행한다. 간격을 생략하면 Claude가 반복 사이 속도를 자동 조절하고, 프롬프트를 생략하면 자동 유지 관리 검사 또는 <code>.claude/loop.md</code>의 프롬프트를 실행한다. 별칭 <code>/proactive</code>.</p>
+        <div class="rows">
+          <div class="kv"><div class="k">실행 위치</div><div class="v">현재 <b>로컬 세션</b> 내 — 세션이 닫히면 멈춘다</div></div>
+          <div class="kv"><div class="k">간격</div><div class="v"><code>5m</code>처럼 지정하거나 생략 시 자동 페이스</div></div>
+          <div class="kv"><div class="k">프롬프트</div><div class="v">생략 시 자동 유지 관리 또는 <code>.claude/loop.md</code> 실행</div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/loop 5m</span> check if the deploy finished</div>
+        </div>
+      </div>
+
+      <!-- /schedule -->
+      <div class="card" style="--cc:var(--c5);--cbg:var(--c5bg);">
+        <div class="card-top">
+          <span class="cmd-badge">/schedule</span>
+          <span class="tag">Cloud routines</span>
+        </div>
+        <h2>클라우드에서 예약 실행한다 — routines</h2>
+        <p class="lead"><code>/schedule</code>은 <b>routines</b>를 만들고 갱신·나열·실행한다. <b>Anthropic 관리 클라우드</b>에서 돌기 때문에 로컬 머신이 꺼져 있어도 동작한다. Claude가 설정 과정을 대화형으로 안내한다. 별칭 <code>/routines</code>.</p>
+        <div class="rows">
+          <div class="kv"><div class="k">실행 위치</div><div class="v"><b>Anthropic 관리 클라우드</b> — 로컬 종료와 무관</div></div>
+          <div class="kv"><div class="k">진입</div><div class="v">대화형 안내. GitHub 미연결 시 <code>/web-setup</code> 자동 요청</div></div>
+          <div class="kv"><div class="k">트리거 구분</div><div class="v">repo 이벤트는 Actions, <b>시간 기반</b>은 <code>/schedule</code></div></div>
+        </div>
+        <div class="example">
+          <div class="ex-lbl">실전 예시</div>
+          <div class="ex-body"><span class="c">/schedule</span> 매일 오전 9시에 빌드 상태 확인</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- LAST_CHECKED: 2026-05-28 Claude Code v2.1.141 -->
+  <!-- LAST_CHECKED: 2026-05-31 Claude Code v2.1.158 -->
   <footer>
     <span>Claude Code Automation Playbook · 구조 → 이벤트 → 차단 → 정리 → 제어 → 안전</span>
-    <span>2026년 5월 14일 기준 · v2.1.141 · 이벤트·핸들러는 버전에 따라 추가될 수 있어 <b>공식 hooks reference</b> 확인 권장</span>
+    <span>2026년 5월 31일 기준 · v2.1.158 · 이벤트·핸들러는 버전에 따라 추가될 수 있어 <b>공식 hooks reference</b> 확인 권장</span>
   </footer>
 
 </div>
@@ -323,6 +370,22 @@ window.COMMAND_DETAILS = {
     summary: "Claude Code는 <b>4가지 범위 수준</b>(Managed·User·Project·Local)에서 설정을 관리합니다. <code>~/.claude/settings.json</code>(User), <code>.claude/settings.json</code>(Project), <code>.claude/settings.local.json</code>(Local, gitignored). 우선순위는 Managed → 명령줄 인수 → Local → Project → User 순. <code>permissions</code>·<code>env</code>·<code>model</code>·<code>sandbox</code>·<code>hooks</code> 등의 키를 받습니다. 배열 설정(<code>permissions.allow</code> 등)은 범위 전체에서 <b>연결되고 중복 제거</b>됩니다.",
     example: "{\n  \"permissions\": {\n    \"allow\": [\"Bash(npm run lint)\", \"Read(src/**)\"],\n    \"deny\": [\"Bash(curl *)\", \"Read(./.env)\"],\n    \"defaultMode\": \"plan\"\n  },\n  \"env\": { \"CLAUDE_CODE_ENABLE_TELEMETRY\": \"1\" },\n  \"model\": \"claude-sonnet-4-6\"\n}",
     caution: "",
+    version: "v2.1.141"
+  },
+  "/loop": {
+    source: "https://code.claude.com/docs/ko/commands",
+    sourceLabel: "code.claude.com · 명령어 · /loop (별칭 /proactive)",
+    summary: "<b>Skill</b>. 세션이 열려 있는 동안 프롬프트를 반복적으로 실행합니다. 간격을 생략하면 Claude가 반복 사이에 자동으로 속도를 조절합니다. 프롬프트를 생략하면 Claude가 자동 유지 관리 검사를 실행하거나, 사용 가능한 경우, <code>.claude/loop.md</code>의 프롬프트를 실행합니다. 예: <code>/loop 5m check if the deploy finished</code>. 별칭: <code>/proactive</code>.",
+    example: "/loop 5m check if the deploy finished",
+    caution: "",
+    version: "v2.1.141"
+  },
+  "/schedule": {
+    source: "https://code.claude.com/docs/ko/commands#schedule",
+    sourceLabel: "code.claude.com · /schedule (별칭 /routines)",
+    summary: "<b>routines</b>를 만들거나, 업데이트하거나, 나열하거나, 실행합니다. Anthropic 관리 클라우드 인프라에서 실행됩니다. Claude가 설정 과정을 대화형으로 안내합니다. 별칭: <code>/routines</code>.",
+    example: "/schedule 매일 오전 9시에 빌드 상태 확인",
+    caution: "Anthropic 관리 클라우드에서 실행되므로 로컬 머신이 꺼져 있어도 동작한다. GitHub 연결이 필요하면 미연결 시 자동으로 <code>/web-setup</code>을 요청한다.",
     version: "v2.1.141"
   }
 };

@@ -147,15 +147,14 @@
 
 ### 5.2 라벨 분리한 항목
 
-- **experimental (EXP)**: `/goal`(`features.goals` 필요), `/ps`(`unified_exec` 관련). Codex Cloud·code mode도 공식상 experimental/개발 중.
+- **experimental (EXP)**: `/ps`(`unified_exec` 관련). Codex Cloud·code mode도 공식상 experimental/개발 중. (`/goal`은 v0.133.0부터 기본 활성화되어 정식 전환 — EXP 라벨 해제 완료, 2026-05-31)
 - **Windows 전용 (WIN)**: `/sandbox-add-read-dir` (네이티브 PowerShell 실행 시만).
 - **deprecated (DEP)**: 승인 모드 `on-failure`, 편의 플래그 `--full-auto`. 본문에서 사용 권장하지 않음.
 
 ### 5.3 버전 의존 / 공식 문서 미수록 (전체판 하단 스트립으로 분리)
 
-- `/vim` — TUI 모달 Vim 편집. 3자 자료(치트시트)에만 존재, 공식 슬래시 문서 미수록.
-- `/hooks` — TUI 훅 브라우저. 3자 자료상 v0.129 추가 보고, 공식 슬래시 문서 미수록.
-- → **추적 필요**: 이 둘이 공식 슬래시 문서에 등재되면 전체판 패널 본문으로 승격.
+- `/vim` — TUI 컴포저 Vim 편집. v0.129 GA. 공식 슬래시 docs 등재 확인(2026-05-31) → 전체판 패널 F 본문으로 승격 완료, 버전 의존 스트립 제거.
+- `/hooks` — 라이프사이클 훅 조회. v0.129 추가. 공식 슬래시 docs 등재 확인 → 전체판 패널 F 본문으로 승격 완료.
 
 ### 5.4 의도적으로 깊게 다루지 않은 영역
 
@@ -183,4 +182,4 @@
 
 ---
 
-*최종 갱신: 2026년 5월 14일 · Codex CLI v0.130.x 계열 기준*
+*최종 갱신: 2026년 5월 31일 · Codex CLI v0.135.0 기준 (v0.130→v0.135 캐치업: codex doctor·--output-schema·@ 선택기·goal 정식·/vim·/hooks 승격)*
