@@ -1,6 +1,6 @@
 /* GPT Models — Codex 외 OpenAI 본체 모델 (GPT-5.x, o-series, Realtime, Voice)
  * Sources: openai.com/index/<slug>, github.blog/changelog
- * Verified: 2026-05-17 (날짜는 WebSearch + 외부 보도 교차 검증)
+ * Verified: 2026-05-31 (날짜는 WebSearch + 외부 보도 교차 검증)
  * Note: openai.com/* 직접 fetch는 403이지만 slug URL은 search listing에서 확인됨.
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["GPT Models"] = [
@@ -19,4 +19,5 @@
 {date:"2026-04-23",title:"GPT-5.5 System Card",version:"gpt-5.5",importance:3,stage:"Paper",summary:"GPT-5.5 시스템 카드.",url:"https://openai.com/index/gpt-5-5-system-card/"},
 {date:"2026-05-05",title:"GPT-5.5 Instant (ChatGPT 기본)",version:"gpt-5.5-instant",importance:4,stage:"GA",summary:"GPT-5.5 Instant가 ChatGPT의 새 기본 모델로 채택.",url:"https://openai.com/index/introducing-gpt-5-5/"},
 {date:"2026-05-07",title:"GPT-Realtime 2 + Translate + Whisper",version:"gpt-realtime-2",importance:5,stage:"GA",summary:"Realtime API 3종 신규 모델 — GPT-Realtime-2(GPT-5급 추론으로 구성 가능한 reasoning, 첫 음성 GPT-5 기반), GPT-Realtime-Translate(70+ 언어 입력 → 13개 언어 실시간 번역, $0.034/분), GPT-Realtime-Whisper(speech-to-text 스트리밍).",url:"https://openai.com/index/advancing-voice-intelligence-with-new-models-in-the-api/"},
+{date:"2026-05-07",title:"GPT-5.5-Cyber 제한 프리뷰 공개",version:"gpt-5.5-cyber",importance:3,stage:"Preview",summary:"OpenAI가 검증된 사이버 방어자를 대상으로 GPT-5.5-Cyber 제한 프리뷰를 열고 Trusted Access for Cyber 프로그램을 확대했다. 이 모델은 취약점 탐색, 악성코드 분석, 공격 역분석 등 방어 목적 작업에서 공개 모델보다 가드레일이 완화되어 있으나 자격 증명 탈취·악성코드 작성 같은 요청은 계속 차단된다.",url:"https://openai.com/index/gpt-5-5-with-trusted-access-for-cyber/"}
 ];

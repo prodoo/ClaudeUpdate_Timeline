@@ -308,10 +308,10 @@ svg.timeline { display: block; user-select: none; }
 
 <div class="tooltip" id="tooltip" role="tooltip"></div>
 
-<!-- LAST_CHECKED: 2026-05-28 -->
+<!-- LAST_CHECKED: 2026-05-31 v0.135.0 -->
 <footer class="foot">
   <span>Codex 2025–26 timeline · 데이터: github.com/openai/codex · openai.com/index · developers.openai.com/codex · developers.openai.com/blog</span>
-  <span>2026-05-17 기준 · 모든 이벤트 공식 출처 검증</span>
+  <span>2026-05-31 기준 · 모든 이벤트 공식 출처 검증</span>
 </footer>
 
 <!-- ===== Data files (split by category for verification·diff·rollback) ===== -->
@@ -356,8 +356,9 @@ function parseDate(s) { return new Date(s + "T00:00:00Z"); }
 EVENTS.forEach(e => { e._d = parseDate(e.date); });
 EVENTS.sort((a, b) => a._d - b._d);
 
+const TODAY = "2026-05-31";
 const D_MIN = parseDate("2025-04-16");
-const D_MAX = parseDate("2026-05-17");
+const D_MAX = new Date(EVENTS.reduce((m, e) => e._d.getTime() > m ? e._d.getTime() : m, parseDate(TODAY).getTime()));
 const D_TOTAL = (D_MAX - D_MIN) / 86400000 + 1;
 
 const state = {
@@ -433,7 +434,7 @@ function renderTimeline() {
   function xOf(d) { return padL + (dayDelta(D_MIN, d) / (D_TOTAL - 1)) * innerW; }
   function xOfStr(s) { return xOf(parseDate(s)); }
 
-  const today = parseDate("2026-05-17");
+  const today = parseDate(TODAY);
 
   let svg = `<svg class="timeline" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
   // month grid — 14 months (2025-05 to 2026-05) with quarterly headers more prominent
@@ -475,17 +476,20 @@ function renderTimeline() {
     const laneY = laneTop + i * laneH + laneH / 2;
     const evs = byLane[src];
     evs.sort((a, b) => a._d - b._d);
+    // 2D expanding-ring collision avoidance: spread same-(lane,date) bubbles so none hides behind another
     const placed = [];
     evs.forEach(e => {
       const r = 2 + e.importance * 1.6;
-      let cx = xOfStr(e.date);
-      let cy = laneY;
-      let attempts = 0;
-      while (attempts < 6) {
-        let collide = placed.some(p => Math.hypot(p.cx - cx, p.cy - cy) < (p.r + r + 1));
+      const baseX = xOfStr(e.date);
+      let cx = baseX, cy = laneY, attempts = 0;
+      while (attempts < 56) {
+        const collide = placed.some(p => Math.hypot(p.cx - cx, p.cy - cy) < (p.r + r + 1));
         if (!collide) break;
-        cy = laneY + (attempts % 2 === 0 ? 1 : -1) * Math.ceil(attempts / 2) * 6;
         attempts++;
+        const ring = Math.ceil(attempts / 8);        // 8 directions per ring, then expand outward (horizontal-biased: keeps vertical within lane)
+        const ang  = (attempts % 8) * (Math.PI / 4);
+        cx = baseX + Math.cos(ang) * ring * 13;
+        cy = laneY + Math.sin(ang) * ring * 6;
       }
       placed.push({ cx, cy, r, e });
     });
@@ -853,7 +857,17 @@ $dark.addEventListener("click", () => {
    INIT
 ============================================================ */
 buildSources();
+const _todayBtn = document.querySelector(".jumpbtn.today");
+if (_todayBtn) _todayBtn.dataset.jump = TODAY;
 render();
+// 로드 시 최신(TODAY) 위치로 캔버스 자동 스크롤
+setTimeout(() => {
+  const wrap = document.getElementById("canvas-wrap");
+  if (!wrap || state.view !== "timeline") return;
+  const innerW = Math.max($main.clientWidth - 60, 1000) * state.zoom - 130 - 40;
+  const x = 130 + (dayDelta(D_MIN, parseDate(TODAY)) / (D_TOTAL - 1)) * innerW;
+  wrap.scrollTo({ left: Math.max(0, x - wrap.clientWidth / 2) });
+}, 50);
 window.addEventListener("resize", () => { if (state.view === "timeline") renderTimeline(); });
 </script>
 </body>

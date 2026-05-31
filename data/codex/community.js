@@ -1,6 +1,6 @@
 /* Community — 외부 보도·커뮤니티 분석·독립 벤치마크
  * Sources: techcrunch.com, github.blog/changelog, cerebras.ai/blog, tomshardware.com 등
- * Verified: 2026-05-17
+ * Verified: 2026-05-31
  * Note: 본질적으로 비공식이지만 출처 URL이 분명한 글만 수록. (커뮤니티 분석) 라벨 허용.
  *       (추정)·(추측) 라벨 금지 — Claude의 Stealth lane과 동일 정책.
  */
@@ -15,4 +15,7 @@
 {date:"2026-04-23",title:"TechCrunch: GPT-5.5 'superapp' 한 발",version:"",importance:3,stage:"News",summary:"GPT-5.5 출시 보도 — OpenAI를 AI 'super app'에 한 발 다가가게 함.",url:"https://techcrunch.com/2026/04/23/openai-chatgpt-gpt-5-5-ai-model-superapp/"},
 {date:"2026-05-05",title:"TechCrunch: GPT-5.5 Instant 기본 모델",version:"",importance:2,stage:"News",summary:"ChatGPT의 새 기본 모델 GPT-5.5 Instant 출시 보도.",url:"https://techcrunch.com/2026/05/05/openai-releases-gpt-5-5-instant-a-new-default-model-for-chatgpt/"},
 {date:"2026-05-07",title:"9to5Mac: Realtime 2 — reason, translate, transcribe",version:"",importance:3,stage:"News",summary:"OpenAI의 새 음성 모델 — 추론하고, 번역하고, 말하는 동안 받아쓰는. GPT-Realtime 2 출시 보도.",url:"https://9to5mac.com/2026/05/07/openai-has-new-voice-models-that-reason-translate-and-transcribe-as-you-speak/"},
+{date:"2026-05-08",title:"Help Net Security: GPT-5.5-Cyber 허용적 보안 워크플로 튜닝",version:"",importance:2,stage:"News",summary:"OpenAI가 GPT-5.5-Cyber를 더 허용적인 보안 워크플로에 맞춰 튜닝했다는 외부 보도. 승인된 방어자 대상의 한정 접근과 권한 통제 구조를 분석.",url:"https://www.helpnetsecurity.com/2026/05/08/openai-gpt-5-5-cyber-model/"},
+{date:"2026-05-11",title:"MacRumors: OpenAI Daybreak 플랫폼 공개",version:"",importance:3,stage:"News",summary:"OpenAI가 소프트웨어 취약점을 식별·교정하는 사이버보안 플랫폼 Daybreak를 출시했다는 보도. Anthropic의 Project Glasswing에 대한 경쟁 대응으로 평가하며 GPT-5.5 계열 세 모델 활용을 설명.",url:"https://www.macrumors.com/2026/05/11/openai-launches-daybreak/"},
+{date:"2026-05-14",title:"TechCrunch: Codex, 휴대폰으로 확장",version:"",importance:3,stage:"News",summary:"OpenAI가 Codex를 ChatGPT 모바일 앱에 통합해 iOS·Android에서 스레드 작업·출력 검토·명령 승인·모델 변경을 원격 수행하게 했다는 보도. 모든 ChatGPT 요금제에 프리뷰로 제공.",url:"https://techcrunch.com/2026/05/14/openai-says-codex-is-coming-to-your-phone/"}
 ];

@@ -1,6 +1,6 @@
 /* Research — OpenAI 연구 발표·system card·평가 paper (코딩·agentic·safety)
  * Sources: openai.com/index (system card), cdn.openai.com/pdf, openai.com/research, arxiv
- * Verified: 2026-05-17
+ * Verified: 2026-05-31
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["Research"] = [
 {date:"2025-09-15",title:"GPT-5-Codex System Card",version:"gpt-5-codex",importance:4,stage:"Paper",summary:"GPT-5-Codex 시스템 카드 (GPT-5 system card 부록) — RL로 실제 코딩 task 학습, PR 스타일 모방, 테스트 통과까지 반복. 평가·안전성 결과.",url:"https://cdn.openai.com/pdf/97cc5669-7a25-4e63-b15f-5fd5bdc4d149/gpt-5-codex-system-card.pdf"},
@@ -11,4 +11,5 @@
 {date:"2026-01-15",title:"Terminal-Bench 2.0 (ICLR 2026)",version:"",importance:3,stage:"Paper",summary:"Terminal-Bench 2.0 — 전문가 수집의 다양한 long-horizon task. frontier 모델용 어렵고 현실적이며 경제적으로 가치 있는 벤치마크. ICLR 2026 발표.",url:"https://openreview.net/pdf/417ac3236de7dbf3fc3414c51754dd239271663e.pdf"},
 {date:"2025-11-12",title:"GPT-5.1 Instant/Thinking System Card Addendum",version:"gpt-5.1",importance:2,stage:"Paper",summary:"GPT-5 시스템 카드의 5.1 Instant/Thinking 추가 부록.",url:"https://openai.com/index/gpt-5-system-card-addendum-gpt-5-1/"},
 {date:"2026-04-23",title:"GPT-5.5 System Card",version:"gpt-5.5",importance:3,stage:"Paper",summary:"GPT-5.5 시스템 카드 — 평가·안전성·정렬 결과.",url:"https://openai.com/index/gpt-5-5-system-card/"},
+{date:"2026-05-04",title:"GPT-5.5 Instant System Card",version:"gpt-5.5-instant",importance:3,stage:"Paper",summary:"GPT-5.5 Instant 시스템 카드. Instant 계열 최초로 사이버보안과 생물·화학 준비 영역에서 High capability로 분류되어 강화된 안전장치를 적용. 비교 기준선은 GPT-5.3 Instant.",url:"https://openai.com/index/gpt-5-5-instant-system-card/"}
 ];

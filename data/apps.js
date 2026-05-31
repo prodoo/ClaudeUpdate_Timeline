@@ -1,6 +1,6 @@
-/* Claude Apps — 24 events
+/* Claude Apps — 26 events
  * Source: https://support.claude.com/en/articles/12138966-release-notes
- * Verified: 2026-05-14
+ * Verified: 2026-05-31
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["Claude Apps"] = [
 {date:"2026-01-12",title:"Cowork research preview on Claude Desktop",version:"",importance:5,stage:"Preview",summary:"Claude Code의 에이전트 기능을 Claude 데스크톱 앱에 가져와 코딩 외 지식 작업까지 확장하는 Cowork 연구 프리뷰 출시.",url:"https://support.claude.com/en/articles/12138966-release-notes"},
@@ -27,4 +27,7 @@
 {date:"2026-04-09",title:"Role-based access controls (Enterprise)",version:"",importance:3,stage:"GA",summary:"엔터프라이즈 플랜 관리자 그룹별 역할 기반 권한 제어(RBAC) 추가.",url:"https://support.claude.com/en/articles/12138966-release-notes"},
 {date:"2026-04-16",title:"Claude Opus 4.7 launch",version:"Opus 4.7",importance:5,stage:"GA",summary:"소프트웨어 엔지니어링과 고해상도 비전 개선된 최신 Opus 4.7 — Claude Apps에 즉시 적용.",url:"https://www.anthropic.com/news/claude-opus-4-7"},
 {date:"2026-04-17",title:"Claude Design by Anthropic Labs",version:"",importance:4,stage:"GA",summary:"Claude와 협업하여 디자인·프로토타입·슬라이드 등 시각적 산출물을 만드는 Anthropic Labs 신제품.",url:"https://www.anthropic.com/news/claude-design-anthropic-labs"}
+,
+{date:"2026-05-21",title:"Claude 컴플라이언스 API 통합",version:"",importance:3,stage:"GA",summary:"보안·컴플라이언스 도구와의 통합을 도입하여 IT 및 보안 팀이 플랫폼 전반에서 Claude를 관리할 수 있도록 했다.",url:"https://support.claude.com/en/articles/12138966-release-notes"},
+{date:"2026-05-28",title:"Claude Opus 4.8 앱 출시",version:"Opus 4.8",importance:5,stage:"GA",summary:"Claude 앱에 가장 성능이 높은 정식 모델인 Claude Opus 4.8을 출시했다. 코딩, 에이전트 기능, 추론, 실무 지식 작업에서 개선되었으며, 기업 요금제는 사용자 지정 역할로 커넥터 접근 권한을 관리할 수 있게 되었다.",url:"https://support.claude.com/en/articles/12138966-release-notes"}
 ];

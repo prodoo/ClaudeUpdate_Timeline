@@ -1,6 +1,6 @@
-/* Research — 27 events
+/* Research — 31 events
  * Source: https://www.anthropic.com/research + https://alignment.anthropic.com
- * Verified: 2026-05-14
+ * Verified: 2026-05-31
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["Research"] = [
 {date:"2026-01-01",title:"Petri 2.0: 새 시나리오·평가 자각 완화",version:"",importance:4,stage:"Blog",summary:"자동 행동 감사 도구 Petri의 새 시나리오와 평가 자각 완화 기능을 추가한 업데이트.",url:"https://alignment.anthropic.com"},
@@ -30,4 +30,9 @@
 {date:"2026-05-07",title:"Focus areas for The Anthropic Institute",version:"",importance:3,stage:"Blog",summary:"Anthropic Institute의 정책·연구 우선순위 아젠다 공개.",url:"https://www.anthropic.com/research/anthropic-institute-agenda"},
 {date:"2026-05-07",title:"Natural Language Autoencoders: Claude's thoughts into text",version:"",importance:4,stage:"Blog",summary:"해석가능성 연구 — Claude의 내부 수치 표현을 사람이 읽는 텍스트로 변환하는 encoder-decoder 모델 학습.",url:"https://www.anthropic.com/research/natural-language-autoencoders"},
 {date:"2026-05-08",title:"Teaching Claude why",version:"",importance:4,stage:"Blog",summary:"Agentic misalignment 감소 연구 — 행동만 직접 학습하기보다 인격·윤리 원칙을 추론하도록 가르치는 것이 더 효과적임을 보임.",url:"https://www.anthropic.com/research/teaching-claude-why"}
+,
+{date:"2026-05-14",title:"2028: Two scenarios for global AI leadership",version:"",importance:3,stage:"Report",summary:"미·중 AI 경쟁의 2028년 두 가지 시나리오를 제시한다. 첫째는 민주주의 진영이 모델 지능·도입·전 세계 보급에서 확실한 우위를 확보하는 경우이고, 둘째는 첨단 연산 자원에 대한 수출 통제가 느슨해져 중국이 최첨단 근처까지 경쟁력을 갖추는 경우다.",url:"https://www.anthropic.com/research/2028-ai-leadership"},
+{date:"2026-05-19",title:"SLEIGHT-Bench: Finding Blind Spots in AI Monitors",version:"",importance:3,stage:"Paper",summary:"AI 모니터링 시스템의 사각지대를 노린 회피형 합성 트랜스크립트 40건으로 구성한 벤치마크를 공개한다. 최첨단 모니터가 유해 행동을 탐지하지 못하는 11개 사각지대 범주를 식별했으며, 주 평가 대상으로 Opus 4.6 모니터를 사용했다.",url:"https://alignment.anthropic.com/2026/sleight-bench/"},
+{date:"2026-05-22",title:"Project Glasswing: An initial update",version:"",importance:4,stage:"News",summary:"약 50개 파트너와 함께 진행하는 핵심 소프트웨어 취약점 사전 발견 협력 사업 Project Glasswing의 초기 결과를 발표한다. Claude Mythos Preview를 활용해 높음 또는 치명적 등급 취약점 1만 건 이상을 이미 발견했다.",url:"https://www.anthropic.com/research/glasswing-initial-update"},
+{date:"2026-05-27",title:"Coding agents in the social sciences",version:"",importance:3,stage:"Report",summary:"Claude Code 같은 코딩 에이전트가 사회과학 연구에 도입되는 양상을 조사한다. 연구자 중 20%만이 코딩 에이전트를 상시 사용하며, 성별·경력 단계·소속 대학 명성에 따라 사용률에 뚜렷한 격차가 있음을 확인했다.",url:"https://www.anthropic.com/research/coding-agents-social-sciences"}
 ];

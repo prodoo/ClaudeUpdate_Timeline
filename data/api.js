@@ -1,6 +1,6 @@
-﻿/* API Platform — 28 events
+﻿/* API Platform — 37 events
  * Source: https://platform.claude.com/docs/en/release-notes/api
- * Verified: 2026-05-14
+ * Verified: 2026-05-31
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["API Platform"] = [
 {date:"2026-01-05",title:"Claude Opus 3 retired",version:"",importance:3,stage:"GA",summary:"Claude Opus 3 (claude-3-opus-20240229) 모델 은퇴 — 모든 요청이 에러 반환. Opus 4.5로 마이그레이션 권장.",url:"https://platform.claude.com/docs/en/release-notes/api#january-5-2026"},
@@ -31,4 +31,14 @@
 {date:"2026-04-24",title:"Rate Limits API released",version:"",importance:3,stage:"GA",summary:"관리자가 조직과 워크스페이스에 설정된 rate limit을 프로그래밍으로 조회.",url:"https://platform.claude.com/docs/en/release-notes/api#april-24-2026"},
 {date:"2026-05-11",title:"Claude Platform on AWS launched",version:"",importance:5,stage:"GA",summary:"Claude Platform on AWS GA 출시 — Anthropic 관리형 인프라를 AWS에서 사용. Messages·Files·Batches API, Managed Agents, Skills, code execution, tool use 모두 지원. AWS billing·IAM 인증 사용.",url:"https://platform.claude.com/docs/en/release-notes/api#may-11-2026"},
 {date:"2026-05-12",title:"Fast mode now supports Claude Opus 4.7",version:"",importance:3,stage:"Preview",summary:"Fast mode (research preview)가 Claude Opus 4.7 지원. `speed:\"fast\"` + `model:\"claude-opus-4-7\"` + `fast-mode-2026-02-01` 베타 헤더로 토큰 생성 속도 향상 (프리미엄 요금).",url:"https://platform.claude.com/docs/en/release-notes/api#may-12-2026"}
+,
+{date:"2026-05-13",title:"캐시 진단 퍼블릭 베타",version:"",importance:3,stage:"Beta",summary:"캐시 진단을 퍼블릭 베타로 출시했다. Messages 요청에 diagnostics.previous_message_id를 전달하면 API가 프롬프트 캐시 접두부가 이전 턴과 어디서 갈라졌는지 설명하는 cache_miss_reason을 반환한다. 요청에 cache-diagnosis-2026-04-07 베타 헤더를 포함해야 한다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-13-2026"},
+{date:"2026-05-18",title:"웹 검색 도구 SEC 공시 데이터 확장",version:"",importance:2,stage:"GA",summary:"웹 검색 도구가 더 풍부한 SEC 공시 데이터를 반환하여, 금융 리서치·실적 분석·실사 워크플로를 출처 인용과 함께 1차 자료에 근거하도록 만들기 쉬워졌다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-18-2026"},
+{date:"2026-05-19",title:"MCP 터널 리서치 프리뷰 및 Managed Agents 자체 호스팅 샌드박스",version:"",importance:3,stage:"Preview",summary:"비공개 네트워크 내 MCP 서버에 연결할 수 있는 MCP 터널이 리서치 프리뷰로 제공된다. Claude Managed Agents에는 Anthropic 인프라 대신 도구 실행을 처리하는 자체 호스팅 샌드박스가 추가되었고, 활성 세션의 MCP 서버·도구 구성 업데이트와 100K 토큰 초과 대용량 출력의 파일 자동 분산이 지원된다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-19-2026"},
+{date:"2026-05-28",title:"Claude Opus 4.8 API 출시",version:"Opus 4.8",importance:5,stage:"GA",summary:"가장 성능이 높은 정식 모델 Claude Opus 4.8을 출시했다. 기본 1M 토큰 컨텍스트 윈도우, 128k 최대 출력 토큰을 지원하며 적응형 사고를 사용해 필요한 경우에만 추론을 수행한다. Opus 4.7과 동일한 도구·플랫폼 기능을 지원한다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-28-2026"},
+{date:"2026-05-28",title:"대화 중간 시스템 메시지 출시",version:"",importance:4,stage:"GA",summary:"Opus 4.8에서 messages 배열의 첫 번째가 아닌 위치에 role: \"system\" 메시지를 보낼 수 있게 되었다. 장시간 세션 도중 지침이 바뀌어도 이전 턴의 프롬프트 캐시 적중을 보존한다. 베타 헤더가 필요하지 않다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-28-2026"},
+{date:"2026-05-28",title:"거부 카테고리를 stop_details로 반환",version:"",importance:3,stage:"GA",summary:"Opus 4.8이 요청을 거부할 때 Messages API가 stop_details에 거부 카테고리를 반환하여, 애플리케이션이 거부 유형별로 다음 단계를 분기할 수 있게 되었다. 베타 헤더가 필요하지 않다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-28-2026"},
+{date:"2026-05-28",title:"Opus 4.8 effort 기본값 high 및 프롬프트 캐시 최소 길이 인하",version:"",importance:3,stage:"GA",summary:"Opus 4.8에서 effort 파라미터 기본값이 Claude Code와 Messages API를 포함한 모든 표면에서 high로 설정되었다. 또한 프롬프트 캐싱의 최소 캐시 가능 길이가 Opus 4.7보다 낮은 1,024 토큰으로 내려갔다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-28-2026"},
+{date:"2026-05-28",title:"Opus 4.8 패스트 모드 리서치 프리뷰",version:"",importance:3,stage:"Preview",summary:"Claude API 한정으로 Opus 4.8 패스트 모드가 리서치 프리뷰로 제공된다. 동시에 Opus 4.6용 패스트 모드는 사용 중단(deprecated)되어 출시 약 30일 후 제거될 예정이다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-28-2026"},
+{date:"2026-05-29",title:"Claude Platform on AWS에서 Managed Agents 고급 기능 제공",version:"",importance:3,stage:"GA",summary:"Claude Managed Agents의 웹훅, 다중 에이전트 오케스트레이션, 자체 호스팅 샌드박스를 Claude Platform on AWS에서 사용할 수 있게 되었다. 새 IAM 작업과 AnthropicSelfHostedEnvironmentAccess 관리형 정책이 추가되었다.",url:"https://platform.claude.com/docs/en/release-notes/api#may-29-2026"}
 ];

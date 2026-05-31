@@ -1,6 +1,6 @@
 /* Codex CLI — github.com/openai/codex releases (모든 검증 가능한 stable rust-vX.Y.Z)
  * Sources: https://github.com/openai/codex/releases/tag/rust-v{X.Y.Z}
- * Verified: 2026-05-17 (각 항목 GitHub API tag fetch로 published_at 확인)
+ * Verified: 2026-05-31 (각 항목 GitHub API tag fetch로 published_at 확인)
  * Note: stable releases only (alpha 제외). v0.1~v0.4, v0.43, v0.51, v0.62, v0.67/68/70, v0.82/83,
  *       v0.108/109, v0.126/127는 GitHub release object 없음 (누락).
  *       body 미제공 항목은 날짜 컨텍스트 기반 일반 요약.
@@ -107,4 +107,9 @@
 {date:"2026-04-30",title:"v0.128.0: persisted goals, permission profiles",version:"v0.128.0",importance:4,stage:"GA",summary:"persisted goal workflows, permission profiles, plugin marketplace 설치, 세션 import 도입.",url:"https://github.com/openai/codex/releases/tag/rust-v0.128.0"},
 {date:"2026-05-07",title:"v0.129.0: Vim mode + hooks",version:"v0.129.0",importance:4,stage:"GA",summary:"Vim 에디터 모드, hooks 기능, 워크플로 개선, 플러그인 관리 강화.",url:"https://github.com/openai/codex/releases/tag/rust-v0.129.0"},
 {date:"2026-05-08",title:"v0.130.0: plugin sharing, remote control",version:"v0.130.0",importance:4,stage:"GA",summary:"플러그인 공유, remote control 커맨드, app-server 페이지네이션, 다수 버그 수정.",url:"https://github.com/openai/codex/releases/tag/rust-v0.130.0"},
+{date:"2026-05-18",title:"Codex CLI v0.131.0 안정 릴리스",version:"v0.131.0",importance:4,stage:"GA",summary:"TUI에 서비스 등급 명령·통합 토큰 사용량·승인 모드 표시가 추가되고, @ 멘션 선택기가 파일·디렉토리·플러그인·스킬을 한 곳에서 검색하도록 확장되었다. 플러그인 마켓플레이스 CLI 명령, 데몬 기반 codex remote-control, 진단용 codex doctor 명령이 도입되었다.",url:"https://github.com/openai/codex/releases/tag/rust-v0.131.0"},
+{date:"2026-05-20",title:"Codex CLI v0.132.0 안정 릴리스",version:"v0.132.0",importance:3,stage:"GA",summary:"Python SDK가 API 키 로그인과 ChatGPT 브라우저·디바이스 코드 인증 흐름을 정식 지원하고, 텍스트 전용 워크플로에서 turn API에 일반 문자열을 입력으로 전달할 수 있게 되었다. codex exec resume가 --output-schema를 받아들이고, TUI 시작 시 터미널 기능 탐지를 일괄 처리해 기동 속도가 개선되었다.",url:"https://github.com/openai/codex/releases/tag/rust-v0.132.0"},
+{date:"2026-05-21",title:"Codex CLI v0.133.0 안정 릴리스",version:"v0.133.0",importance:4,stage:"GA",summary:"목표(Goals) 기능이 기본 활성화되어 전용 저장소를 기반으로 활성 turn 간 진행 상황을 추적한다. codex remote-control이 포그라운드 명령처럼 실행되며 준비 상태를 대기하고, 권한 프로필에 목록 API·상속·관리형 requirements.toml 지원이 추가되었다.",url:"https://github.com/openai/codex/releases/tag/rust-v0.133.0"},
+{date:"2026-05-26",title:"Codex CLI v0.134.0 안정 릴리스",version:"v0.134.0",importance:3,stage:"GA",summary:"로컬 대화 기록 전반에 대한 대소문자 무시 검색이 추가되고, --profile이 CLI·TUI 권한·샌드박스 흐름 전반의 기본 프로필 선택기가 되었다. MCP 설정에 서버별 환경 지정과 OAuth 옵션이 추가되고, readOnlyHint를 알리는 읽기 전용 MCP 도구를 동시 실행할 수 있게 되었다.",url:"https://github.com/openai/codex/releases/tag/rust-v0.134.0"},
+{date:"2026-05-28",title:"Codex CLI v0.135.0 안정 릴리스",version:"v0.135.0",importance:3,stage:"GA",summary:"codex doctor가 환경·Git·터미널·app-server·스레드 인벤토리 진단을 더 풍부하게 보고하고, /status가 원격 전송 연결 시 원격 연결 정보와 서버 버전을 표시한다. Vim 모드에 텍스트 객체 편집이 추가되고, /permissions가 명명된 권한 프로필을 인식하며, 설치 스크립트가 CODEX_NON_INTERACTIVE=1로 비대화형 모드를 지원한다.",url:"https://github.com/openai/codex/releases/tag/rust-v0.135.0"}
 ];

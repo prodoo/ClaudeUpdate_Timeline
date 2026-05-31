@@ -1,6 +1,6 @@
 /* Corporate — GA · Pricing · DevDay · Partnership · SDK 발표
  * Sources: openai.com/index/<slug>, developers.openai.com
- * Verified: 2026-05-17
+ * Verified: 2026-05-31
  */
 (window.EVENTS_BY_SOURCE = window.EVENTS_BY_SOURCE || {})["Corporate"] = [
 {date:"2025-04-16",title:"Codex CLI · codex-mini-latest 공개",version:"",importance:5,stage:"Press",summary:"OpenAI가 터미널 코딩 에이전트 Codex CLI(오픈소스, Rust 기반)와 codex-mini-latest API 모델을 동시 출시. TechCrunch 등 공식 보도.",url:"https://github.com/openai/codex"},
@@ -12,4 +12,7 @@
 {date:"2026-01-15",title:"Cerebras 파트너십 발표",version:"",importance:4,stage:"News",summary:"OpenAI가 Cerebras와 파트너십 발표. 이후 GPT-5.3-Codex-Spark의 1000+ tokens/s 인퍼런스 기반이 됨. OpenAI 최초의 비-NVIDIA 프로덕션 배포.",url:"https://openai.com/index/introducing-gpt-5-3-codex-spark/"},
 {date:"2026-04-02",title:"Codex pricing — token-based",version:"",importance:4,stage:"News",summary:"Plus/Pro/Business/Enterprise tier별 token-based pricing (이전 per-message 대신).",url:"https://developers.openai.com/codex/pricing"},
 {date:"2026-04-21",title:"Scaling Codex to enterprises worldwide",version:"",importance:5,stage:"News",summary:"Codex를 기업으로 전세계 확장. Cognizant·CGI 등 파트너 영입으로 Enterprise 소프트웨어 shop을 통한 글로벌 확산.",url:"https://openai.com/index/scaling-codex-to-enterprises-worldwide/"},
+{date:"2026-04-23",title:"GPT-5.5, NVIDIA GB200 NVL72에서 Codex 구동",version:"",importance:4,stage:"News",summary:"NVIDIA가 자사 GB200 NVL72 시스템에서 GPT-5.5 기반 Codex를 구동하는 협력을 공식 블로그로 발표. 이전 세대 대비 토큰당 비용 35배 절감, 메가와트당 토큰 처리량 50배 향상을 제시하고 NVIDIA 직원 1만여 명이 사전 접근.",url:"https://blogs.nvidia.com/blog/openai-codex-gpt-5-5-ai-agents/"},
+{date:"2026-05-11",title:"Daybreak — OpenAI 사이버보안 이니셔티브",version:"",importance:5,stage:"News",summary:"OpenAI가 프런티어 모델과 Codex Security를 결합한 사이버보안 이니셔티브 Daybreak를 공개. 취약점 탐지·패치 생성·교정 검증을 개발 루프에 통합하며 GPT-5.5, GPT-5.5 with Trusted Access for Cyber, GPT-5.5-Cyber 세 모델을 기반으로 한다.",url:"https://openai.com/daybreak/"},
+{date:"2026-05-18",title:"OpenAI·Dell Technologies Codex 파트너십",version:"",importance:5,stage:"News",summary:"OpenAI와 Dell Technologies가 하이브리드·온프레미스 기업 환경에 Codex를 도입하는 파트너십을 발표. Codex가 Dell AI Data Platform 및 Dell AI Factory와 연동되며, OpenAI가 Codex 배포에 비-Azure·비-클라우드 경로를 명시한 최초 사례.",url:"https://openai.com/index/dell-codex-enterprise-partnership/"}
 ];
