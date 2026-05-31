@@ -117,13 +117,13 @@ a { color: inherit; }
   <section class="section">
     <div class="section-h"><span>Reference 계열</span><span class="cnt">2편 · 명령어 나열형</span></div>
     <div class="cards">
-      <a class="card" href="claude-code-cheat-sheet.html" data-commands="claude /clear claude -c /compact /context /resume Ctrl+C /permissions /status /doctor /model /effort /init /memory /plan Shift+Tab /review /security-review /goal /fast ! /agents Esc Esc Ctrl+R Ctrl+G Ctrl+T Ctrl+O @파일명 /mcp /ultrareview \ + Enter">
+      <a class="card" href="claude-code-cheat-sheet.html" data-commands="claude /clear claude -c /compact /context /resume Ctrl+C /permissions /status /doctor /model /effort /init /memory /plan Shift+Tab /review /security-review /goal /fast ! /agents Esc Esc Ctrl+R Ctrl+G Ctrl+T Ctrl+O @파일명 /mcp /ultrareview /loop /proactive /schedule /remote-control /rc /remote-env /teleport \ + Enter">
         <div class="card-top"><span class="card-tag">Cheat Sheet</span><span class="card-arr">↗</span></div>
         <h3>핵심 명령어 총정리</h3>
         <p class="desc">5패널 밀집 그리드 — 실행·세션 / 권한 / 작업제어 / UI 단축키 / GitHub CI. 자주 쓰는 슬래시·플래그·키 위주.</p>
         <p class="fn">claude-code-cheat-sheet.html</p>
       </a>
-      <a class="card" href="claude-code-cheat-sheet-full.html" data-commands="claude /branch /rename claude -r /export claude -p /diff /clear /copy /compact /status /context Ctrl+C /resume /exit /rewind /permissions /theme /config /color /model /tui /effort /keybindings /init /output-style /memory /terminal-setup /add-dir /scroll-speed /doctor /sandbox /hooks /login /logout /team-onboarding /plan Shift+Tab /review /security-review /goal /debug /simplify /batch /btw /loop /focus /ultraplan /fast ! /agents /skills /plugin /reload-plugins /mcp /claude-api /fewer-permission-prompts /ultrareview /commit /pr /push /pr-comments /install-github-app /lint /merge-to-main /fix-pipeline /vitest /commit-push-pr /issue /remote-control /remote-env /schedule /teleport /chrome /desktop /ide /voice /mobile /onboarding /oauth-refresh Esc Esc Ctrl+R Ctrl+G Tab Ctrl+T Ctrl+O Ctrl+B Ctrl+F Alt+T @파일명 /help /usage /cost /stats /insights /release-notes /powerup /feedback /stickers /buddy claude agents claude update claude mcp claude project purge claude plugin details">
+      <a class="card" href="claude-code-cheat-sheet-full.html" data-commands="claude /branch /rename claude -r /export claude -p /diff /clear /copy /compact /status /context Ctrl+C /resume /exit /rewind /permissions /theme /config /color /model /tui /effort /keybindings /init /output-style /memory /terminal-setup /add-dir /scroll-speed /doctor /sandbox /hooks /login /logout /team-onboarding /plan Shift+Tab /review /security-review /goal /debug /simplify /batch /btw /loop /focus /ultraplan /fast ! /agents /skills /plugin /reload-plugins /mcp /claude-api /fewer-permission-prompts /ultrareview /commit /pr /push /pr-comments /install-github-app /lint /merge-to-main /fix-pipeline /vitest /commit-push-pr /issue /remote-control /remote-env /schedule /teleport /chrome /desktop /ide /voice /mobile /onboarding /oauth-refresh Esc Esc Ctrl+R Ctrl+G Tab Ctrl+T Ctrl+O Ctrl+B Ctrl+F Alt+T @파일명 /help /usage /cost /stats /insights /release-notes /powerup /feedback /stickers /buddy claude agents claude update claude mcp claude project purge claude plugin details claude -c /mcp__ ↑ / ↓ ?">
         <div class="card-top"><span class="card-tag">Cheat Sheet · Full</span><span class="card-arr">↗</span></div>
         <h3>전체 명령어 총정리</h3>
         <p class="desc">8패널 A~H + CLI 스트립 — 공개 슬래시 명령어 전수 + 내부·유출 명령어 별도 박스.</p>
@@ -135,49 +135,49 @@ a { color: inherit; }
   <section class="section">
     <div class="section-h"><span>Playbook 계열</span><span class="cnt">7편 · 6단계 서사 아크</span></div>
     <div class="cards">
-      <a class="card" href="claude-code-workflow-playbook.html" data-commands="CLAUDE.md /plan /effort /review /compact /rewind 라이프사이클 lifecycle">
+      <a class="card" href="claude-code-workflow-playbook.html" data-commands="CLAUDE.md CLAUDE.local.md /plan /effort /review /security-review /compact /rewind /init /memory /diff /pr-comments /clear /context /code-review /checkpoint /undo Ctrl+C Esc Esc @ 라이프사이클 lifecycle">
         <div class="card-top"><span class="card-tag">Workflow</span><span class="card-arr">↗</span></div>
         <h3>라이프사이클</h3>
         <p class="desc">한 작업을 처음부터 끝까지: CLAUDE.md · /plan · /effort · /review · /compact · /rewind.</p>
         <p class="arc">설정 → 계획 → 조율 → 검증 → 정리 → 회복</p>
         <p class="fn">claude-code-workflow-playbook.html</p>
       </a>
-      <a class="card" href="claude-code-orchestration-playbook.html" data-commands="/agents subagent team parallel subagents --worktree worktree claude agents /goal 오케스트레이션 멀티에이전트">
+      <a class="card" href="claude-code-orchestration-playbook.html" data-commands="/agents subagent subagents team parallel --worktree -w worktree claude claude agents /goal /batch --max-turns --max-budget-usd --cwd --json --permission-mode --model --effort --settings --add-dir --plugin-dir --mcp-config .claude/agents/ .claude/worktrees/ 오케스트레이션 멀티에이전트">
         <div class="card-top"><span class="card-tag">Orchestration</span><span class="card-arr">↗</span></div>
         <h3>멀티 에이전트 오케스트레이션</h3>
         <p class="desc">/agents · subagent vs Teams · 병렬 · --worktree 격리 · claude agents · /goal.</p>
         <p class="arc">정의 → 층위 → 병렬 → 격리 → 지휘 → 통제</p>
         <p class="fn">claude-code-orchestration-playbook.html</p>
       </a>
-      <a class="card" href="claude-code-context-engineering-playbook.html" data-commands="context rot /context CLAUDE.md .claude/rules/ subagent /btw /compact 컨텍스트 엔지니어링">
+      <a class="card" href="claude-code-context-engineering-playbook.html" data-commands="context rot /context /compact /memory /btw CLAUDE.md CLAUDE.local.md @import .claude/rules/ subagent 컨텍스트 엔지니어링">
         <div class="card-top"><span class="card-tag">Context Engineering</span><span class="card-arr">↗</span></div>
         <h3>컨텍스트 엔지니어링</h3>
         <p class="desc">context rot · /context · CLAUDE.md · .claude/rules/ · subagent+/btw · /compact.</p>
         <p class="arc">원리 → 구성 → 계층 → 분할 → 격리 → 보존</p>
         <p class="fn">claude-code-context-engineering-playbook.html</p>
       </a>
-      <a class="card" href="claude-code-automation-hooks-playbook.html" data-commands="settings.json lifecycle events PreToolUse PostToolUse SessionStart UserPromptSubmit Stop handler safe by design hooks 훅 자동화">
+      <a class="card" href="claude-code-automation-hooks-playbook.html" data-commands="settings.json .claude/settings.local.json lifecycle events /hooks PreToolUse PostToolUse PostToolUseFailure SessionStart SessionEnd UserPromptSubmit Stop StopFailure SubagentStop PreCompact handler safe by design hooks 훅 자동화 /loop /proactive /schedule /routines /remote-control /rc /remote-env /teleport /less-permission-prompts /web-setup 루틴 반복 예약">
         <div class="card-top"><span class="card-tag">Automation · Hooks</span><span class="card-arr">↗</span></div>
         <h3>자동화 &amp; Hooks</h3>
-        <p class="desc">settings.json · lifecycle events · PreToolUse · PostToolUse · 4 handlers · safe by design.</p>
+        <p class="desc">settings.json · lifecycle events · PreToolUse · PostToolUse · 4 handlers · safe by design · /loop · /schedule.</p>
         <p class="arc">구조 → 이벤트 → 차단 → 정리 → 제어 → 안전</p>
         <p class="fn">claude-code-automation-hooks-playbook.html</p>
       </a>
-      <a class="card" href="claude-code-extension-playbook.html" data-commands="SKILL.md /skills /plugin /mcp extension skills plugins MCP 확장">
+      <a class="card" href="claude-code-extension-playbook.html" data-commands="SKILL.md .mcp.json .claude-plugin/plugin.json /skills /plugin /reload-plugins /mcp /mcp__ --plugin-dir --plugin-url $ARGUMENTS .claude/skills/ .claude/commands/ extension skills plugins MCP 확장">
         <div class="card-top"><span class="card-tag">Extension</span><span class="card-arr">↗</span></div>
         <h3>확장 · Skills · Plugins · MCP</h3>
         <p class="desc">4 mechanisms · SKILL.md · /skills · /plugin · /mcp · extension safety.</p>
         <p class="arc">구분 → 제작 → 호출 → 배포 → 연결 → 안전</p>
         <p class="fn">claude-code-extension-playbook.html</p>
       </a>
-      <a class="card" href="claude-code-headless-cicd-playbook.html" data-commands="claude -p --bare --output-format --allowedTools --max-turns claude-code-action headless CI CD 헤드리스">
+      <a class="card" href="claude-code-headless-cicd-playbook.html" data-commands="claude -p -p --print --continue --resume --bare --output-format --json-schema --allowedTools --allowed-tools --tools --max-turns --dangerously-skip-permissions --permission-mode --settings /install-github-app /schedule @claude claude-code-action ANTHROPIC_API_KEY headless CI CD 헤드리스">
         <div class="card-top"><span class="card-tag">Headless · CI/CD</span><span class="card-arr">↗</span></div>
         <h3>헤드리스 &amp; CI/CD</h3>
         <p class="desc">claude -p · --bare · --output-format · --allowedTools · --max-turns · claude-code-action.</p>
         <p class="arc">기본 → 재현성 → 출력 → 경계 → 비용 → 통합</p>
         <p class="fn">claude-code-headless-cicd-playbook.html</p>
       </a>
-      <a class="card" href="claude-code-permission-autonomy-playbook.html" data-commands="least privilege permission modes allow deny ask eval order /sandbox auto bypass permissions 권한 자율성">
+      <a class="card" href="claude-code-permission-autonomy-playbook.html" data-commands="least privilege permission modes /permissions /config /sandbox allow deny ask eval order Shift+Tab defaultMode --dangerously-skip-permissions --network disableBypassPermissionsMode auto bypass permissions 권한 자율성">
         <div class="card-top"><span class="card-tag">Permission · Autonomy</span><span class="card-arr">↗</span></div>
         <h3>권한 &amp; 자율성</h3>
         <p class="desc">least privilege · permission modes · allow/deny/ask · eval order · /sandbox · auto vs bypass.</p>
@@ -189,7 +189,7 @@ a { color: inherit; }
 
 </main>
 
-<!-- LAST_CHECKED: 2026-05-28 Claude Code v2.1.141 -->
+<!-- LAST_CHECKED: 2026-05-31 Claude Code v2.1.141 -->
 <footer class="foot">
   <span>Claude Code 매뉴얼 시리즈 · 허브 디자인은 타임라인 톤 임시 적용 · 개별 매뉴얼은 Pretendard/navy 톤 별도 유지</span>
   <span>2026-05-14 기준 · Claude Code v2.1.141</span>
